@@ -4,74 +4,361 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="description" content="EcoSentinel AI - Community-Driven Environmental Risk Intelligence Platform" />
+    <meta name="keywords" content="environmental intelligence, climate action, Kenya, UNEP, AI, flooding, air quality, deforestation" />
+    <meta name="author" content="Gideon Kiprono" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" type="image/png" href="/favicon.png" />
-    <title>EcoSentinel AI - Environmental Intelligence Platform</title>
+    <title>EcoSentinel AI - Environmental Risk Intelligence Platform</title>
+    
+    <!-- Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
       :root {
-        --azc-primary: #07c;
-        --azc-bg: #eee;
-        --azc-border-radius: 16px;
+        /* EcoSentinel AI Brand Colors */
+        --eco-primary: #40A957;
+        --eco-secondary: #2E7D32;
+        --eco-accent: #4CAF50;
+        --eco-danger: #F44336;
+        --eco-warning: #FF9800;
+        --eco-info: #2196F3;
+        --eco-success: #4CAF50;
+        
+        /* Background and surfaces */
+        --eco-bg-primary: #FAFAFA;
+        --eco-bg-secondary: #FFFFFF;
+        --eco-bg-tertiary: #F5F5F5;
+        --eco-surface: #FFFFFF;
+        --eco-surface-variant: #E8F5E8;
+        
+        /* Text colors */
+        --eco-text-primary: #1B1B1B;
+        --eco-text-secondary: #666666;
+        --eco-text-tertiary: #999999;
+        --eco-text-on-primary: #FFFFFF;
+        
+        /* Borders and dividers */
+        --eco-border: #E0E0E0;
+        --eco-border-light: #F0F0F0;
+        
+        /* Spacing and layout */
+        --eco-border-radius: 12px;
+        --eco-border-radius-lg: 16px;
+        --eco-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+        --eco-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --eco-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+        
+        /* Animation */
+        --eco-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       }
+
+      * {
+        box-sizing: border-box;
+      }
+
       html,
       body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         font-size: 16px;
+        line-height: 1.5;
         margin: 0;
-        background: var(--azc-bg);
+        padding: 0;
+        background: var(--eco-bg-primary);
+        color: var(--eco-text-primary);
         display: flex;
         flex-direction: column;
         width: 100%;
-        height: 100%;
+        height: 100vh;
+        overflow: hidden;
       }
+
+      /* Header Navigation */
       nav {
         display: flex;
-        flex: 0 1 auto;
-        background: #333;
-        color: #fff;
-        padding: 16px;
-        font-family:
-          'Segoe UI',
-          -apple-system,
-          BlinkMacSystemFont,
-          Roboto,
-          'Helvetica Neue',
-          sans-serif;
-        font-size: 1.25rem;
+        justify-content: space-between;
         align-items: center;
-
-        & img {
-          height: 32px;
-          margin-right: 0.5em;
-        }
+        flex: 0 0 auto;
+        background: linear-gradient(135deg, var(--eco-primary) 0%, var(--eco-secondary) 100%);
+        color: var(--eco-text-on-primary);
+        padding: 16px 24px;
+        box-shadow: var(--eco-shadow-md);
+        position: relative;
+        z-index: 100;
       }
+
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 600;
+        font-size: 1.25rem;
+      }
+
+      .nav-brand img {
+        height: 40px;
+        width: 40px;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .nav-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: var(--eco-border-radius);
+        font-size: 0.875rem;
+        backdrop-filter: blur(10px);
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--eco-success);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      /* Main Content Area */
       main {
         container-type: size;
         flex: 1;
         position: relative;
         display: flex;
+        flex-direction: column;
+        overflow: hidden;
       }
+
+      /* Environmental Dashboard Layout */
+      .dashboard-layout {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        height: 100%;
+        gap: 0;
+      }
+
+      .sidebar {
+        background: var(--eco-surface);
+        border-right: 1px solid var(--eco-border);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .main-content {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Environmental Status Cards */
+      .env-status-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        padding: 20px;
+        background: var(--eco-bg-tertiary);
+        border-bottom: 1px solid var(--eco-border);
+      }
+
+      .status-card {
+        background: var(--eco-surface);
+        border-radius: var(--eco-border-radius);
+        padding: 16px;
+        box-shadow: var(--eco-shadow-sm);
+        transition: var(--eco-transition);
+        cursor: pointer;
+      }
+
+      .status-card:hover {
+        box-shadow: var(--eco-shadow-md);
+        transform: translateY(-2px);
+      }
+
+      .status-card.danger { border-left: 4px solid var(--eco-danger); }
+      .status-card.warning { border-left: 4px solid var(--eco-warning); }
+      .status-card.success { border-left: 4px solid var(--eco-success); }
+      .status-card.info { border-left: 4px solid var(--eco-info); }
+
+      .status-title {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--eco-text-secondary);
+        margin-bottom: 8px;
+      }
+
+      .status-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--eco-text-primary);
+        margin-bottom: 4px;
+      }
+
+      .status-location {
+        font-size: 0.75rem;
+        color: var(--eco-text-tertiary);
+      }
+
+      /* Chat Interface Styling */
       azc-chat {
         flex: 1;
-        max-width: 1024px;
-        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        max-width: none;
+        margin: 0;
+        background: var(--eco-surface);
+      }
+
+      azc-history {
+        background: var(--eco-surface);
+        border-bottom: 1px solid var(--eco-border);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .dashboard-layout {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+        }
+        
+        .sidebar {
+          border-right: none;
+          border-bottom: 1px solid var(--eco-border);
+          max-height: 200px;
+        }
+        
+        .env-status-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+          padding: 16px;
+        }
+        
+        .nav-brand {
+          font-size: 1rem;
+        }
+        
+        .nav-indicator {
+          display: none;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .env-status-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        nav {
+          padding: 12px 16px;
+        }
+        
+        .nav-brand {
+          font-size: 0.9rem;
+        }
       }
     </style>
   </head>
   <body>
+    <!-- Navigation Header -->
     <nav>
-      <img src="/favicon.png" alt="" />
-      AI Chat with Enterprise Data
+      <div class="nav-brand">
+        <img src="/logo.svg" alt="EcoSentinel AI Logo" />
+        <span>EcoSentinel AI</span>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-indicator">
+          <div class="status-dot"></div>
+          <span>Environmental Monitor Active</span>
+        </div>
+      </div>
     </nav>
+
+    <!-- Main Dashboard -->
     <main>
-      <azc-history id="chatHistory"></azc-history>
-      <azc-chat id="chat"></azc-chat>
+      <div class="dashboard-layout">
+        <!-- Sidebar with Environmental Status -->
+        <div class="sidebar">
+          <!-- Real-time Environmental Status Cards -->
+          <div class="env-status-grid">
+            <div class="status-card warning" id="flood-risk">
+              <div class="status-title">Flood Risk</div>
+              <div class="status-value">Medium</div>
+              <div class="status-location">Kibera, Nairobi</div>
+            </div>
+            
+            <div class="status-card danger" id="air-quality">
+              <div class="status-title">Air Quality</div>
+              <div class="status-value">156 AQI</div>
+              <div class="status-location">Industrial Area</div>
+            </div>
+            
+            <div class="status-card success" id="deforestation">
+              <div class="status-title">Forest Cover</div>
+              <div class="status-value">Stable</div>
+              <div class="status-location">Aberdare Range</div>
+            </div>
+            
+            <div class="status-card info" id="heat-index">
+              <div class="status-title">Heat Index</div>
+              <div class="status-value">28°C</div>
+              <div class="status-location">Kisumu County</div>
+            </div>
+          </div>
+          
+          <!-- Chat History -->
+          <azc-history id="chatHistory"></azc-history>
+        </div>
+
+        <!-- Main Chat Interface -->
+        <div class="main-content">
+          <azc-chat id="chat"></azc-chat>
+        </div>
+      </div>
     </main>
+
     <script type="module" src="/src/index.ts"></script>
     <script>
       // Generate a unique ID and store it in local storage
       const userId = localStorage.getItem('userId') || crypto.randomUUID();
       localStorage.setItem('userId', userId);
 
+      // Configure EcoSentinel AI specific settings
+      const ecoSentinelConfig = {
+        enablePromptSuggestions: true,
+        promptSuggestions: [
+          '🌊 What is the flood risk in Kibera this week?',
+          '🌱 When should I plant maize in Kisumu County?',
+          '💨 How is the air quality in Nairobi today?',
+          '🌳 Are there deforestation alerts in my area?',
+          '⚠️ What environmental risks should I watch for?',
+          '📍 Give me hyperlocal weather predictions',
+        ],
+        strings: {
+          promptSuggestionsTitle: 'Ask EcoSentinel AI about environmental risks',
+          citationsTitle: 'Data Sources:',
+          followUpQuestionsTitle: 'Related environmental questions:',
+          chatInputPlaceholder: 'Ask about environmental risks, weather, or get local guidance... (Type in English or Swahili)',
+          chatInputButtonLabel: 'Send environmental query',
+          assistant: 'EcoSentinel AI',
+          user: 'You',
+          errorMessage: 'Environmental data service temporarily unavailable. Please try again.',
+          newChatButton: 'New environmental query',
+          retryButton: 'Retry environmental query',
+        },
+      };
+
+      // Initialize chat components
       window.chatHistory.userId = userId;
       window.chatHistory.addEventListener('loadSession', (e) => {
         const { id, messages } = e.detail;
@@ -80,8 +367,54 @@
       });
 
       window.chat.userId = userId;
+      window.chat.options = ecoSentinelConfig;
       window.chat.addEventListener('messagesUpdated', () => {
         window.chatHistory.refresh();
+      });
+
+      // Simulate real-time environmental data updates
+      function updateEnvironmentalStatus() {
+        const floodCard = document.getElementById('flood-risk');
+        const airCard = document.getElementById('air-quality');
+        const forestCard = document.getElementById('deforestation');
+        const heatCard = document.getElementById('heat-index');
+        
+        // Simulate dynamic data updates (in real app, this would come from APIs)
+        const floodRisks = ['Low', 'Medium', 'High'];
+        const locations = ['Kibera', 'Kawangware', 'Mathare', 'Korogocho'];
+        
+        // Update flood risk every 30 seconds
+        setInterval(() => {
+          const randomRisk = floodRisks[Math.floor(Math.random() * floodRisks.length)];
+          const randomLocation = locations[Math.floor(Math.random() * locations.length)];
+          
+          if (floodCard) {
+            floodCard.querySelector('.status-value').textContent = randomRisk;
+            floodCard.querySelector('.status-location').textContent = `${randomLocation}, Nairobi`;
+            
+            // Update card styling based on risk level
+            floodCard.classList.remove('warning', 'danger', 'success');
+            if (randomRisk === 'High') floodCard.classList.add('danger');
+            else if (randomRisk === 'Medium') floodCard.classList.add('warning');
+            else floodCard.classList.add('success');
+          }
+        }, 30000);
+      }
+
+      // Initialize environmental status updates
+      updateEnvironmentalStatus();
+
+      // Add click handlers for environmental status cards
+      document.querySelectorAll('.status-card').forEach(card => {
+        card.addEventListener('click', function() {
+          const title = this.querySelector('.status-title').textContent;
+          const value = this.querySelector('.status-value').textContent;
+          const location = this.querySelector('.status-location').textContent;
+          
+          // Auto-populate chat with environmental query
+          const query = `Tell me more about ${title.toLowerCase()} status: ${value} in ${location}. What should I do?`;
+          window.chat.question = query;
+        });
       });
     </script>
   </body>

@@ -39,22 +39,27 @@ export const chatDefaultOptions: ChatComponentOptions = {
   apiUrl: '',
   enablePromptSuggestions: true,
   promptSuggestions: [
-    'How to search and book rentals?',
-    'What is the refund policy?',
-    'How to contact a representative?',
+    '🌊 What is the flood risk in my area this week?',
+    '🌱 When should I plant crops based on weather patterns?',
+    '💨 How is the air quality in Nairobi today?',
+    '🌳 Are there any deforestation alerts in Central Kenya?',
+    '⚠️ What environmental risks should I prepare for?',
+    '📍 Give me hyperlocal environmental predictions',
+    '🏠 How can my community adapt to climate change?',
+    '🚨 What should I do during environmental emergencies?',
   ],
   messages: [],
   strings: {
-    promptSuggestionsTitle: 'Ask anything or try an example',
-    citationsTitle: 'Citations:',
-    followUpQuestionsTitle: 'Follow-up questions:',
-    chatInputPlaceholder: 'Ask me anything...',
-    chatInputButtonLabel: 'Send question',
-    assistant: 'Support Assistant',
+    promptSuggestionsTitle: 'Ask EcoSentinel AI about environmental risks and guidance',
+    citationsTitle: 'Environmental Data Sources:',
+    followUpQuestionsTitle: 'Related environmental questions:',
+    chatInputPlaceholder: 'Ask about environmental risks, weather forecasts, or local guidance... (English or Swahili)',
+    chatInputButtonLabel: 'Send environmental query',
+    assistant: 'EcoSentinel AI',
     user: 'You',
-    errorMessage: 'We are currently experiencing an issue.',
-    newChatButton: 'New chat',
-    retryButton: 'Retry',
+    errorMessage: 'Environmental intelligence service is temporarily unavailable. Please try again in a moment.',
+    newChatButton: 'New environmental query',
+    retryButton: 'Retry environmental query',
   },
 };
 
@@ -360,139 +365,503 @@ export class ChatComponent extends LitElement {
 
   static override styles = css`
     :host {
-      /* Base properties */
-      --primary: var(--azc-primary, #07f);
-      --error: var(--azc-error, #e30);
-      --text-color: var(--azc-text-color, #000);
-      --text-invert-color: var(--azc--text-invert-color, #fff);
-      --disabled-color: var(--azc-disabled-color, #ccc);
-      --bg: var(--azc-bg, #eee);
-      --card-bg: var(--azc-card-bg, #fff);
-      --card-shadow: var(--azc-card-shadow, 0 0.3px 0.9px rgba(0 0 0 / 12%), 0 1.6px 3.6px rgba(0 0 0 / 16%));
-      --space-md: var(--azc-space-md, 12px);
-      --space-xl: var(--azc-space-xl, calc(var(--space-md) * 2));
-      --space-xs: var(--azc-space-xs, calc(var(--space-md) / 2));
-      --space-xxs: var(--azc-space-xs, calc(var(--space-md) / 4));
-      --border-radius: var(--azc-border-radius, 16px);
-      --focus-outline: var(--azc-focus-outline, 2px solid);
-      --overlay-color: var(--azc-overlay-color, rgba(0 0 0 / 40%));
+      /* EcoSentinel AI Environmental Theme */
+      --primary: var(--eco-primary, #40A957);
+      --secondary: var(--eco-secondary, #2E7D32);
+      --accent: var(--eco-accent, #4CAF50);
+      --error: var(--eco-danger, #F44336);
+      --warning: var(--eco-warning, #FF9800);
+      --info: var(--eco-info, #2196F3);
+      --success: var(--eco-success, #4CAF50);
+      
+      --text-color: var(--eco-text-primary, #1B1B1B);
+      --text-invert-color: var(--eco-text-on-primary, #FFFFFF);
+      --text-secondary: var(--eco-text-secondary, #666666);
+      --disabled-color: var(--eco-text-tertiary, #999999);
+      
+      --bg: var(--eco-bg-primary, #FAFAFA);
+      --card-bg: var(--eco-surface, #FFFFFF);
+      --surface-variant: var(--eco-surface-variant, #E8F5E8);
+      
+      --card-shadow: var(--eco-shadow-md, 0 4px 12px rgba(0, 0, 0, 0.1));
+      --border-color: var(--eco-border, #E0E0E0);
+      
+      --space-md: 12px;
+      --space-xl: 24px;
+      --space-xs: 6px;
+      --space-xxs: 3px;
+      --border-radius: var(--eco-border-radius, 12px);
+      --focus-outline: 2px solid;
+      --overlay-color: rgba(0 0 0 / 20%);
 
-      /* Component-specific properties */
-      --error-color: var(--azc-error-color, var(--error));
-      --error-border: var(--azc-error-border, none);
-      --error-bg: var(--azc-error-bg, var(--card-bg));
-      --retry-button-color: var(--azc-retry-button-color, var(--text-color));
-      --retry-button-bg: var(--azc-retry-button-bg, #f0f0f0);
-      --retry-button-bg-hover: var(--azc-retry-button-bg, #e5e5e5);
-      --retry-button-border: var(--azc-retry-button-border, none);
-      --suggestion-color: var(--azc-suggestion-color, var(--text-color));
-      --suggestion-border: var(--azc-suggestion-border, none);
-      --suggestion-bg: var(--azc-suggestion-bg, var(--card-bg));
-      --suggestion-shadow: var(--azc-suggestion-shadow, 0 6px 16px -1.5px rgba(141 141 141 / 30%));
-      --user-message-color: var(--azc-user-message-color, var(--text-invert-color));
-      --user-message-border: var(--azc-user-message-border, none);
-      --user-message-bg: var(--azc-user-message-bg, var(--primary));
-      --bot-message-color: var(--azc-bot-message-color, var(--text-color));
-      --bot-message-border: var(--azc-bot-message-border, none);
-      --citation-color: var(--azc-citation-color, var(--text-invert-color));
-      --bot-message-bg: var(--azc-bot-message-bg, var(--card-bg));
-      --citation-bg: var(--azc-citation-bg, var(--primary));
-      --citation-bg-hover: var(--azc-citation-bg, color-mix(in srgb, var(--primary), #000 10%));
-      --new-chat-button-color: var(--azc-button-color, var(--text-invert-color));
-      --new-chat-button-bg: var(--azc-new-chat-button-bg, var(--primary));
-      --new-chat-button-bg-hover: var(--azc-new-chat-button-bg, color-mix(in srgb, var(--primary), #000 10%));
-      --chat-input-color: var(--azc-chat-input-color, var(--text-color));
-      --chat-input-border: var(--azc-chat-input-border, none);
-      --chat-input-bg: var(--azc-chat-input-bg, var(--card-bg));
-      --submit-button-color: var(--azc-button-color, var(--primary));
-      --submit-button-border: var(--azc-submit-button-border, none);
-      --submit-button-bg: var(--azc-submit-button-bg, none);
-      --submit-button-bg-hover: var(--azc-submit-button-color, #f0f0f0);
+      /* Environmental-specific component styling */
+      --error-color: var(--error);
+      --error-border: 1px solid var(--error);
+      --error-bg: #FFEBEE;
+      
+      --retry-button-color: var(--text-color);
+      --retry-button-bg: var(--surface-variant);
+      --retry-button-bg-hover: #D4F1D4;
+      --retry-button-border: 1px solid var(--border-color);
+      
+      --suggestion-color: var(--text-color);
+      --suggestion-border: 1px solid var(--border-color);
+      --suggestion-bg: var(--card-bg);
+      --suggestion-shadow: var(--card-shadow);
+      
+      --user-message-color: var(--text-invert-color);
+      --user-message-border: none;
+      --user-message-bg: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      
+      --bot-message-color: var(--text-color);
+      --bot-message-border: 1px solid var(--border-color);
+      --bot-message-bg: var(--card-bg);
+      
+      --citation-color: var(--text-invert-color);
+      --citation-bg: var(--info);
+      --citation-bg-hover: #1976D2;
+      
+      --new-chat-button-color: var(--text-invert-color);
+      --new-chat-button-bg: var(--primary);
+      --new-chat-button-bg-hover: var(--secondary);
+      
+      --chat-input-color: var(--text-color);
+      --chat-input-border: 1px solid var(--border-color);
+      --chat-input-bg: var(--card-bg);
+      
+      --submit-button-color: var(--primary);
+      --submit-button-border: none;
+      --submit-button-bg: transparent;
+      --submit-button-bg-hover: var(--surface-variant);
 
       container-type: size;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
+
     *:focus-visible {
       outline: var(--focus-outline) var(--primary);
+      outline-offset: 2px;
     }
+
     .animation {
-      animation: 0.3s ease;
+      animation: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
     svg {
       fill: currentColor;
       width: 100%;
+      height: 100%;
     }
+
     button {
+      font-family: inherit;
       font-size: 1rem;
-      border-radius: calc(var(--border-radius) / 2);
+      border-radius: var(--border-radius);
       outline: var(--focus-outline) transparent;
-      transition: outline 0.3s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
 
       &:not(:disabled) {
         cursor: pointer;
       }
+
+      &:hover:not(:disabled) {
+        transform: translateY(-1px);
+      }
     }
+
     .chat-container {
       height: 100cqh;
       overflow: auto;
       container-type: inline-size;
       position: relative;
       background: var(--bg);
-      font-family:
-        'Segoe UI',
-        -apple-system,
-        BlinkMacSystemFont,
-        Roboto,
-        'Helvetica Neue',
-        sans-serif;
+      display: flex;
+      flex-direction: column;
     }
+
     .citation {
       font-size: 0.85rem;
+      font-weight: 500;
       color: var(--citation-color);
       background: var(--citation-bg);
-      border: var(--citation-border);
-      padding: var(--space-xxs) var(--space-xs);
+      border: none;
+      padding: var(--space-xs) var(--space-md);
       margin-right: var(--space-xs);
       margin-top: var(--space-xs);
+      border-radius: 20px;
+      transition: all 0.2s ease;
 
       &:hover {
         background: var(--citation-bg-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
       }
     }
+
     .citations-title {
-      font-weight: bold;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-xs);
     }
+
     .suggestions-container {
       text-align: center;
       padding: var(--space-xl);
+      background: var(--surface-variant);
+      border-radius: var(--border-radius);
+      margin: var(--space-xl);
     }
+
+    .suggestions-container h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: var(--space-xl);
+      font-size: 1.1rem;
+    }
+
     .suggestions {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: var(--space-md);
     }
-    @container (width < 480px) {
+
+    @container (width < 768px) {
       .suggestions {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+        gap: var(--space-xs);
       }
     }
 
     .suggestion {
-      flex: 1 1 0;
       padding: var(--space-xl) var(--space-md);
-      color: var(--sugestion-color);
+      color: var(--suggestion-color);
       background: var(--suggestion-bg);
       border: var(--suggestion-border);
       border-radius: var(--border-radius);
       box-shadow: var(--suggestion-shadow);
+      text-align: left;
+      font-weight: 500;
+      transition: all 0.2s ease;
 
       &:hover {
-        outline: var(--focus-outline) var(--primary);
+        outline: 2px solid var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(64, 169, 87, 0.15);
       }
     }
+
     .messages {
       padding: var(--space-xl);
       display: flex;
       flex-direction: column;
       gap: var(--space-md);
+      flex: 1;
+      min-height: 0;
+    }
+
+    .user {
+      align-self: end;
+      color: var(--user-message-color);
+      background: var(--user-message-bg);
+      border: var(--user-message-border);
+    }
+
+    .assistant {
+      color: var(--bot-message-color);
+      background: var(--bot-message-bg);
+      border: var(--bot-message-border);
+      box-shadow: var(--card-shadow);
+    }
+
+    .message {
+      position: relative;
+      width: auto;
+      max-width: 75%;
+      border-radius: var(--border-radius);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-xl);
+      
+      &.user {
+        animation-name: fade-in-up;
+        border-radius: var(--border-radius) var(--border-radius) 4px var(--border-radius);
+      }
+      
+      &.assistant {
+        border-radius: var(--border-radius) var(--border-radius) var(--border-radius) 4px;
+      }
+    }
+
+    .message-body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .content {
+      white-space: pre-line;
+      line-height: 1.6;
+    }
+
+    .message-role {
+      position: absolute;
+      right: var(--space-xl);
+      bottom: -1.5em;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    .questions {
+      margin: var(--space-md) 0;
+      color: var(--primary);
+      text-align: right;
+    }
+
+    .question-icon {
+      vertical-align: middle;
+      display: inline-block;
+      height: 1.7rem;
+      width: 1.7rem;
+      margin-bottom: var(--space-xs);
+      margin-left: var(--space-xs);
+      color: var(--primary);
+    }
+
+    .question {
+      position: relative;
+      padding: var(--space-xs) var(--space-md);
+      margin-bottom: var(--space-xs);
+      margin-left: var(--space-xs);
+      vertical-align: middle;
+      color: var(--primary);
+      background: var(--card-bg);
+      border: 1px solid var(--primary);
+      border-radius: 20px;
+      font-weight: 500;
+      animation-name: fade-in-right;
+      
+      &:hover {
+        background: var(--surface-variant);
+        transform: translateY(-1px);
+      }
+    }
+
+    .button,
+    .submit-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-xs);
+      border: var(--submit-button-border);
+      background: var(--submit-button-bg);
+      color: var(--submit-button-color);
+      
+      &:disabled {
+        color: var(--disabled-color);
+        opacity: 0.6;
+      }
+      
+      &:hover:not(:disabled) {
+        background: var(--submit-button-bg-hover);
+      }
+    }
+
+    .submit-button {
+      flex: 0 0 auto;
+      padding: var(--space-md);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      align-self: flex-end;
+    }
+
+    .error {
+      color: var(--error-color);
+      background: var(--error-bg);
+      border: var(--error-border);
+      border-radius: var(--border-radius);
+
+      & .message-body {
+        flex-direction: row;
+        align-items: center;
+        gap: var(--space-md);
+      }
+
+      & button {
+        flex: 0 0 auto;
+        padding: var(--space-xs) var(--space-md);
+        color: var(--retry-button-color);
+        background: var(--retry-button-bg);
+        border: var(--retry-button-border);
+        font-weight: 500;
+
+        &:hover {
+          background: var(--retry-button-bg-hover);
+        }
+      }
+    }
+
+    .error-message {
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .chat-input {
+      position: sticky;
+      bottom: 0;
+      padding: var(--space-xl);
+      padding-top: var(--space-md);
+      background: linear-gradient(to top, var(--bg) 70%, transparent);
+      backdrop-filter: blur(10px);
+      display: flex;
+      gap: var(--space-md);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .new-chat-button {
+      flex: 0 0 auto;
+      width: 48px;
+      height: 48px;
+      padding: var(--space-md);
+      border-radius: 50%;
+      background: var(--new-chat-button-bg);
+      color: var(--new-chat-button-color);
+      border: none;
+      
+      &:hover:not(:disabled) {
+        background: var(--new-chat-button-bg-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(64, 169, 87, 0.3);
+      }
+      
+      &:disabled {
+        opacity: 0.5;
+      }
+    }
+
+    .input-form {
+      display: flex;
+      flex: 1 auto;
+      background: var(--chat-input-bg);
+      border: var(--chat-input-border);
+      border-radius: var(--border-radius);
+      padding: var(--space-md);
+      box-shadow: var(--card-shadow);
+      outline: var(--focus-outline) transparent;
+      transition: all 0.2s ease;
+      overflow: hidden;
+
+      &:has(.text-input:focus-visible) {
+        outline: var(--focus-outline) var(--primary);
+        box-shadow: 0 0 0 3px rgba(64, 169, 87, 0.1);
+      }
+    }
+
+    .text-input {
+      padding: var(--space-xs);
+      font-family: inherit;
+      font-size: 1rem;
+      flex: 1 auto;
+      min-height: 2.5rem;
+      max-height: 120px;
+      border: none;
+      resize: vertical;
+      background: none;
+      color: var(--chat-input-color);
+      
+      &::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.7;
+      }
+      
+      &:focus {
+        outline: none;
+      }
+      
+      &:disabled {
+        opacity: 0.7;
+      }
+    }
+
+    .loader-animation {
+      width: 80px;
+      height: 4px;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      background: linear-gradient(
+        90deg,
+        var(--surface-variant) 0%,
+        var(--primary) 50%,
+        var(--surface-variant) 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    @keyframes fade-in-up {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fade-in-right {
+      0% {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .animation {
+        animation: none;
+      }
+      
+      button:hover:not(:disabled) {
+        transform: none;
+      }
+    }
+
+    /* Environmental status integration */
+    .environmental-context {
+      background: var(--surface-variant);
+      border-radius: var(--border-radius);
+      padding: var(--space-md);
+      margin-bottom: var(--space-md);
+      border-left: 4px solid var(--primary);
+    }
+
+    .env-alert {
+      background: #FFF3E0;
+      border-left-color: var(--warning);
+    }
+
+    .env-danger {
+      background: #FFEBEE;
+      border-left-color: var(--error);
+    }
+
+    .env-info {
+      background: #E3F2FD;
+      border-left-color: var(--info);
+    }
+  `;
     }
     .user {
       align-self: end;

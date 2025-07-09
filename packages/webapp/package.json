@@ -1,23 +1,26 @@
 {
-  "name": "webapp",
+  "name": "ecosentinel-webapp",
   "version": "1.0.0",
-  "description": "Web app for the serverless AI Chat RAG sample",
+  "description": "EcoSentinel AI - Community-Driven Environmental Risk Intelligence Platform Web Application",
   "private": true,
   "type": "module",
+  "keywords": ["environmental intelligence", "climate action", "Kenya", "UNEP", "AI", "sustainability"],
+  "author": "Gideon Kiprono <kipronoyegon68@gmail.com>",
+  "license": "MIT",
   "scripts": {
     "dev": "vite --port 8000 --host",
     "build": "vite build",
     "watch": "vite build --watch --minify false",
-    "clean": "npx rimraf dist"
+    "clean": "npx rimraf dist",
+    "preview": "vite preview --port 8000"
   },
-  "author": "Microsoft",
-  "license": "MIT",
   "dependencies": {
     "@microsoft/ai-chat-protocol": "^1.0.0-beta.20240814.1",
     "lit": "^3.0.0"
   },
   "devDependencies": {
-    "vite": "^6.0.2"
+    "vite": "^6.0.2",
+    "@types/node": "^20.0.0"
   },
   "files": [
     "dist"
