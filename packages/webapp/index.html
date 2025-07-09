@@ -144,8 +144,10 @@
       .dashboard-layout {
         display: grid;
         grid-template-columns: 320px 1fr;
-        height: 100%;
+        height: calc(100vh - 220px); /* Account for header and status cards */
         gap: 0;
+        flex: 1;
+        min-height: 0;
       }
 
       .sidebar {
@@ -161,6 +163,41 @@
         flex-direction: column;
         overflow: hidden;
         position: relative;
+        background: var(--eco-surface);
+      }
+
+      /* Language Selector */
+      .language-selector {
+        padding: 16px;
+        background: var(--eco-surface-variant);
+        border-bottom: 1px solid var(--eco-border);
+        display: flex;
+        gap: 8px;
+        flex: 0 0 auto;
+      }
+
+      .lang-btn {
+        flex: 1;
+        padding: 8px 12px;
+        background: var(--eco-surface);
+        border: 1px solid var(--eco-border);
+        border-radius: var(--eco-border-radius);
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--eco-text-secondary);
+        cursor: pointer;
+        transition: var(--eco-transition);
+      }
+
+      .lang-btn.active {
+        background: var(--eco-primary);
+        color: var(--eco-text-on-primary);
+        border-color: var(--eco-primary);
+      }
+
+      .lang-btn:hover:not(.active) {
+        background: var(--eco-surface-variant);
+        border-color: var(--eco-primary);
       }
 
       /* Environmental Status Cards */
@@ -171,44 +208,7 @@
         padding: 20px;
         background: var(--eco-bg-tertiary);
         border-bottom: 1px solid var(--eco-border);
-      }
-
-      .status-card {
-        background: var(--eco-surface);
-        border-radius: var(--eco-border-radius);
-        padding: 16px;
-        box-shadow: var(--eco-shadow-sm);
-        transition: var(--eco-transition);
-        cursor: pointer;
-      }
-
-      .status-card:hover {
-        box-shadow: var(--eco-shadow-md);
-        transform: translateY(-2px);
-      }
-
-      .status-card.danger { border-left: 4px solid var(--eco-danger); }
-      .status-card.warning { border-left: 4px solid var(--eco-warning); }
-      .status-card.success { border-left: 4px solid var(--eco-success); }
-      .status-card.info { border-left: 4px solid var(--eco-info); }
-
-      .status-title {
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--eco-text-secondary);
-        margin-bottom: 8px;
-      }
-
-      .status-value {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--eco-text-primary);
-        margin-bottom: 4px;
-      }
-
-      .status-location {
-        font-size: 0.75rem;
-        color: var(--eco-text-tertiary);
+        flex: 0 0 auto;
       }
 
       /* Chat Interface Styling */
@@ -224,6 +224,9 @@
       azc-history {
         background: var(--eco-surface);
         border-bottom: 1px solid var(--eco-border);
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
       }
 
       /* Responsive Design */
@@ -286,37 +289,17 @@
 
     <!-- Main Dashboard -->
     <main>
+      <!-- Environmental Status Overview -->
+      <eco-dashboard id="envDashboard"></eco-dashboard>
+
+      <!-- Main Chat Interface Layout -->
       <div class="dashboard-layout">
-        <!-- Sidebar with Environmental Status -->
+        <!-- Sidebar with Chat History -->
         <div class="sidebar">
-          <!-- Real-time Environmental Status Cards -->
-          <div class="env-status-grid">
-            <div class="status-card warning" id="flood-risk">
-              <div class="status-title">Flood Risk</div>
-              <div class="status-value">Medium</div>
-              <div class="status-location">Kibera, Nairobi</div>
-            </div>
-            
-            <div class="status-card danger" id="air-quality">
-              <div class="status-title">Air Quality</div>
-              <div class="status-value">156 AQI</div>
-              <div class="status-location">Industrial Area</div>
-            </div>
-            
-            <div class="status-card success" id="deforestation">
-              <div class="status-title">Forest Cover</div>
-              <div class="status-value">Stable</div>
-              <div class="status-location">Aberdare Range</div>
-            </div>
-            
-            <div class="status-card info" id="heat-index">
-              <div class="status-title">Heat Index</div>
-              <div class="status-value">28°C</div>
-              <div class="status-location">Kisumu County</div>
-            </div>
+          <div class="language-selector">
+            <button id="lang-en" class="lang-btn active">English</button>
+            <button id="lang-sw" class="lang-btn">Kiswahili</button>
           </div>
-          
-          <!-- Chat History -->
           <azc-history id="chatHistory"></azc-history>
         </div>
 
@@ -333,30 +316,97 @@
       const userId = localStorage.getItem('userId') || crypto.randomUUID();
       localStorage.setItem('userId', userId);
 
-      // Configure EcoSentinel AI specific settings
-      const ecoSentinelConfig = {
-        enablePromptSuggestions: true,
-        promptSuggestions: [
-          '🌊 What is the flood risk in Kibera this week?',
-          '🌱 When should I plant maize in Kisumu County?',
-          '💨 How is the air quality in Nairobi today?',
-          '🌳 Are there deforestation alerts in my area?',
-          '⚠️ What environmental risks should I watch for?',
-          '📍 Give me hyperlocal weather predictions',
-        ],
-        strings: {
-          promptSuggestionsTitle: 'Ask EcoSentinel AI about environmental risks',
-          citationsTitle: 'Data Sources:',
-          followUpQuestionsTitle: 'Related environmental questions:',
-          chatInputPlaceholder: 'Ask about environmental risks, weather, or get local guidance... (Type in English or Swahili)',
-          chatInputButtonLabel: 'Send environmental query',
-          assistant: 'EcoSentinel AI',
-          user: 'You',
-          errorMessage: 'Environmental data service temporarily unavailable. Please try again.',
-          newChatButton: 'New environmental query',
-          retryButton: 'Retry environmental query',
+      // Language configurations for EcoSentinel AI
+      const languageConfigs = {
+        en: {
+          enablePromptSuggestions: true,
+          promptSuggestions: [
+            '🌊 What is the flood risk in my area this week?',
+            '🌱 When should I plant maize based on weather patterns?',
+            '💨 How is the air quality in Nairobi today?',
+            '🌳 Are there any deforestation alerts in Central Kenya?',
+            '⚠️ What environmental risks should I prepare for?',
+            '📍 Give me hyperlocal environmental predictions',
+            '🏠 How can my community adapt to climate change?',
+            '🚨 What should I do during environmental emergencies?',
+            '🌾 What crops are best for this season in my area?',
+            '💧 Is the water quality safe in my location?',
+          ],
+          strings: {
+            promptSuggestionsTitle: 'Ask EcoSentinel AI about environmental risks and guidance',
+            citationsTitle: 'Environmental Data Sources:',
+            followUpQuestionsTitle: 'Related environmental questions:',
+            chatInputPlaceholder: 'Ask about environmental risks, weather forecasts, or local guidance...',
+            chatInputButtonLabel: 'Send environmental query',
+            assistant: 'EcoSentinel AI',
+            user: 'You',
+            errorMessage: 'Environmental intelligence service is temporarily unavailable. Please try again.',
+            newChatButton: 'New environmental query',
+            retryButton: 'Retry environmental query',
+          },
         },
+        sw: {
+          enablePromptSuggestions: true,
+          promptSuggestions: [
+            '🌊 Ni hatari gani ya mafuriko katika eneo langu wiki hii?',
+            '🌱 Ni wakati gani bora wa kupanda mahindi kulingana na hali ya hewa?',
+            '💨 Je, ubora wa hewa Nairobi ni vipi leo?',
+            '🌳 Kuna onyo la ukataji misitu katika Kenya ya Kati?',
+            '⚠️ Ni hatari gani za mazingira ninapaswa kujiandalia?',
+            '📍 Nipe utabiri wa mazingira wa eneo langu',
+            '🏠 Jamii yangu iwezaje kubadilika na mabadiliko ya tabianchi?',
+            '🚨 Nifanye nini wakati wa dharura za mazingira?',
+            '🌾 Ni mazao gani bora kwa msimu huu eneo langu?',
+            '💧 Je, ubora wa maji ni salama eneo langu?',
+          ],
+          strings: {
+            promptSuggestionsTitle: 'Uliza EcoSentinel AI kuhusu hatari za mazingira na mwongozo',
+            citationsTitle: 'Vyanzo vya Data ya Mazingira:',
+            followUpQuestionsTitle: 'Maswali mengine yanayohusiana:',
+            chatInputPlaceholder: 'Uliza kuhusu hatari za mazingira, utabiri wa hali ya hewa, au mwongozo wa eneo lako...',
+            chatInputButtonLabel: 'Tuma swali la mazingira',
+            assistant: 'EcoSentinel AI',
+            user: 'Wewe',
+            errorMessage: 'Huduma ya akili ya mazingira haipatikani kwa sasa. Tafadhali jaribu tena.',
+            newChatButton: 'Mazungumzo mapya ya mazingira',
+            retryButton: 'Jaribu tena swali la mazingira',
+          },
+        }
       };
+
+      // Current language state
+      let currentLanguage = localStorage.getItem('ecoSentinelLanguage') || 'en';
+
+      // Language switching functionality
+      function switchLanguage(lang) {
+        currentLanguage = lang;
+        localStorage.setItem('ecoSentinelLanguage', lang);
+        
+        // Update active button
+        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`lang-${lang}`).classList.add('active');
+        
+        // Update chat configuration
+        window.chat.options = languageConfigs[lang];
+        
+        // Dispatch language change event for other components
+        document.dispatchEvent(new CustomEvent('languageChanged', {
+          detail: { language: lang }
+        }));
+        
+        // Update navigation text
+        updateNavigationLanguage(lang);
+      }
+
+      // Update navigation elements based on language
+      function updateNavigationLanguage(lang) {
+        const navIndicator = document.querySelector('.nav-indicator span');
+        if (navIndicator) {
+          navIndicator.textContent = lang === 'sw' 
+            ? 'Ufuatiliaji wa Mazingira Unaendelea' 
+            : 'Environmental Monitor Active';
+        }
+      }
 
       // Initialize chat components
       window.chatHistory.userId = userId;
@@ -367,54 +417,40 @@
       });
 
       window.chat.userId = userId;
-      window.chat.options = ecoSentinelConfig;
+      window.chat.options = languageConfigs[currentLanguage];
       window.chat.addEventListener('messagesUpdated', () => {
         window.chatHistory.refresh();
       });
 
-      // Simulate real-time environmental data updates
-      function updateEnvironmentalStatus() {
-        const floodCard = document.getElementById('flood-risk');
-        const airCard = document.getElementById('air-quality');
-        const forestCard = document.getElementById('deforestation');
-        const heatCard = document.getElementById('heat-index');
+      // Handle environmental dashboard status card clicks
+      function handleStatusCardClick(event) {
+        const { status } = event.detail;
         
-        // Simulate dynamic data updates (in real app, this would come from APIs)
-        const floodRisks = ['Low', 'Medium', 'High'];
-        const locations = ['Kibera', 'Kawangware', 'Mathare', 'Korogocho'];
+        // Auto-populate chat with environmental query based on language
+        let query;
+        if (currentLanguage === 'sw') {
+          query = `Niambie zaidi kuhusu ${status.title.toLowerCase()}: ${status.value} katika ${status.location}. Nifanye nini?`;
+        } else {
+          query = `Tell me more about ${status.title.toLowerCase()} status: ${status.value} in ${status.location}. What should I do?`;
+        }
         
-        // Update flood risk every 30 seconds
-        setInterval(() => {
-          const randomRisk = floodRisks[Math.floor(Math.random() * floodRisks.length)];
-          const randomLocation = locations[Math.floor(Math.random() * locations.length)];
-          
-          if (floodCard) {
-            floodCard.querySelector('.status-value').textContent = randomRisk;
-            floodCard.querySelector('.status-location').textContent = `${randomLocation}, Nairobi`;
-            
-            // Update card styling based on risk level
-            floodCard.classList.remove('warning', 'danger', 'success');
-            if (randomRisk === 'High') floodCard.classList.add('danger');
-            else if (randomRisk === 'Medium') floodCard.classList.add('warning');
-            else floodCard.classList.add('success');
-          }
-        }, 30000);
+        window.chat.question = query;
       }
 
-      // Initialize environmental status updates
-      updateEnvironmentalStatus();
-
-      // Add click handlers for environmental status cards
-      document.querySelectorAll('.status-card').forEach(card => {
-        card.addEventListener('click', function() {
-          const title = this.querySelector('.status-title').textContent;
-          const value = this.querySelector('.status-value').textContent;
-          const location = this.querySelector('.status-location').textContent;
-          
-          // Auto-populate chat with environmental query
-          const query = `Tell me more about ${title.toLowerCase()} status: ${value} in ${location}. What should I do?`;
-          window.chat.question = query;
-        });
+      // Set up event listeners when DOM is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        // Language switcher event listeners
+        document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
+        document.getElementById('lang-sw').addEventListener('click', () => switchLanguage('sw'));
+        
+        // Environmental dashboard event listener
+        const envDashboard = document.getElementById('envDashboard');
+        if (envDashboard) {
+          envDashboard.addEventListener('status-card-click', handleStatusCardClick);
+        }
+        
+        // Set initial language
+        switchLanguage(currentLanguage);
       });
     </script>
   </body>
