@@ -26,6 +26,7 @@
 
 [Overview](#overview) • [Features](#features) • [ML Models](#ml-models) • [Architecture](#architecture) • [FAQ](#faq) • [Contributing](#contributing) • [Licensing](#licensing)
 
+![EcoSentinel AI Dashboard](./assets/EcoSentinel_AI_Mockup.png)
 <!--
 ![EcoSentinel AI Demo](./docs/images/demo.gif) -->
 
