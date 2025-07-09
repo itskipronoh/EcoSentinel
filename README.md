@@ -191,7 +191,7 @@ SOFTWARE.
 ### Project Attribution
 
 **Project Title:** EcoSentinel AI - Community-Driven Environmental Risk Intelligence Platform  
-**Lead Developer:** Gideon Kiprono  
+**Lead Developer:** Gideon Kiprono & Peter Kimutai  
 **Organization:** United Nations Environment Programme (UNEP) Hackathon 2025  
 **Purpose:** Digital Innovation for Climate, Nature, and Pollution Solutions
 
@@ -221,7 +221,9 @@ https://github.com/itskipronoh/EcoSentinel"
 For questions regarding licensing, commercial use, or contributions, please contact:
 
 - **Email:** [kipronoyegon68@gmail.com](mailto:kipronoyegon68@gmail.com)
-- **GitHub:** [@itskipronoh](https://github.com/itskipronoh)
+- **GitHub:** [@itskipronoh](https://github.com/itskipronoh),
+- **GitHub:** [@Kimutai004](https://github.com/Kimutai004), 
+- 
 - **Project Repository:** [EcoSentinel AI](https://github.com/itskipronoh/EcoSentinel)
 
 ---
