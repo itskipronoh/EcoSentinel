@@ -1,0 +1,59 @@
+# EcoSentinel AI - Machine Learning Dependencies
+# Environmental Prediction Models for Climate Risk Assessment
+
+# Core Data Science Libraries
+pandas>=2.0.0
+numpy>=1.24.0
+scikit-learn>=1.3.0
+scipy>=1.10.0
+
+# Deep Learning & Neural Networks
+tensorflow>=2.13.0
+keras>=2.13.0
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Geospatial & Satellite Data Processing
+rasterio>=1.3.0
+geopandas>=0.13.0
+shapely>=2.0.0
+folium>=0.14.0
+pyproj>=3.6.0
+xarray>=2023.6.0
+
+# Computer Vision for Satellite Imagery
+opencv-python>=4.8.0
+Pillow>=10.0.0
+imageio>=2.31.0
+
+# Time Series & Statistical Analysis
+statsmodels>=0.14.0
+plotly>=5.15.0
+seaborn>=0.12.0
+matplotlib>=3.7.0
+
+# Weather & Climate Data APIs
+requests>=2.31.0
+netCDF4>=1.6.0
+h5py>=3.9.0
+
+# Data Validation & Quality
+jsonschema>=4.18.0
+pydantic>=2.0.0
+
+# Azure Integration
+azure-storage-blob>=12.17.0
+azure-cosmosdb-table>=1.0.6
+azure-functions>=1.15.0
+azure-cognitiveservices-speech>=1.31.0
+
+# Development & Testing
+pytest>=7.4.0
+jupyter>=1.0.0
+ipykernel>=6.25.0
+black>=23.7.0
+flake8>=6.0.0
+
+# Environment & Configuration
+python-dotenv>=1.0.0
+PyYAML>=6.0.1
