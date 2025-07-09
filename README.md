@@ -195,7 +195,7 @@ https://github.com/itskipronoh/EcoSentinel"
 
 ### Contributing and Licensing Questions
 For questions regarding licensing, commercial use, or contributions, please contact:
-- **Email:** [Your contact email]
+- **Email:** [kipronoyegon68@gmail.com](mailto:kipronoyegon68@gmail.com)
 - **GitHub:** [@itskipronoh](https://github.com/itskipronoh)
 - **Project Repository:** [EcoSentinel AI](https://github.com/itskipronoh/EcoSentinel)
 
