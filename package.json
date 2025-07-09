@@ -1,7 +1,7 @@
 {
-  "name": "serverless-chat-langchainjs",
+  "name": "ecosentinel-ai",
   "version": "1.0.0",
-  "description": "Build your own serverless AI chat with Retrieval-Augmented-Generation using LangChain.js, TypeScript and Azure",
+  "description": "EcoSentinel AI - Community-Driven Environmental Risk Intelligence Platform using AI, LangChain.js, and Azure",
   "private": true,
   "type": "module",
   "scripts": {
@@ -20,25 +20,32 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Azure-Samples/serverless-chat-langchainjs.git"
+    "url": "https://github.com/itskipronoh/EcoSentinel.git"
   },
-  "homepage": "https://github.com/Azure-Samples/serverless-chat-langchainjs",
+  "homepage": "https://github.com/itskipronoh/EcoSentinel",
   "bugs": {
-    "url": "https://github.com/Azure-Samples/serverless-chat-langchainjs/issues"
+    "url": "https://github.com/itskipronoh/EcoSentinel/issues"
   },
   "keywords": [
+    "environmental-ai",
+    "climate-action",
+    "unep",
+    "kenya",
+    "community-intelligence",
+    "hyperlocal-predictions",
+    "voice-accessibility",
+    "swahili",
     "langchainjs",
-    "chatbot",
-    "retrieval-augmented-generation",
-    "serverless",
-    "typescript",
     "azure",
     "azure-functions",
-    "azure-static-web-apps",
-    "azure-ai-search",
-    "mongodb"
+    "azure-openai",
+    "environmental-monitoring",
+    "flood-prediction",
+    "pollution-tracking",
+    "sustainability",
+    "sdg"
   ],
-  "author": "Microsoft",
+  "author": "Gideon Kiprono <gideonkiprono@example.com>",
   "license": "MIT",
   "workspaces": [
     "packages/*"

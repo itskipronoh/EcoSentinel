@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Minimalist Design -->
+  
+  <!-- Main Circle -->
+  <circle cx="128" cy="128" r="100" fill="none" stroke="#2E7D32" stroke-width="4"/>
+  
+  <!-- Eye/Sentinel Symbol -->
+  <ellipse cx="128" cy="128" rx="60" ry="40" fill="#4CAF50" opacity="0.3"/>
+  <ellipse cx="128" cy="128" rx="40" ry="25" fill="#2E7D32" opacity="0.6"/>
+  <circle cx="128" cy="128" r="15" fill="#1B5E20"/>
+  <circle cx="132" cy="124" r="4" fill="#81C784"/>
+  
+  <!-- Data Connection Lines -->
+  <g stroke="#00BCD4" stroke-width="2" opacity="0.7">
+    <!-- Horizontal lines -->
+    <line x1="40" y1="128" x2="68" y2="128"/>
+    <line x1="188" y1="128" x2="216" y2="128"/>
+    
+    <!-- Vertical lines -->
+    <line x1="128" y1="40" x2="128" y2="68"/>
+    <line x1="128" y1="188" x2="128" y2="216"/>
+    
+    <!-- Data pulse indicators -->
+    <circle cx="40" cy="128" r="3" fill="#00BCD4"/>
+    <circle cx="216" cy="128" r="3" fill="#00BCD4"/>
+    <circle cx="128" cy="40" r="3" fill="#00BCD4"/>
+    <circle cx="128" cy="216" r="3" fill="#00BCD4"/>
+  </g>
+  
+  <!-- Corner Environmental Icons -->
+  <!-- Top-left: Tree -->
+  <g transform="translate(50, 50)">
+    <rect x="6" y="12" width="2" height="6" fill="#4E342E"/>
+    <circle cx="7" cy="10" r="5" fill="#388E3C"/>
+  </g>
+  
+  <!-- Top-right: Cloud/Weather -->
+  <g transform="translate(190, 50)">
+    <ellipse cx="7" cy="8" rx="4" ry="2.5" fill="#64B5F6"/>
+    <ellipse cx="11" cy="9" rx="3" ry="2" fill="#64B5F6"/>
+    <ellipse cx="5" cy="10" rx="3" ry="2" fill="#64B5F6"/>
+  </g>
+  
+  <!-- Bottom-left: Water -->
+  <g transform="translate(50, 190)">
+    <path d="M7 2 Q10 5 10 9 Q10 12 7 12 Q4 12 4 9 Q4 5 7 2 Z" fill="#1976D2"/>
+  </g>
+  
+  <!-- Bottom-right: Location Pin -->
+  <g transform="translate(190, 190)">
+    <circle cx="7" cy="6" r="6" fill="#F44336" opacity="0.8"/>
+    <circle cx="7" cy="6" r="3" fill="#FFFFFF"/>
+    <path d="M7 12 L9 15 L7 18 L5 15 Z" fill="#F44336" opacity="0.8"/>
+  </g>
+  
+  <!-- Title Text Path -->
+  <path id="circle-text" d="M 128,28 A 100,100 0 1,1 127.99,28" fill="none"/>
+  <text font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#2E7D32" text-anchor="middle">
+    <textPath href="#circle-text" startOffset="50%">ECOSENTINEL AI</textPath>
+  </text>
+</svg>

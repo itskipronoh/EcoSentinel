@@ -1,52 +1,98 @@
 <!-- prettier-ignore -->
 <div align="center">
 
-<img src="./packages/webapp/public/favicon.png" alt="" align="center" height="64" />
+<img src="./packages/webapp/public/favicon.png" alt="EcoSentinel AI Logo" align="center" height="64" />
 
-# Serverless AI Chat with RAG using LangChain.js
+# 🌍 EcoSentinel AI
+## Community-Driven Environmental Risk Intelligence Platform
 
-[![Open project in GitHub Codespaces](https://img.shields.io/badge/Codespaces-Open-blue?style=flat-square&logo=github)](https://codespaces.new/Azure-Samples/serverless-chat-langchainjs?hide_repo_select=true&ref=main&quickstart=true)
-[![Join Azure AI Community Discord](https://img.shields.io/badge/Discord-Azure_AI_Community-blue?style=flat-square&logo=discord&color=5865f2&logoColor=fff)](https://discord.gg/kzRShWzttr)
-[![Official Learn documentation](https://img.shields.io/badge/Documentation-00a3ee?style=flat-square)](https://learn.microsoft.com/azure/developer/javascript/ai/get-started-app-chat-template-langchainjs)
-[![Watch to learn about RAG and this sample on YouTube](https://img.shields.io/badge/YouTube-d95652.svg?style=flat-square&logo=youtube)](https://www.youtube.com/watch?v=xkFOmx5yxIA&list=PLlrxD0HtieHi5ZpsHULPLxm839IrhmeDk&index=4)
-[![dev.to blog post walkthrough](https://img.shields.io/badge/Blog%20post-black?style=flat-square&logo=dev.to)](https://dev.to/azure/build-a-serverless-chatgpt-with-rag-using-langchainjs-3487)
+[![UNEP Hackathon](https://img.shields.io/badge/UNEP-Hack_for_Environment-green?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBmaWxsPSIjNDBBOTU3Ii8+Cjwvc3ZnPgo=)](https://github.com/itskipronoh/EcoSentinel)
+[![Azure Powered](https://img.shields.io/badge/Azure-Powered-0078d4?style=flat-square&logo=microsoft-azure)](https://azure.microsoft.com/)
+[![LangChain.js](https://img.shields.io/badge/LangChain.js-AI_Framework-2e7d32?style=flat-square)](https://js.langchain.com/)
+[![Kenya Open Data](https://img.shields.io/badge/Kenya-Open_Data-red?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjgiIGZpbGw9IiMwMDA3MDAiLz4KPHJlY3QgeT0iOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjgiIGZpbGw9IiNmZmZmZmYiLz4KPHJlY3QgeT0iMTYiIHdpZHRoPSIyNCIgaGVpZ2h0PSI4IiBmaWxsPSIjY2UxMTI2Ii8+Cjwvc3ZnPgo=)](https://www.opendata.go.ke/)
+[![Voice Accessible](https://img.shields.io/badge/Voice-Accessible-4CAF50?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjEyQzE0IDEzLjEgMTMuMSAxNCAxMiAxNEMxMC45IDE0IDEwIDEzLjEgMTAgMTJWNEMxMCAyLjkgMTAuOSAyIDEyIDJaTTE5IDEwVjEyQzE5IDE1Ljc2IDE1Ljc2IDE5IDEyIDE5UzUgMTUuNzYgNSAxMlYxMEgzVjEyQzMgMTYuNDIgNi4xNiAyMC4xNiAxMC41IDIwLjkyVjIzSDEzLjVWMjAuOTJDMTcuODQgMjAuMTYgMjEgMTYuNDIgMjEgMTJWMTBIMTlaIiBmaWxsPSIjNDBBOTU3Ii8+Cjwvc3ZnPgo=)](https://github.com/itskipronoh/EcoSentinel)
 <br>
-[![Build Status](https://img.shields.io/github/actions/workflow/status/Azure-Samples/serverless-chat-langchainjs/build-test.yaml?style=flat-square&label=Build)](https://github.com/Azure-Samples/serverless-chat-langchainjs/actions)
-![Node version](https://img.shields.io/badge/Node.js->=20-3c873a?style=flat-square)
-[![Ollama + Llama3.1](https://img.shields.io/badge/Ollama-Llama3.1-ff7000?style=flat-square)](https://ollama.com/library/llama3.1)
+[![Node version](https://img.shields.io/badge/Node.js->=20-3c873a?style=flat-square)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-blue?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![SDG Climate Action](https://img.shields.io/badge/UN_SDG-Climate_Action-blue?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiMwMDc3YmYiLz4KPHRleHQgeD0iMTIiIHk9IjE2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiPjEzPC90ZXh0Pgo8L3N2Zz4K)](https://sdgs.un.org/goals/goal13)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-:star: If you like this sample, star it on GitHub — it helps a lot!
+🌱 **Democratizing environmental intelligence. From Kibera to Kisumu, Eldoret to Mandera — EcoSentinel AI makes data make sense.**
 
-[Overview](#overview) • [Get started](#getting-started) • [Run the sample](#run-the-sample) • [Resources](#resources) • [FAQ](#faq) • [Troubleshooting](#troubleshooting)
+[Overview](#overview) • [Features](#features) • [Getting Started](#getting-started) • [Architecture](#architecture) • [Contributing](#contributing) • [Impact](#impact)
 
-![Animation showing the chat app in action](./docs/images/demo.gif)
+![EcoSentinel AI Demo](./docs/images/demo.gif)
 
 </div>
 
-This sample shows how to build a serverless AI chat experience with Retrieval-Augmented Generation using [LangChain.js](https://js.langchain.com/) and Azure. The application is hosted on [Azure Static Web Apps](https://learn.microsoft.com/azure/static-web-apps/overview) and [Azure Functions](https://learn.microsoft.com/azure/azure-functions/functions-overview?pivots=programming-language-javascript), with [Azure Cosmos DB for NoSQL](https://learn.microsoft.com/azure/cosmos-db/nosql/vector-) as the vector database. You can use it as a starting point for building more complex AI applications.
+## 🌍 About EcoSentinel AI
+
+**EcoSentinel AI** is a revolutionary Community-Driven Environmental Risk Intelligence Platform developed for the [UNEP Hack for the Environment](https://www.unep.org/) hackathon. Our mission is to democratize environmental intelligence by transforming complex climate and environmental data into actionable insights that communities across Kenya — and beyond — can understand and act upon.
+
+### 🎯 The Challenge
+Environmental risks disproportionately affect vulnerable populations. Despite abundant global environmental data, at-risk communities often lack access to:
+- **Real-time, localized information** in their native languages
+- **Actionable guidance** that translates scientific data into practical steps
+- **Accessible technology** that works without high-speed internet or smartphones
+
+### ✨ Our Solution
+EcoSentinel AI bridges this gap through:
+
+#### 📍 **Hyperlocal Environmental Intelligence**
+- **Sub-ward level predictions** for flood risk, air quality, heat index, and waste overflow
+- **Fine-tuned AI models** using UNEP, Copernicus, and Kenya Open Data
+- **Real-time alerts**: *"⚠️ Flood risk in Kawangware Zone 4: Evacuate Gichagi Road by 4:00 PM"*
+
+#### 🗣️ **Voice-Accessible AI Assistant**
+- **IVR chatbot hotline** accessible via basic phones
+- **Swahili and local language support**: *"Ni salama kupanda mahindi wiki hii?"*
+- **Azure Speech-to-Text + OpenAI** for natural conversations
+
+#### 🧠 **AI-Generated Action Plans**
+- **Context-aware recommendations**: *"Plant acacia trees in Kibera this week to improve soil retention before the rains"*
+- **Crop timing guidance**, flood evacuation routes, pollution avoidance zones
+- **Community-specific advice** based on local conditions
+
+#### 📊 **Decision-Support Dashboard**
+- **Real-time visualizations** for NGOs and government officials
+- **Downloadable AI reports** with actionable insights
+- **Azure Maps integration** for geospatial intelligence
 
 > [!TIP]
-> You can test this application locally without any cost using [Ollama](https://ollama.com/). Follow the instructions in the [Local Development](#local-development) section to get started.
+> **This platform is built for resilience** — it works offline, supports voice interaction, and provides guidance in local languages to ensure no community is left behind.
 
-## Overview
-
-Building AI applications can be complex and time-consuming, but using LangChain.js and Azure serverless technologies allows to greatly simplify the process. This application is a chatbot that uses a set of enterprise documents to generate responses to user queries.
-
-We provide sample data to make this sample ready to try, but feel free to replace it with your own. We use a fictitious company called _Contoso Real Estate_, and the experience allows its customers to ask support questions about the usage of its products. The sample data includes a set of documents that describes its terms of service, privacy policy and a support guide.
+## 🏗️ Architecture
 
 <div align="center">
-  <img src="./docs/images/architecture.drawio.png" alt="Application architecture" width="640px" />
+  <img src="./docs/images/architecture.drawio.png" alt="EcoSentinel AI Architecture" width="640px" />
 </div>
 
-This application is made from multiple components:
+EcoSentinel AI is built on a modern, serverless architecture that ensures scalability, reliability, and cost-effectiveness:
 
-- A web app made with a single chat web component built with [Lit](https://lit.dev) and hosted on [Azure Static Web Apps](https://learn.microsoft.com/azure/static-web-apps/overview). The code is located in the `packages/webapp` folder.
+### 🏗️ **Core Components**
 
-- A serverless API built with [Azure Functions](https://learn.microsoft.com/azure/azure-functions/functions-overview?pivots=programming-language-javascript) and using [LangChain.js](https://js.langchain.com/) to ingest the documents and generate responses to the user chat queries. The code is located in the `packages/api` folder.
+- **🌐 Web Application**: Built with [Lit](https://lit.dev) web components and hosted on [Azure Static Web Apps](https://learn.microsoft.com/azure/static-web-apps/overview). Features an intuitive chat interface with geospatial visualizations powered by Azure Maps.
 
-- A database to store chat sessions and the text extracted from the documents and the vectors generated by LangChain.js, using [Azure Cosmos DB for NoSQL](https://learn.microsoft.com/azure/cosmos-db/nosql/).
+- **⚡ Serverless API**: Powered by [Azure Functions](https://learn.microsoft.com/azure/azure-functions/functions-overview?pivots=programming-language-javascript) and [LangChain.js](https://js.langchain.com/) for:
+  - Environmental data ingestion and processing
+  - AI-powered chat responses and recommendations
+  - Real-time risk assessment and alerting
+  - Voice-to-text processing for the IVR system
+
+- **🗄️ Vector Database**: [Azure Cosmos DB for NoSQL](https://learn.microsoft.com/azure/cosmos-db/nosql/) stores:
+  - Chat sessions and user interactions
+  - Environmental dataset embeddings
+  - Hyperlocal prediction models
+  - Community feedback and validation data
+
+- **🎤 Voice Interface**: Azure Speech Services + Custom IVR integration for voice-accessible environmental guidance
+
+### 📊 **Data Sources**
+- **UNEP Environmental Data** - Global environmental indicators
+- **Copernicus Satellite Imagery** - Real-time earth observation
+- **Kenya Open Data Portal** - Local government datasets  
+- **SentinelHub** - High-resolution satellite monitoring
+- **Community Reports** - Crowd-sourced environmental observations
 
 - A file storage to store the source documents, using [Azure Blob Storage](https://learn.microsoft.com/azure/storage/blobs/storage-blobs-introduction).
 
