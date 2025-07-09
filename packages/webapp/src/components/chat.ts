@@ -861,52 +861,66 @@ export class ChatComponent extends LitElement {
       background: #E3F2FD;
       border-left-color: var(--info);
     }
-  `;
-    }
+
     .user {
       align-self: end;
       color: var(--user-message-color);
       background: var(--user-message-bg);
       border: var(--user-message-border);
     }
+
     .assistant {
       color: var(--bot-message-color);
       background: var(--bot-message-bg);
       border: var(--bot-message-border);
       box-shadow: var(--card-shadow);
     }
+
     .message {
       position: relative;
       width: auto;
-      max-width: 70%;
+      max-width: 75%;
       border-radius: var(--border-radius);
       padding: var(--space-xl);
       margin-bottom: var(--space-xl);
+      
       &.user {
         animation-name: fade-in-up;
+        border-radius: var(--border-radius) var(--border-radius) 4px var(--border-radius);
+      }
+      
+      &.assistant {
+        border-radius: var(--border-radius) var(--border-radius) var(--border-radius) 4px;
       }
     }
+
     .message-body {
       display: flex;
       flex-direction: column;
       gap: var(--space-md);
     }
+
     .content {
       white-space: pre-line;
+      line-height: 1.6;
     }
+
     .message-role {
       position: absolute;
       right: var(--space-xl);
-      bottom: -1.25em;
-      color: var(--text-color);
-      font-size: 0.85rem;
-      opacity: 0.6;
+      bottom: -1.5em;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      opacity: 0.8;
     }
+
     .questions {
       margin: var(--space-md) 0;
       color: var(--primary);
       text-align: right;
     }
+
     .question-icon {
       vertical-align: middle;
       display: inline-block;
@@ -914,7 +928,9 @@ export class ChatComponent extends LitElement {
       width: 1.7rem;
       margin-bottom: var(--space-xs);
       margin-left: var(--space-xs);
+      color: var(--primary);
     }
+
     .question {
       position: relative;
       padding: var(--space-xs) var(--space-md);
@@ -924,68 +940,88 @@ export class ChatComponent extends LitElement {
       color: var(--primary);
       background: var(--card-bg);
       border: 1px solid var(--primary);
+      border-radius: 20px;
+      font-weight: 500;
       animation-name: fade-in-right;
+      
       &:hover {
-        background: color-mix(in srgb, var(--card-bg), var(--primary) 5%);
+        background: var(--surface-variant);
+        transform: translateY(-1px);
       }
     }
+
     .button,
     .submit-button {
       display: flex;
       align-items: center;
       justify-content: center;
       padding: var(--space-xs);
-      border: var(--button-border);
+      border: var(--submit-button-border);
       background: var(--submit-button-bg);
       color: var(--submit-button-color);
+      
       &:disabled {
         color: var(--disabled-color);
+        opacity: 0.6;
       }
+      
       &:hover:not(:disabled) {
         background: var(--submit-button-bg-hover);
       }
     }
+
     .submit-button {
       flex: 0 0 auto;
-      padding: var(--space-xs);
-      width: 36px;
+      padding: var(--space-md);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
       align-self: flex-end;
     }
+
     .error {
       color: var(--error-color);
       background: var(--error-bg);
-      outline: var(--focus-outline) var(--error);
+      border: var(--error-border);
+      border-radius: var(--border-radius);
 
       & .message-body {
         flex-direction: row;
         align-items: center;
+        gap: var(--space-md);
       }
 
       & button {
-        flex: 0;
-        padding: var(--space-md);
+        flex: 0 0 auto;
+        padding: var(--space-xs) var(--space-md);
         color: var(--retry-button-color);
         background: var(--retry-button-bg);
         border: var(--retry-button-border);
+        font-weight: 500;
 
         &:hover {
           background: var(--retry-button-bg-hover);
         }
       }
     }
+
     .error-message {
       flex: 1;
+      font-weight: 500;
     }
+
     .chat-input {
       position: sticky;
       bottom: 0;
       padding: var(--space-xl);
       padding-top: var(--space-md);
-      background: var(--bg);
-      box-shadow: 0 calc(-1 * var(--space-md)) var(--space-md) var(--bg);
+      background: linear-gradient(to top, var(--bg) 70%, transparent);
+      backdrop-filter: blur(10px);
       display: flex;
       gap: var(--space-md);
+      border-top: 1px solid var(--border-color);
     }
+
     .new-chat-button {
       flex: 0 0 auto;
       width: 48px;
@@ -994,12 +1030,19 @@ export class ChatComponent extends LitElement {
       border-radius: 50%;
       background: var(--new-chat-button-bg);
       color: var(--new-chat-button-color);
-      font-size: 1.5rem;
+      border: none;
+      
       &:hover:not(:disabled) {
         background: var(--new-chat-button-bg-hover);
-        color: var(--new-chat-button-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(64, 169, 87, 0.3);
+      }
+      
+      &:disabled {
+        opacity: 0.5;
       }
     }
+
     .input-form {
       display: flex;
       flex: 1 auto;
@@ -1009,86 +1052,115 @@ export class ChatComponent extends LitElement {
       padding: var(--space-md);
       box-shadow: var(--card-shadow);
       outline: var(--focus-outline) transparent;
-      transition: outline 0.3s ease;
+      transition: all 0.2s ease;
       overflow: hidden;
 
       &:has(.text-input:focus-visible) {
         outline: var(--focus-outline) var(--primary);
+        box-shadow: 0 0 0 3px rgba(64, 169, 87, 0.1);
       }
     }
+
     .text-input {
       padding: var(--space-xs);
       font-family: inherit;
       font-size: 1rem;
       flex: 1 auto;
-      height: 3rem;
+      min-height: 2.5rem;
+      max-height: 120px;
       border: none;
-      resize: none;
+      resize: vertical;
       background: none;
+      color: var(--chat-input-color);
+      
       &::placeholder {
-        color: var(--text-color);
-        opacity: 0.4;
+        color: var(--text-secondary);
+        opacity: 0.7;
       }
+      
       &:focus {
         outline: none;
       }
+      
       &:disabled {
         opacity: 0.7;
       }
     }
+
     .loader-animation {
-      width: 100px;
+      width: 80px;
       height: 4px;
       border-radius: var(--border-radius);
       overflow: hidden;
-      background-color: var(--primary);
-      transform: scaleX(0);
-      transform-origin: center left;
-      animation: cubic-bezier(0.85, 0, 0.15, 1) 2s infinite load-animation;
+      background: linear-gradient(
+        90deg,
+        var(--surface-variant) 0%,
+        var(--primary) 50%,
+        var(--surface-variant) 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
     }
 
-    @keyframes load-animation {
-      0% {
-        transform: scaleX(0);
-        transform-origin: center left;
-      }
-      50% {
-        transform: scaleX(1);
-        transform-origin: center left;
-      }
-      51% {
-        transform: scaleX(1);
-        transform-origin: center right;
-      }
-      100% {
-        transform: scaleX(0);
-        transform-origin: center right;
-      }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
     }
+
     @keyframes fade-in-up {
       0% {
-        opacity: 0.5;
-        top: 100px;
+        opacity: 0;
+        transform: translateY(20px);
       }
       100% {
         opacity: 1;
-        top: 0px;
+        transform: translateY(0);
       }
     }
+
     @keyframes fade-in-right {
       0% {
-        opacity: 0.5;
-        right: -100px;
+        opacity: 0;
+        transform: translateX(20px);
       }
       100% {
         opacity: 1;
-        right: 0;
+        transform: translateX(0);
       }
     }
+
     @media (prefers-reduced-motion: reduce) {
       .animation {
         animation: none;
       }
+      
+      button:hover:not(:disabled) {
+        transform: none;
+      }
+    }
+
+    /* Environmental status integration */
+    .environmental-context {
+      background: var(--surface-variant);
+      border-radius: var(--border-radius);
+      padding: var(--space-md);
+      margin-bottom: var(--space-md);
+      border-left: 4px solid var(--primary);
+    }
+
+    .env-alert {
+      background: #FFF3E0;
+      border-left-color: var(--warning);
+    }
+
+    .env-danger {
+      background: #FFEBEE;
+      border-left-color: var(--error);
+    }
+
+    .env-info {
+      background: #E3F2FD;
+      border-left-color: var(--info);
     }
   `;
 }
