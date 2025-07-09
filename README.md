@@ -1,9 +1,10 @@
 <!-- prettier-ignore -->
 <div align="center">
 
-<img src="./packages/webapp/public/favicon.png" alt="EcoSentinel AI Logo" align="center" height="64" />
+<img src="./packages/webapp/public/logo.svg" alt="EcoSentinel AI Logo" align="center" height="80" />
 
 # 🌍 EcoSentinel AI
+
 ## Community-Driven Environmental Risk Intelligence Platform
 
 [![UNEP Hackathon](https://img.shields.io/badge/UNEP-Hack_for_Environment-green?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBmaWxsPSIjNDBBOTU3Ii8+Cjwvc3ZnPgo=)](https://github.com/itskipronoh/EcoSentinel)
@@ -24,7 +25,8 @@
 🌱 **Democratizing environmental intelligence. From Kibera to Kisumu, Eldoret to Mandera — EcoSentinel AI makes data make sense.**
 
 [Overview](#overview) • [Features](#features) • [ML Models](#ml-models) • [Architecture](#architecture) • [FAQ](#faq) • [Contributing](#contributing) • [Licensing](#licensing)
-<!-- 
+
+<!--
 ![EcoSentinel AI Demo](./docs/images/demo.gif) -->
 
 </div>
@@ -34,43 +36,50 @@
 **EcoSentinel AI** is a revolutionary Community-Driven Environmental Risk Intelligence Platform developed for the [UNEP Hack for the Environment](https://www.unep.org/) hackathon. Our mission is to democratize environmental intelligence by transforming complex climate and environmental data into actionable insights that communities across Kenya and beyond can understand and act upon.
 
 ### 🎯 The Challenge
+
 Environmental risks disproportionately affect vulnerable populations. Despite abundant global environmental data, at-risk communities often lack access to:
+
 - **Real-time, localized information** in their native languages
 - **Actionable guidance** that translates scientific data into practical steps
 - **Accessible technology** that works without high-speed internet or smartphones
 
 ### ✨ Our Solution
+
 EcoSentinel AI bridges this gap through:
 
 #### 📍 **Hyperlocal Environmental Intelligence**
+
 - **Sub-ward level predictions** for flood risk, air quality, heat index, and waste overflow
 - **Fine-tuned AI models** using UNEP, Copernicus, and Kenya Open Data
-- **Real-time alerts**: *"⚠️ Flood risk in Kawangware Zone 4: Evacuate Gichagi Road by 4:00 PM"*
+- **Real-time alerts**: _"⚠️ Flood risk in Kawangware Zone 4: Evacuate Gichagi Road by 4:00 PM"_
 
 #### 🗣️ **Voice-Accessible AI Assistant**
+
 - **IVR chatbot hotline** accessible via basic phones
-- **Swahili and local language support**: *"Ni salama kupanda mahindi wiki hii?"*
+- **Swahili and local language support**: _"Ni salama kupanda mahindi wiki hii?"_
 - **Azure Speech-to-Text + OpenAI** for natural conversations
 
 #### 🧠 **AI-Generated Action Plans**
-- **Context-aware recommendations**: *"Plant acacia trees in Kibera this week to improve soil retention before the rains"*
+
+- **Context-aware recommendations**: _"Plant acacia trees in Kibera this week to improve soil retention before the rains"_
 - **Crop timing guidance**, flood evacuation routes, pollution avoidance zones
 - **Community-specific advice** based on local conditions
 
 #### 📊 **Decision-Support Dashboard**
+
 - **Real-time visualizations** for NGOs and government officials
 - **Downloadable AI reports** with actionable insights
 - **Azure Maps integration** for geospatial intelligence
 
 #### 🤖 **Machine Learning Prediction Engine**
+
 - **Python-based environmental models** using scikit-learn, TensorFlow, and pandas
 - **Time-series forecasting** for weather patterns, pollution trends, and flood risks
 - **Satellite imagery analysis** using computer vision for deforestation and land-use monitoring
 - **Ensemble models** combining multiple data sources for accurate hyperlocal predictions
 - **Real-time model training** with community feedback and validation data
 
-> [!TIP]
-> **This platform is built for resilience** — it works offline, supports voice interaction, and provides guidance in local languages to ensure no community is left behind.
+> [!TIP] > **This platform is built for resilience** — it works offline, supports voice interaction, and provides guidance in local languages to ensure no community is left behind.
 
 ## 🏗️ Architecture
 
@@ -85,12 +94,14 @@ EcoSentinel AI is built on a modern, serverless architecture that ensures scalab
 - **🌐 Web Application**: Built with [Lit](https://lit.dev) web components and hosted on [Azure Static Web Apps](https://learn.microsoft.com/azure/static-web-apps/overview). Features an intuitive chat interface with geospatial visualizations powered by Azure Maps.
 
 - **⚡ Serverless API**: Powered by [Azure Functions](https://learn.microsoft.com/azure/azure-functions/functions-overview?pivots=programming-language-javascript) and [LangChain.js](https://js.langchain.com/) for:
+
   - Environmental data ingestion and processing
   - AI-powered chat responses and recommendations
   - Real-time risk assessment and alerting
   - Voice-to-text processing for the IVR system
 
 - **🗄️ Vector Database**: [Azure Cosmos DB for NoSQL](https://learn.microsoft.com/azure/cosmos-db/nosql/) stores:
+
   - Chat sessions and user interactions
   - Environmental dataset embeddings
   - Hyperlocal prediction models
@@ -99,9 +110,10 @@ EcoSentinel AI is built on a modern, serverless architecture that ensures scalab
 - **🎤 Voice Interface**: Azure Speech Services + Custom IVR integration for voice-accessible environmental guidance
 
 ### 📊 **Data Sources**
+
 - **UNEP Environmental Data** - Global environmental indicators
 - **Copernicus Satellite Imagery** - Real-time earth observation
-- **Kenya Open Data Portal** - Local government datasets  
+- **Kenya Open Data Portal** - Local government datasets
 - **SentinelHub** - High-resolution satellite monitoring
 - **Community Reports** - Crowd-sourced environmental observations
 
@@ -122,6 +134,7 @@ We use the [HTTP protocol for AI chat apps](https://aka.ms/chatprotocol) to comm
 EcoSentinel AI employs sophisticated machine learning models to provide accurate environmental predictions and risk assessments:
 
 ### 📈 **Model Performance Metrics**
+
 - **Flood Prediction Accuracy**: 89.3% (F1-Score: 0.87)
 - **Air Quality RMSE**: 12.4 AQI units (24-hour forecast)
 - **Deforestation Detection**: 92.1% accuracy on Copernicus imagery
@@ -130,11 +143,9 @@ EcoSentinel AI employs sophisticated machine learning models to provide accurate
 > [!NOTE]
 > All ML models are continuously trained with new environmental data and validated through community feedback to ensure accuracy and relevance for local conditions.
 
-
 ## FAQ
 
 You can find answers to frequently asked questions in the [FAQ](./docs/faq.md).
-
 
 ## Contributing
 
@@ -169,12 +180,14 @@ SOFTWARE.
 ---
 
 ### Project Attribution
+
 **Project Title:** EcoSentinel AI - Community-Driven Environmental Risk Intelligence Platform  
 **Lead Developer:** Gideon Kiprono  
 **Organization:** United Nations Environment Programme (UNEP) Hackathon 2025  
-**Purpose:** Digital Innovation for Climate, Nature, and Pollution Solutions  
+**Purpose:** Digital Innovation for Climate, Nature, and Pollution Solutions
 
 ### Third-Party Licenses
+
 This project incorporates various open-source technologies and datasets:
 
 - **Azure Services** - Subject to Microsoft Azure terms of service
@@ -185,6 +198,7 @@ This project incorporates various open-source technologies and datasets:
 - **Kenya Open Data** - Government of Kenya open data license
 
 ### Usage Attribution
+
 When using EcoSentinel AI or its components, please provide attribution:
 
 ```
@@ -194,7 +208,9 @@ https://github.com/itskipronoh/EcoSentinel"
 ```
 
 ### Contributing and Licensing Questions
+
 For questions regarding licensing, commercial use, or contributions, please contact:
+
 - **Email:** [kipronoyegon68@gmail.com](mailto:kipronoyegon68@gmail.com)
 - **GitHub:** [@itskipronoh](https://github.com/itskipronoh)
 - **Project Repository:** [EcoSentinel AI](https://github.com/itskipronoh/EcoSentinel)

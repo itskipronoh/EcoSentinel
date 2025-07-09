@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Enhanced gradients for the main logo -->
+    <linearGradient id="mainLeafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1B5E20;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#2E7D32;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#4CAF50;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#66BB6A;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="mainAiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0D47A1;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#1976D2;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#2196F3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#42A5F5;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="mainCommunityGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E65100;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FF8F00;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFA726;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Enhanced glow effects -->
+    <filter id="mainGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="aiGlow">
+      <feGaussianBlur stdDeviation="1.5" result="aiBlur"/>
+      <feMerge> 
+        <feMergeNode in="aiBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle with subtle gradient -->
+  <circle cx="60" cy="60" r="55" fill="url(#mainAiGradient)" opacity="0.05" stroke="url(#mainAiGradient)" stroke-width="1"/>
+  
+  <!-- Primary leaf/nature element (larger, more prominent) -->
+  <path d="M60 15 C78 15, 92 29, 92 47 C92 65, 78 79, 60 79 C60 65, 60 51, 60 37 C52 29, 44 21, 32 17 C44 16, 52 15, 60 15 Z" 
+        fill="url(#mainLeafGradient)" filter="url(#mainGlow)"/>
+  
+  <!-- Secondary leaf for visual balance and depth -->
+  <path d="M60 79 C42 79, 28 65, 28 47 C28 29, 42 15, 60 15 C60 29, 60 43, 60 57 C68 65, 76 73, 88 77 C76 78, 68 79, 60 79 Z" 
+        fill="url(#mainLeafGradient)" opacity="0.6"/>
+  
+  <!-- AI Neural network nodes (representing distributed intelligence) -->
+  <circle cx="25" cy="25" r="3" fill="url(#mainAiGradient)" opacity="0.9" filter="url(#aiGlow)"/>
+  <circle cx="95" cy="30" r="3" fill="url(#mainAiGradient)" opacity="0.9" filter="url(#aiGlow)"/>
+  <circle cx="22" cy="95" r="3" fill="url(#mainAiGradient)" opacity="0.9" filter="url(#aiGlow)"/>
+  <circle cx="98" cy="88" r="3" fill="url(#mainAiGradient)" opacity="0.9" filter="url(#aiGlow)"/>
+  
+  <!-- Additional intelligence nodes -->
+  <circle cx="15" cy="60" r="2" fill="url(#mainAiGradient)" opacity="0.7"/>
+  <circle cx="105" cy="60" r="2" fill="url(#mainAiGradient)" opacity="0.7"/>
+  <circle cx="60" cy="10" r="2" fill="url(#mainAiGradient)" opacity="0.7"/>
+  <circle cx="60" cy="110" r="2" fill="url(#mainAiGradient)" opacity="0.7"/>
+  
+  <!-- AI connection lines (neural network) -->
+  <path d="M25 25 L60 47 L95 30" stroke="url(#mainAiGradient)" stroke-width="1.5" opacity="0.6" fill="none"/>
+  <path d="M22 95 L60 67 L98 88" stroke="url(#mainAiGradient)" stroke-width="1.5" opacity="0.6" fill="none"/>
+  <path d="M25 25 L22 95" stroke="url(#mainAiGradient)" stroke-width="1" opacity="0.4" fill="none"/>
+  <path d="M95 30 L98 88" stroke="url(#mainAiGradient)" stroke-width="1" opacity="0.4" fill="none"/>
+  
+  <!-- Cross connections -->
+  <path d="M15 60 L105 60" stroke="url(#mainAiGradient)" stroke-width="0.8" opacity="0.3" fill="none"/>
+  <path d="M60 10 L60 110" stroke="url(#mainAiGradient)" stroke-width="0.8" opacity="0.3" fill="none"/>
+  
+  <!-- Community elements (diverse buildings representing different communities) -->
+  <rect x="15" y="100" width="4" height="12" fill="url(#mainCommunityGradient)" rx="1"/>
+  <rect x="22" y="97" width="4" height="15" fill="url(#mainCommunityGradient)" rx="1"/>
+  <rect x="29" y="102" width="4" height="10" fill="url(#mainCommunityGradient)" rx="1"/>
+  <rect x="36" y="99" width="4" height="13" fill="url(#mainCommunityGradient)" rx="1"/>
+  
+  <rect x="80" y="101" width="4" height="11" fill="url(#mainCommunityGradient)" rx="1"/>
+  <rect x="87" y="98" width="4" height="14" fill="url(#mainCommunityGradient)" rx="1"/>
+  <rect x="94" y="103" width="4" height="9" fill="url(#mainCommunityGradient)" rx="1"/>
+  <rect x="101" y="100" width="4" height="12" fill="url(#mainCommunityGradient)" rx="1"/>
+  
+  <!-- Environmental monitoring waves (data streams) -->
+  <path d="M10 47 Q20 43, 30 47 Q40 51, 50 47 Q60 43, 70 47 Q80 51, 90 47 Q100 43, 110 47" 
+        stroke="url(#mainLeafGradient)" stroke-width="2" opacity="0.5" fill="none"/>
+  <path d="M10 53 Q20 49, 30 53 Q40 57, 50 53 Q60 49, 70 53 Q80 57, 90 53 Q100 49, 110 53" 
+        stroke="url(#mainLeafGradient)" stroke-width="1.5" opacity="0.4" fill="none"/>
+  <path d="M10 59 Q20 55, 30 59 Q40 63, 50 59 Q60 55, 70 59 Q80 63, 90 59 Q100 55, 110 59" 
+        stroke="url(#mainLeafGradient)" stroke-width="1" opacity="0.3" fill="none"/>
+  
+  <!-- Central AI core (the intelligence hub) -->
+  <circle cx="60" cy="60" r="6" fill="url(#mainAiGradient)" stroke="white" stroke-width="2" filter="url(#mainGlow)"/>
+  <circle cx="60" cy="60" r="3" fill="white" opacity="0.95"/>
+  <circle cx="60" cy="60" r="1.5" fill="url(#mainAiGradient)" opacity="0.8"/>
+  
+  <!-- Environmental data indicators -->
+  <g opacity="0.6">
+    <circle cx="12" cy="20" r="1.5" fill="url(#mainLeafGradient)"/>
+    <circle cx="108" cy="18" r="1.5" fill="url(#mainLeafGradient)"/>
+    <circle cx="8" cy="100" r="1.5" fill="url(#mainLeafGradient)"/>
+    <circle cx="112" cy="102" r="1.5" fill="url(#mainLeafGradient)"/>
+  </g>
+  
+  <!-- Subtle pulsing rings (representing active monitoring) -->
+  <circle cx="60" cy="60" r="35" stroke="url(#mainAiGradient)" stroke-width="0.5" opacity="0.2" fill="none"/>
+  <circle cx="60" cy="60" r="45" stroke="url(#mainLeafGradient)" stroke-width="0.5" opacity="0.15" fill="none"/>
+</svg>
