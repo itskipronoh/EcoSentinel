@@ -18,6 +18,46 @@
     <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css">
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
     
+
+    <!-- Header Navigation Links (Chat & Alerts) -->
+    <style>
+      .header-nav-links {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-left: 2rem;
+      }
+      .header-link {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1rem;
+        position: relative;
+        transition: color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 6px 10px;
+        border-radius: 8px;
+      }
+      .header-link.active,
+      .header-link:hover {
+        background: rgba(255,255,255,0.18);
+        color: #fff;
+      }
+      .alerts-badge {
+        background: var(--alert-orange);
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border-radius: 8px;
+        padding: 2px 7px;
+        margin-left: 4px;
+        vertical-align: top;
+        line-height: 1;
+      }
+    </style>
+    
     <style>
       :root {
         /* EcoSentinel AI Brand Colors */
