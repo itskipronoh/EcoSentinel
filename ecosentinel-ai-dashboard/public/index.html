@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EcoSentinel AI - Environmental Monitoring Dashboard">
+    <link rel="icon" href="../src/assets/icons/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../src/assets/css/tailwind.css">
+    <link rel="stylesheet" href="../src/assets/css/main.css">
+    <title>EcoSentinel AI Dashboard</title>
+</head>
+<body class="bg-light-gray text-dark-forest">
+    <div id="app" class="flex flex-col h-screen">
+        <header class="header bg-gradient-to-r from-forest-green to-nature-green p-4">
+            <h1 class="text-white text-2xl">EcoSentinel AI</h1>
+            <div class="language-toggle">
+                <button id="lang-en" class="lang-btn active">EN</button>
+                <button id="lang-sw" class="lang-btn">SW</button>
+                <button class="voice-assistant-btn" title="Voice Assistant">
+                    <i class="fas fa-microphone"></i>
+                </button>
+            </div>
+        </header>
+        <div class="flex flex-grow">
+            <nav class="sidebar bg-white w-64 shadow-lg">
+                <ul class="nav-menu">
+                    <li><a href="#" class="nav-item active">Dashboard</a></li>
+                    <li><a href="#" class="nav-item">Air Quality</a></li>
+                    <li><a href="#" class="nav-item">Flood Risk</a></li>
+                    <li><a href="#" class="nav-item">Heatwave</a></li>
+                    <li><a href="#" class="nav-item">Biodiversity</a></li>
+                </ul>
+            </nav>
+            <main class="main-content flex-grow p-4">
+                <div class="map-section">
+                    <h2 class="map-title">Environmental Monitoring Map</h2>
+                    <div id="mapContainer" class="map-container bg-white rounded-lg shadow-lg h-96">
+                        <!-- Azure Maps will be rendered here -->
+                    </div>
+                </div>
+                <div class="status-section grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="status-card">
+                        <h3 class="card-title">Air Quality Index</h3>
+                        <div class="card-value" id="aqiValue">156</div>
+                        <div class="card-status" id="aqiStatus">Moderate</div>
+                    </div>
+                    <div class="status-card">
+                        <h3 class="card-title">Flood Risk Level</h3>
+                        <div class="card-value" id="floodValue">Medium</div>
+                        <div class="card-status" id="floodStatus">Monitor</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <button class="chat-toggle" id="chatToggle" title="Chat with EcoSentinel AI">
+            <i class="fas fa-comments"></i>
+        </button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3 class="chat-title">EcoSentinel AI Assistant</h3>
+                <button class="chat-close" id="chatClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message assistant">
+                    👋 Hello! I'm your EcoSentinel AI assistant. Ask me about environmental risks, air quality, flood predictions, or any environmental concerns in your area.
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Ask about environmental risks in your area...">
+                <button class="chat-send" id="chatSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="../src/assets/js/app.js"></script>
+    <script src="../src/assets/js/chat.js"></script>
+    <script src="../src/assets/js/map.js"></script>
+    <script src="../src/assets/js/language.js"></script>
+</body>
+</html>

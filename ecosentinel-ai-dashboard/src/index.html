@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EcoSentinel AI - Environmental Monitoring Dashboard">
+    <link rel="stylesheet" href="assets/css/tailwind.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+    <title>EcoSentinel AI Dashboard</title>
+</head>
+<body class="bg-light-gray text-dark-forest overflow-hidden">
+    <header id="header" class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-forest-green to-nature-green shadow-lg flex items-center justify-between px-4">
+        <h1 class="text-white text-2xl font-bold">EcoSentinel AI</h1>
+        <div class="flex items-center">
+            <button id="lang-en" class="lang-btn active">EN</button>
+            <button id="lang-sw" class="lang-btn">SW</button>
+            <button class="voice-assistant-btn" title="Voice Assistant">
+                <i class="fas fa-microphone text-white"></i>
+            </button>
+        </div>
+    </header>
+    <nav id="sidebar" class="fixed top-16 left-0 w-64 h-full bg-white shadow-lg">
+        <ul class="nav-menu p-4">
+            <li><a href="#" class="nav-item active">Dashboard</a></li>
+            <li><a href="#" class="nav-item">Air Quality</a></li>
+            <li><a href="#" class="nav-item">Flood Risk</a></li>
+            <li><a href="#" class="nav-item">Heatwave</a></li>
+            <li><a href="#" class="nav-item">Biodiversity</a></li>
+        </ul>
+    </nav>
+    <main class="ml-64 mt-16 p-4">
+        <div class="map-section mb-4">
+            <h2 class="text-xl font-semibold mb-2">Environmental Monitoring Map</h2>
+            <div id="mapContainer" class="bg-white rounded-lg shadow-lg h-96 flex items-center justify-center">
+                <p>Azure Maps Integration</p>
+            </div>
+        </div>
+        <div class="status-section grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="status-card bg-white rounded-lg shadow-lg p-4">
+                <h3 class="font-semibold">Air Quality Index</h3>
+                <div id="aqiValue" class="text-2xl">156</div>
+                <div id="aqiStatus" class="status-moderate">Moderate</div>
+            </div>
+            <div class="status-card bg-white rounded-lg shadow-lg p-4">
+                <h3 class="font-semibold">Flood Risk Level</h3>
+                <div id="floodValue" class="text-2xl">Medium</div>
+                <div id="floodStatus" class="status-moderate">Monitor</div>
+            </div>
+        </div>
+    </main>
+    <button id="chatToggle" class="chat-toggle fixed bottom-4 right-4 bg-gradient-to-r from-tech-blue to-deep-blue rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
+        <i class="fas fa-comments text-white"></i>
+    </button>
+    <div id="chatWindow" class="chat-window fixed bottom-24 right-4 w-96 bg-white rounded-lg shadow-lg hidden">
+        <div class="chat-header bg-gradient-to-r from-forest-green to-nature-green text-white p-4 rounded-t-lg flex justify-between items-center">
+            <h3 class="chat-title">EcoSentinel AI Assistant</h3>
+            <button id="chatClose" class="text-white">X</button>
+        </div>
+        <div id="chatMessages" class="chat-messages p-4 h-48 overflow-y-auto"></div>
+        <div class="chat-input-container p-4 border-t">
+            <input type="text" id="chatInput" class="chat-input border rounded-lg w-full p-2" placeholder="Ask about environmental risks...">
+            <button id="chatSend" class="chat-send bg-tech-blue text-white rounded-lg p-2">Send</button>
+        </div>
+    </div>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/chat.js"></script>
+    <script src="assets/js/map.js"></script>
+    <script src="assets/js/language.js"></script>
+</body>
+</html>

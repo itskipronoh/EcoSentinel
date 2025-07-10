@@ -1,0 +1,28 @@
+{
+  "name": "ecosentinel-ai-dashboard",
+  "version": "1.0.0",
+  "description": "A responsive dashboard UI for EcoSentinel AI, an AI-powered environmental monitoring system.",
+  "main": "src/assets/js/app.js",
+  "scripts": {
+    "start": "live-server public",
+    "build": "tailwindcss build src/assets/css/tailwind.css -o src/assets/css/main.css",
+    "watch": "tailwindcss build src/assets/css/tailwind.css -o src/assets/css/main.css --watch"
+  },
+  "keywords": [
+    "environment",
+    "monitoring",
+    "dashboard",
+    "AI",
+    "EcoSentinel"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "tailwindcss": "^2.2.19",
+    "live-server": "^1.2.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.2",
+    "postcss": "^8.4.5"
+  }
+}
