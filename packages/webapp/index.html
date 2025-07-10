@@ -1,25 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="description" content="EcoSentinel AI - Community-Driven Environmental Risk Intelligence Platform" />
-    <meta name="keywords" content="environmental intelligence, climate action, Kenya, UNEP, AI, flooding, air quality, deforestation" />
-    <meta name="author" content="Gideon Kiprono" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate icon" type="image/png" href="/favicon.png" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EcoSentinel AI - Community-Driven Environmental Risk Intelligence Platform">
+    <meta name="keywords" content="environmental intelligence, climate action, Kenya, UNEP, AI, flooding, air quality, deforestation">
+    <meta name="author" content="Gideon Kiprono">
     <title>EcoSentinel AI - Environmental Risk Intelligence Platform</title>
     
-    <!-- Google Fonts for better typography -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- Azure Maps SDK -->
-    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css">
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
     
     <style>
       :root {
-        /* EcoSentinel AI Brand Colors - From Brand Guidelines */
+        /* EcoSentinel AI Brand Colors */
         --forest-green: #2E7D32;
         --eco-green: #4CAF50;
         --nature-green: #388E3C;
@@ -31,6 +32,8 @@
         --light-green: #E8F5E8;
         --sage: #C8E6C9;
         --gray: #757575;
+        --light-gray: #F5F5F5;
+        --white: #FFFFFF;
         
         /* Layout */
         --sidebar-width: 280px;
@@ -51,7 +54,7 @@
 
       body {
         font-family: 'Inter', Arial, sans-serif;
-        background: #f8fafc;
+        background: var(--light-gray);
         color: var(--dark-forest);
         overflow-x: hidden;
       }
@@ -199,58 +202,66 @@
         margin-top: var(--header-height);
         padding: 2rem;
         min-height: calc(100vh - var(--header-height));
+        background: var(--light-gray);
       }
 
       /* Dashboard Grid */
       .dashboard-grid {
         display: grid;
         grid-template-columns: 2fr 1fr;
-        grid-template-rows: auto auto auto;
         gap: 2rem;
         height: calc(100vh - var(--header-height) - 4rem);
       }
 
       /* Map Section */
       .map-section {
-        grid-column: 1;
-        grid-row: 1 / 3;
         background: white;
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
-        overflow: hidden;
-        position: relative;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
       }
 
       .map-header {
-        padding: 1.5rem;
-        border-bottom: 1px solid #e5e7eb;
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e0e0e0;
       }
 
       .map-title {
         font-size: 1.25rem;
         font-weight: 600;
         color: var(--dark-forest);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
       }
 
       .map-container {
-        height: 500px;
-        background: linear-gradient(135deg, var(--light-green) 0%, var(--sage) 100%);
-        position: relative;
+        flex: 1;
+        background: var(--light-gray);
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-      }
-
-      .map-placeholder {
-        text-align: center;
         color: var(--gray);
+        font-size: 1.1rem;
+        position: relative;
+        min-height: 400px;
       }
 
-      /* Cards */
-      .info-card {
+      /* Status Cards Section */
+      .status-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .status-card {
         background: white;
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
@@ -258,9 +269,9 @@
         transition: var(--transition);
       }
 
-      .info-card:hover {
-        box-shadow: var(--shadow-lg);
+      .status-card:hover {
         transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
       }
 
       .card-header {
@@ -271,145 +282,82 @@
       }
 
       .card-title {
-        font-size: 1.125rem;
+        font-size: 1rem;
         font-weight: 600;
         color: var(--dark-forest);
-      }
-
-      .card-icon {
-        font-size: 1.5rem;
-      }
-
-      /* Air Quality Card */
-      .air-quality-card {
-        grid-column: 2;
-        grid-row: 1;
-      }
-
-      .aqi-value {
-        font-size: 3rem;
-        font-weight: 700;
-        margin: 1rem 0;
-      }
-
-      .aqi-good { color: var(--eco-green); }
-      .aqi-moderate { color: var(--alert-orange); }
-      .aqi-unhealthy { color: var(--earth-red); }
-
-      .aqi-status {
-        font-size: 1.125rem;
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-      }
-
-      .aqi-description {
-        color: var(--gray);
-        font-size: 0.875rem;
-        line-height: 1.5;
-      }
-
-      /* Flood Risk Card */
-      .flood-risk-card {
-        grid-column: 2;
-        grid-row: 2;
-      }
-
-      .risk-level {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        margin: 1rem 0;
       }
 
-      .risk-indicator {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-      }
-
-      .risk-low { background: var(--eco-green); }
-      .risk-medium { background: var(--alert-orange); }
-      .risk-high { background: var(--earth-red); }
-
-      .risk-text {
-        font-size: 1.25rem;
-        font-weight: 600;
-      }
-
-      .model-info {
-        background: var(--light-green);
-        padding: 1rem;
+      .card-icon {
+        width: 40px;
+        height: 40px;
         border-radius: 8px;
-        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: white;
       }
 
-      .model-label {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--forest-green);
-        font-weight: 600;
-        margin-bottom: 0.25rem;
+      .aqi-icon {
+        background: var(--tech-blue);
       }
 
-      .model-name {
-        font-size: 0.875rem;
-        color: var(--dark-forest);
+      .flood-icon {
+        background: var(--deep-blue);
       }
 
-      /* Bottom Stats */
-      .stats-section {
-        grid-column: 1 / 3;
-        grid-row: 3;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
+      .heat-icon {
+        background: var(--alert-orange);
       }
 
-      .stat-card {
-        background: white;
-        border-radius: var(--border-radius);
-        padding: 1.5rem;
-        box-shadow: var(--shadow);
-        text-align: center;
-        transition: var(--transition);
+      .biodiversity-icon {
+        background: var(--eco-green);
       }
 
-      .stat-card:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
-      }
-
-      .stat-icon {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-      }
-
-      .stat-value {
+      .card-value {
         font-size: 2rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
       }
 
-      .stat-label {
-        color: var(--gray);
+      .card-status {
         font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 500;
+        text-align: center;
       }
 
-      /* Floating Chat */
-      .chat-float {
+      .status-good {
+        background: var(--light-green);
+        color: var(--forest-green);
+      }
+
+      .status-moderate {
+        background: #fff3e0;
+        color: var(--alert-orange);
+      }
+
+      .status-poor {
+        background: #ffebee;
+        color: var(--earth-red);
+      }
+
+      .risk-low { color: var(--eco-green); }
+      .risk-medium { color: var(--alert-orange); }
+      .risk-high { color: var(--earth-red); }
+
+      /* Floating Chat Assistant */
+      .chat-toggle {
         position: fixed;
         bottom: 2rem;
         right: 2rem;
-        z-index: 1000;
-      }
-
-      .chat-toggle {
         width: 60px;
         height: 60px;
-        background: linear-gradient(135deg, var(--tech-blue) 0%, var(--deep-blue) 100%);
+        background: linear-gradient(135deg, var(--tech-blue), var(--deep-blue));
         border: none;
         border-radius: 50%;
         color: white;
@@ -417,53 +365,69 @@
         cursor: pointer;
         box-shadow: var(--shadow-lg);
         transition: var(--transition);
+        z-index: 1000;
         display: flex;
         align-items: center;
         justify-content: center;
       }
 
       .chat-toggle:hover {
-        transform: scale(1.05);
+        transform: scale(1.1);
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
       }
 
       .chat-window {
-        position: absolute;
-        bottom: 80px;
-        right: 0;
-        width: 350px;
+        position: fixed;
+        bottom: 6rem;
+        right: 2rem;
+        width: 400px;
         height: 500px;
         background: white;
         border-radius: var(--border-radius);
         box-shadow: var(--shadow-lg);
-        display: none;
+        z-index: 1001;
+        display: flex;
         flex-direction: column;
-        overflow: hidden;
+        transform: translateY(100px);
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
       }
 
       .chat-window.open {
-        display: flex;
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
       }
 
       .chat-header {
-        background: linear-gradient(135deg, var(--tech-blue) 0%, var(--deep-blue) 100%);
+        padding: 1rem 1.5rem;
+        background: linear-gradient(135deg, var(--forest-green), var(--nature-green));
         color: white;
-        padding: 1rem;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
       }
 
       .chat-title {
         font-weight: 600;
+        font-size: 1.1rem;
       }
 
       .chat-close {
         background: none;
         border: none;
         color: white;
-        font-size: 1.25rem;
+        font-size: 1.2rem;
         cursor: pointer;
+        padding: 0.25rem;
+        border-radius: 4px;
+        transition: var(--transition);
+      }
+
+      .chat-close:hover {
+        background: rgba(255, 255, 255, 0.2);
       }
 
       .chat-messages {
@@ -475,9 +439,29 @@
         gap: 1rem;
       }
 
-      .chat-input-area {
+      .message {
+        max-width: 80%;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+
+      .message.user {
+        align-self: flex-end;
+        background: var(--tech-blue);
+        color: white;
+      }
+
+      .message.assistant {
+        align-self: flex-start;
+        background: var(--light-green);
+        color: var(--dark-forest);
+      }
+
+      .chat-input-container {
         padding: 1rem;
-        border-top: 1px solid #e5e7eb;
+        border-top: 1px solid #e0e0e0;
         display: flex;
         gap: 0.5rem;
       }
@@ -485,10 +469,11 @@
       .chat-input {
         flex: 1;
         padding: 0.75rem;
-        border: 1px solid #d1d5db;
-        border-radius: 20px;
-        font-size: 0.875rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.9rem;
         outline: none;
+        transition: var(--transition);
       }
 
       .chat-input:focus {
@@ -497,166 +482,144 @@
       }
 
       .chat-send {
-        width: 40px;
-        height: 40px;
+        padding: 0.75rem 1rem;
         background: var(--tech-blue);
-        border: none;
-        border-radius: 50%;
         color: white;
+        border: none;
+        border-radius: 8px;
         cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .chat-send:hover {
+        background: var(--deep-blue);
+      }
+
+      /* Live Data Indicator */
+      .live-indicator {
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--gray);
+        margin-top: auto;
+        padding-top: 1rem;
+        border-top: 1px solid #e0e0e0;
       }
 
-      .message {
-        padding: 0.75rem 1rem;
-        border-radius: 18px;
-        max-width: 80%;
-        word-wrap: break-word;
+      .live-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--eco-green);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
       }
 
-      .message.user {
-        background: var(--tech-blue);
-        color: white;
-        align-self: flex-end;
-        margin-left: auto;
-      }
-
-      .message.assistant {
-        background: var(--light-green);
-        color: var(--dark-forest);
-        align-self: flex-start;
+      @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
       }
 
       /* Responsive Design */
-      @media (max-width: 1024px) {
-        .sidebar {
-          transform: translateX(-100%);
-          transition: var(--transition);
-        }
-
-        .sidebar.open {
-          transform: translateX(0);
-        }
-
-        .main-content {
-          margin-left: 0;
-        }
-
+      @media (max-width: 1200px) {
         .dashboard-grid {
           grid-template-columns: 1fr;
-          grid-template-rows: auto auto auto auto;
+          grid-template-rows: 1fr auto;
         }
-
-        .map-section {
-          grid-column: 1;
-          grid-row: 1;
-        }
-
-        .air-quality-card {
-          grid-column: 1;
-          grid-row: 2;
-        }
-
-        .flood-risk-card {
-          grid-column: 1;
-          grid-row: 3;
-        }
-
-        .stats-section {
-          grid-column: 1;
-          grid-row: 4;
+        
+        .status-section {
+          grid-template-columns: repeat(2, 1fr);
+          display: grid;
         }
       }
 
       @media (max-width: 768px) {
-        .header {
-          padding: 0 1rem;
+        .sidebar {
+          transform: translateX(-100%);
+          transition: var(--transition);
         }
-
-        .header-title {
-          font-size: 1.25rem;
+        
+        .sidebar.open {
+          transform: translateX(0);
         }
-
+        
         .main-content {
+          margin-left: 0;
           padding: 1rem;
         }
-
+        
+        .header-title {
+          font-size: 1.2rem;
+        }
+        
         .chat-window {
           width: calc(100vw - 2rem);
           right: 1rem;
           left: 1rem;
         }
-
-        .stats-section {
-          grid-template-columns: repeat(2, 1fr);
+        
+        .status-section {
+          grid-template-columns: 1fr;
         }
       }
 
-      /* Loading Animation */
-      @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
+      @media (max-width: 480px) {
+        .header {
+          padding: 0 1rem;
+        }
+        
+        .header-title {
+          font-size: 1rem;
+        }
+        
+        .language-toggle {
+          display: none;
+        }
       }
-
-      .loading {
-        animation: pulse 2s infinite;
-      }
-
-      /* Status Indicators */
-      .status-indicator {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 0.5rem;
-      }
-
-      .status-online { background: var(--eco-green); }
-      .status-warning { background: var(--alert-orange); }
-      .status-offline { background: var(--gray); }
     </style>
   </head>
   <body>
     <!-- Header -->
     <header class="header">
       <div class="header-left">
-        <div class="logo">🌍</div>
+        <div class="logo">
+          <i class="fas fa-leaf"></i>
+        </div>
         <h1 class="header-title">EcoSentinel AI</h1>
       </div>
       <div class="header-right">
         <div class="language-toggle">
-          <button class="lang-btn active" id="lang-en">EN</button>
-          <button class="lang-btn" id="lang-sw">SW</button>
+          <button id="lang-en" class="lang-btn active">EN</button>
+          <button id="lang-sw" class="lang-btn">SW</button>
         </div>
-        <button class="voice-assistant-btn" id="voice-btn" title="Voice Assistant">
-          🎤
+        <button class="voice-assistant-btn" title="Voice Assistant">
+          <i class="fas fa-microphone"></i>
         </button>
       </div>
     </header>
 
     <!-- Sidebar Navigation -->
-    <nav class="sidebar" id="sidebar">
+    <nav class="sidebar">
       <div class="nav-menu">
-        <a href="#dashboard" class="nav-item active">
-          <span class="nav-icon">📊</span>
+        <a href="#" class="nav-item active">
+          <span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span>
           <span>Dashboard</span>
         </a>
-        <a href="#air-quality" class="nav-item">
-          <span class="nav-icon">💨</span>
+        <a href="#" class="nav-item">
+          <span class="nav-icon"><i class="fas fa-wind"></i></span>
           <span>Air Quality</span>
         </a>
-        <a href="#flood-risk" class="nav-item">
-          <span class="nav-icon">🌊</span>
+        <a href="#" class="nav-item">
+          <span class="nav-icon"><i class="fas fa-water"></i></span>
           <span>Flood Risk</span>
         </a>
-        <a href="#heatwave" class="nav-item">
-          <span class="nav-icon">🌡️</span>
+        <a href="#" class="nav-item">
+          <span class="nav-icon"><i class="fas fa-thermometer-half"></i></span>
           <span>Heatwave</span>
         </a>
-        <a href="#biodiversity" class="nav-item">
-          <span class="nav-icon">🌳</span>
+        <a href="#" class="nav-item">
+          <span class="nav-icon"><i class="fas fa-seedling"></i></span>
           <span>Biodiversity</span>
         </a>
       </div>
@@ -666,108 +629,345 @@
     <main class="main-content">
       <div class="dashboard-grid">
         <!-- Map Section -->
-        <section class="map-section">
+        <div class="map-section">
           <div class="map-header">
-            <h2 class="map-title">Environmental Monitoring Map</h2>
-            <div>
-              <span class="status-indicator status-online"></span>
-              <span style="font-size: 0.875rem; color: var(--gray);">Live Data</span>
-            </div>
+            <h2 class="map-title">
+              <i class="fas fa-map-marked-alt"></i>
+              Environmental Monitoring Map
+            </h2>
           </div>
           <div class="map-container" id="mapContainer">
-            <div class="map-placeholder">
-              <div style="font-size: 3rem; margin-bottom: 1rem;">🗺️</div>
-              <div>Azure Maps Loading...</div>
-              <div style="font-size: 0.875rem; color: var(--gray); margin-top: 0.5rem;">
-                Interactive environmental risk map will appear here
-              </div>
+            <div style="text-align: center;">
+              <i class="fas fa-map" style="font-size: 3rem; color: var(--gray); margin-bottom: 1rem;"></i>
+              <p>Azure Maps Integration</p>
+              <p style="font-size: 0.9rem; margin-top: 0.5rem;">Real-time environmental data visualization</p>
             </div>
           </div>
-        </section>
+          <div class="live-indicator">
+            <div class="live-dot"></div>
+            <span>Live Data • Updated 2 minutes ago</span>
+          </div>
+        </div>
 
-        <!-- Air Quality Card -->
-        <section class="info-card air-quality-card">
-          <div class="card-header">
-            <h3 class="card-title">Air Quality Index</h3>
-            <span class="card-icon">💨</span>
+        <!-- Status Cards Section -->
+        <div class="status-section">
+          <!-- Air Quality Index Card -->
+          <div class="status-card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <div class="card-icon aqi-icon">
+                  <i class="fas fa-wind"></i>
+                </div>
+                Air Quality Index
+              </h3>
+            </div>
+            <div class="card-value" id="aqiValue">156</div>
+            <div class="card-status status-moderate" id="aqiStatus">Moderate</div>
+            <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
+              <i class="fas fa-map-marker-alt"></i> Nairobi, Kenya
+            </div>
           </div>
-          <div class="aqi-value aqi-moderate" id="aqiValue">156</div>
-          <div class="aqi-status aqi-moderate" id="aqiStatus">Moderate</div>
-          <div class="aqi-description" id="aqiDescription">
-            Air quality is acceptable for most people. Sensitive individuals may experience minor issues.
-          </div>
-          <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
-            📍 Industrial Area, Nairobi
-          </div>
-        </section>
 
-        <!-- Flood Risk Card -->
-        <section class="info-card flood-risk-card">
-          <div class="card-header">
-            <h3 class="card-title">Flood Risk Prediction</h3>
-            <span class="card-icon">🌊</span>
+          <!-- Flood Risk Card -->
+          <div class="status-card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <div class="card-icon flood-icon">
+                  <i class="fas fa-water"></i>
+                </div>
+                Flood Risk Level
+              </h3>
+            </div>
+            <div class="card-value risk-medium" id="floodValue">Medium</div>
+            <div class="card-status status-moderate" id="floodStatus">Monitor</div>
+            <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
+              <i class="fas fa-clock"></i> Next 7 days
+            </div>
           </div>
-          <div class="risk-level">
-            <span class="risk-indicator risk-medium"></span>
-            <span class="risk-text" id="riskLevel">Medium Risk</span>
-          </div>
-          <div style="font-size: 0.875rem; color: var(--gray); margin-bottom: 1rem;">
-            Next 7 days prediction for Kibera area
-          </div>
-          <div class="model-info">
-            <div class="model-label">LoRA Model</div>
-            <div class="model-name">EcoSentinel Flood Predictor v2.1</div>
-          </div>
-          <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
-            📍 Kibera, Nairobi • Updated 5 min ago
-          </div>
-        </section>
 
-        <!-- Statistics Section -->
-        <section class="stats-section">
-          <div class="stat-card">
-            <div class="stat-icon">🌡️</div>
-            <div class="stat-value" style="color: var(--alert-orange);">28°C</div>
-            <div class="stat-label">Heat Index</div>
+          <!-- Heat Index Card -->
+          <div class="status-card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <div class="card-icon heat-icon">
+                  <i class="fas fa-thermometer-half"></i>
+                </div>
+                Heat Index
+              </h3>
+            </div>
+            <div class="card-value" id="heatValue">28°C</div>
+            <div class="card-status status-good" id="heatStatus">Normal</div>
+            <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
+              <i class="fas fa-sun"></i> Feels like 32°C
+            </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon">🌳</div>
-            <div class="stat-value" style="color: var(--eco-green);">92%</div>
-            <div class="stat-label">Forest Cover</div>
+
+          <!-- Biodiversity Card -->
+          <div class="status-card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <div class="card-icon biodiversity-icon">
+                  <i class="fas fa-seedling"></i>
+                </div>
+                Forest Cover
+              </h3>
+            </div>
+            <div class="card-value risk-low" id="forestValue">92%</div>
+            <div class="card-status status-good" id="forestStatus">Stable</div>
+            <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
+              <i class="fas fa-chart-line"></i> +0.2% this month
+            </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon">💧</div>
-            <div class="stat-value" style="color: var(--deep-blue);">Good</div>
-            <div class="stat-label">Water Quality</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">⚠️</div>
-            <div class="stat-value" style="color: var(--earth-red);">3</div>
-            <div class="stat-label">Active Alerts</div>
-          </div>
-        </section>
+        </div>
       </div>
     </main>
 
-    <!-- Floating Chat -->
-    <div class="chat-float">
-      <button class="chat-toggle" id="chatToggle">
-        💬
-      </button>
-      <div class="chat-window" id="chatWindow">
-        <div class="chat-header">
-          <div class="chat-title">EcoSentinel AI Assistant</div>
-          <button class="chat-close" id="chatClose">×</button>
+    <!-- Floating Chat Assistant -->
+    <button class="chat-toggle" id="chatToggle" title="Chat with EcoSentinel AI">
+      <i class="fas fa-comments"></i>
+    </button>
+
+    <div class="chat-window" id="chatWindow">
+      <div class="chat-header">
+        <h3 class="chat-title">EcoSentinel AI Assistant</h3>
+        <button class="chat-close" id="chatClose">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="message assistant">
+          👋 Hello! I'm your EcoSentinel AI assistant. Ask me about environmental risks, air quality, flood predictions, or any environmental concerns in your area.
         </div>
-        <div class="chat-messages" id="chatMessages">
-          <div class="message assistant">
-            👋 Hello! I'm your EcoSentinel AI assistant. Ask me about environmental risks in your area.
+      </div>
+      <div class="chat-input-container">
+        <input type="text" class="chat-input" id="chatInput" placeholder="Ask about environmental risks in your area...">
+        <button class="chat-send" id="chatSend">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+      /* Responsive Design */
+      @media (max-width: 1200px) {
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+          grid-template-rows: 1fr auto;
+        }
+        
+        .status-section {
+          grid-template-columns: repeat(2, 1fr);
+          display: grid;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+          transition: var(--transition);
+        }
+        
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        
+        .main-content {
+          margin-left: 0;
+          padding: 1rem;
+        }
+        
+        .header-title {
+          font-size: 1.2rem;
+        }
+        
+        .chat-window {
+          width: calc(100vw - 2rem);
+          right: 1rem;
+          left: 1rem;
+        }
+        
+        .status-section {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header {
+          padding: 0 1rem;
+        }
+        
+        .header-title {
+          font-size: 1rem;
+        }
+        
+        .language-toggle {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">
+          <i class="fas fa-leaf"></i>
+        </div>
+        <h1 class="header-title">EcoSentinel AI</h1>
+      </div>
+      <div class="header-right">
+        <div class="language-toggle">
+          <button id="lang-en" class="lang-btn active">EN</button>
+          <button id="lang-sw" class="lang-btn">SW</button>
+        </div>
+        <button class="voice-assistant-btn" title="Voice Assistant">
+          <i class="fas fa-microphone"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="nav-menu">
+        <a href="#" class="nav-item active">
+          <span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon"><i class="fas fa-wind"></i></span>
+          <span>Air Quality</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon"><i class="fas fa-water"></i></span>
+          <span>Flood Risk</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon"><i class="fas fa-thermometer-half"></i></span>
+          <span>Heatwave</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon"><i class="fas fa-seedling"></i></span>
+          <span>Biodiversity</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="dashboard-grid">
+        <!-- Map Section -->
+        <div class="map-section">
+          <div class="map-header">
+            <h2 class="map-title">
+              <i class="fas fa-map-marked-alt"></i>
+              Environmental Monitoring Map
+            </h2>
+          </div>
+          <div class="map-container" id="mapContainer">
+            <div style="text-align: center;">
+              <i class="fas fa-map" style="font-size: 3rem; color: var(--gray); margin-bottom: 1rem;"></i>
+              <p>Azure Maps Integration</p>
+              <p style="font-size: 0.9rem; margin-top: 0.5rem;">Real-time environmental data visualization</p>
+            </div>
+          </div>
+          <div class="live-indicator">
+            <div class="live-dot"></div>
+            <span>Live Data • Updated 2 minutes ago</span>
           </div>
         </div>
-        <div class="chat-input-area">
-          <input type="text" class="chat-input" id="chatInput" placeholder="Ask about environmental risks...">
-          <button class="chat-send" id="chatSend">➤</button>
+
+        <!-- Status Cards Section -->
+        <div class="status-section">
+          <!-- Air Quality Index Card -->
+          <div class="status-card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <div class="card-icon aqi-icon">
+                  <i class="fas fa-wind"></i>
+                </div>
+                Air Quality Index
+              </h3>
+            </div>
+            <div class="card-value" id="aqiValue">156</div>
+            <div class="card-status status-moderate" id="aqiStatus">Moderate</div>
+            <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
+              <i class="fas fa-map-marker-alt"></i> Nairobi, Kenya
+            </div>
+          </div>
+
+          <!-- Flood Risk Card -->
+          <div class="status-card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <div class="card-icon flood-icon">
+                  <i class="fas fa-water"></i>
+                </div>
+                Flood Risk Level
+              </h3>
+            </div>
+            <div class="card-value risk-medium" id="floodValue">Medium</div>
+            <div class="card-status status-moderate" id="floodStatus">Monitor</div>
+            <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
+              <i class="fas fa-clock"></i> Next 7 days
+            </div>
+          </div>
+
+          <!-- Heat Index Card -->
+          <div class="status-card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <div class="card-icon heat-icon">
+                  <i class="fas fa-thermometer-half"></i>
+                </div>
+                Heat Index
+              </h3>
+            </div>
+            <div class="card-value" id="heatValue">28°C</div>
+            <div class="card-status status-good" id="heatStatus">Normal</div>
+            <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
+              <i class="fas fa-sun"></i> Feels like 32°C
+            </div>
+          </div>
+
+          <!-- Biodiversity Card -->
+          <div class="status-card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <div class="card-icon biodiversity-icon">
+                  <i class="fas fa-seedling"></i>
+                </div>
+                Forest Cover
+              </h3>
+            </div>
+            <div class="card-value risk-low" id="forestValue">92%</div>
+            <div class="card-status status-good" id="forestStatus">Stable</div>
+            <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
+              <i class="fas fa-chart-line"></i> +0.2% this month
+            </div>
+          </div>
         </div>
+      </div>
+    </main>
+
+    <!-- Floating Chat Assistant -->
+    <button class="chat-toggle" id="chatToggle" title="Chat with EcoSentinel AI">
+      <i class="fas fa-comments"></i>
+    </button>
+
+    <div class="chat-window" id="chatWindow">
+      <div class="chat-header">
+        <h3 class="chat-title">EcoSentinel AI Assistant</h3>
+        <button class="chat-close" id="chatClose">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="message assistant">
+          👋 Hello! I'm your EcoSentinel AI assistant. Ask me about environmental risks, air quality, flood predictions, or any environmental concerns in your area.
+        </div>
+      </div>
+      <div class="chat-input-container">
+        <input type="text" class="chat-input" id="chatInput" placeholder="Ask about environmental risks in your area...">
+        <button class="chat-send" id="chatSend">
+          <i class="fas fa-paper-plane"></i>
+        </button>
       </div>
     </div>
 
@@ -782,12 +982,12 @@
           floodRisk: 'Flood Risk',
           heatwave: 'Heatwave',
           biodiversity: 'Biodiversity',
-          chatPlaceholder: 'Ask about environmental risks...',
+          chatPlaceholder: 'Ask about environmental risks in your area...',
           chatTitle: 'EcoSentinel AI Assistant',
           mapTitle: 'Environmental Monitoring Map',
           liveData: 'Live Data',
           aqiTitle: 'Air Quality Index',
-          floodTitle: 'Flood Risk Prediction',
+          floodTitle: 'Flood Risk Level',
           heatIndex: 'Heat Index',
           forestCover: 'Forest Cover',
           waterQuality: 'Water Quality',
@@ -799,12 +999,12 @@
           floodRisk: 'Hatari ya Mafuriko',
           heatwave: 'Joto Kali',
           biodiversity: 'Mazingira',
-          chatPlaceholder: 'Uliza kuhusu hatari za mazingira...',
+          chatPlaceholder: 'Uliza kuhusu hatari za mazingira eneo lako...',
           chatTitle: 'Msaidizi wa EcoSentinel AI',
           mapTitle: 'Ramani ya Ufuatiliaji wa Mazingira',
           liveData: 'Data za Moja kwa Moja',
           aqiTitle: 'Kiwango cha Ubora wa Hewa',
-          floodTitle: 'Utabiri wa Hatari ya Mafuriko',
+          floodTitle: 'Kiwango cha Hatari ya Mafuriko',
           heatIndex: 'Kiwango cha Joto',
           forestCover: 'Mlolongo wa Misitu',
           waterQuality: 'Ubora wa Maji',
@@ -835,7 +1035,7 @@
         
         document.getElementById('chatInput').placeholder = texts.chatPlaceholder;
         document.querySelector('.chat-title').textContent = texts.chatTitle;
-        document.querySelector('.map-title').textContent = texts.mapTitle;
+        document.querySelector('.map-title').innerHTML = `<i class="fas fa-map-marked-alt"></i> ${texts.mapTitle}`;
       }
 
       // Chat functionality
@@ -885,13 +1085,17 @@
             "Based on current data, the flood risk in your area is moderate. Consider preparing emergency supplies.",
             "Air quality is currently at 156 AQI (Moderate). Sensitive individuals should limit outdoor activities.",
             "The heat index is 28°C. Stay hydrated and seek shade during peak hours.",
-            "Forest cover in your region is stable at 92%. Continue supporting conservation efforts."
+            "Forest cover in your region is stable at 92%. Continue supporting conservation efforts.",
+            "I can help you understand environmental risks. What specific area or concern would you like to know about?",
+            "Current environmental conditions show moderate air quality. Would you like real-time updates for your location?"
           ],
           sw: [
             "Kulingana na data za sasa, hatari ya mafuriko eneo lako ni wastani. Zingatia kujiandaa na vifaa vya dharura.",
             "Ubora wa hewa kwa sasa ni 156 AQI (Wastani). Watu wenye mchocheo wanapaswa kupunguza shughuli za nje.",
             "Kiwango cha joto ni 28°C. Kunywa maji mengi na utafute kivuli wakati wa joto kali.",
-            "Mlolongo wa misitu eneo lako ni thabiti kwa 92%. Endelea kuunga mkono juhudi za uhifadhi."
+            "Mlolongo wa misitu eneo lako ni thabiti kwa 92%. Endelea kuunga mkono juhudi za uhifadhi.",
+            "Ninaweza kukusaidia kuelewa hatari za mazingira. Je, ungependa kujua kuhusu eneo gani au jambo la ziada?",
+            "Hali za mazingira za sasa zinaonyesha ubora wa hewa wa wastani. Je, ungependa usasishaji wa wakati halisi kwa eneo lako?"
           ]
         };
         
@@ -914,7 +1118,7 @@
       });
 
       // Voice Assistant
-      document.getElementById('voice-btn').addEventListener('click', () => {
+      document.querySelector('.voice-assistant-btn').addEventListener('click', () => {
         alert(currentLanguage === 'en' ? 'Voice assistant activated!' : 'Msaidizi wa sauti ameanzishwa!');
       });
 
@@ -923,7 +1127,7 @@
         // Update AQI
         const aqiValues = [45, 89, 156, 178, 201];
         const aqiStatuses = ['Good', 'Moderate', 'Unhealthy for Sensitive', 'Unhealthy', 'Very Unhealthy'];
-        const aqiClasses = ['aqi-good', 'aqi-good', 'aqi-moderate', 'aqi-unhealthy', 'aqi-unhealthy'];
+        const aqiClasses = ['status-good', 'status-good', 'status-moderate', 'status-poor', 'status-poor'];
         
         const randomIndex = Math.floor(Math.random() * aqiValues.length);
         const aqiValue = document.getElementById('aqiValue');
@@ -931,18 +1135,19 @@
         
         aqiValue.textContent = aqiValues[randomIndex];
         aqiStatus.textContent = aqiStatuses[randomIndex];
-        
-        // Update classes
-        aqiValue.className = `aqi-value ${aqiClasses[randomIndex]}`;
-        aqiStatus.className = `aqi-status ${aqiClasses[randomIndex]}`;
+        aqiStatus.className = `card-status ${aqiClasses[randomIndex]}`;
 
         // Update flood risk
-        const riskLevels = ['Low Risk', 'Medium Risk', 'High Risk'];
+        const floodLevels = ['Low', 'Medium', 'High'];
+        const floodStatuses = ['Safe', 'Monitor', 'Alert'];
         const riskClasses = ['risk-low', 'risk-medium', 'risk-high'];
-        const riskIndex = Math.floor(Math.random() * riskLevels.length);
+        const statusClasses = ['status-good', 'status-moderate', 'status-poor'];
+        const riskIndex = Math.floor(Math.random() * floodLevels.length);
         
-        document.getElementById('riskLevel').textContent = riskLevels[riskIndex];
-        document.querySelector('.risk-indicator').className = `risk-indicator ${riskClasses[riskIndex]}`;
+        document.getElementById('floodValue').textContent = floodLevels[riskIndex];
+        document.getElementById('floodValue').className = `card-value ${riskClasses[riskIndex]}`;
+        document.getElementById('floodStatus').textContent = floodStatuses[riskIndex];
+        document.getElementById('floodStatus').className = `card-status ${statusClasses[riskIndex]}`;
       }
 
       // Update data every 30 seconds
@@ -954,329 +1159,33 @@
         console.log('Azure Maps would be initialized here with proper API key');
       }
 
+      // Mobile menu toggle
+      function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        sidebar.classList.toggle('open');
+      }
+
       // Initialize on load
       document.addEventListener('DOMContentLoaded', () => {
         initializeMap();
-      });
-    </script>
-  </body>
-</html>
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-
-      /* Environmental Dashboard Layout */
-      .dashboard-layout {
-        display: grid;
-        grid-template-columns: 320px 1fr;
-        height: calc(100vh - 220px); /* Account for header and status cards */
-        gap: 0;
-        flex: 1;
-        min-height: 0;
-      }
-
-      .sidebar {
-        background: var(--eco-surface);
-        border-right: 1px solid var(--eco-border);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-
-      .main-content {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        position: relative;
-        background: var(--eco-surface);
-      }
-
-      /* Language Selector */
-      .language-selector {
-        padding: 16px;
-        background: var(--eco-surface-variant);
-        border-bottom: 1px solid var(--eco-border);
-        display: flex;
-        gap: 8px;
-        flex: 0 0 auto;
-      }
-
-      .lang-btn {
-        flex: 1;
-        padding: 8px 12px;
-        background: var(--eco-surface);
-        border: 1px solid var(--eco-border);
-        border-radius: var(--eco-border-radius);
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--eco-text-secondary);
-        cursor: pointer;
-        transition: var(--eco-transition);
-      }
-
-      .lang-btn.active {
-        background: var(--eco-primary);
-        color: var(--eco-text-on-primary);
-        border-color: var(--eco-primary);
-      }
-
-      .lang-btn:hover:not(.active) {
-        background: var(--eco-surface-variant);
-        border-color: var(--eco-primary);
-      }
-
-      /* Environmental Status Cards */
-      .env-status-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-        padding: 20px;
-        background: var(--eco-bg-tertiary);
-        border-bottom: 1px solid var(--eco-border);
-        flex: 0 0 auto;
-      }
-
-      /* Chat Interface Styling */
-      azc-chat {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        max-width: none;
-        margin: 0;
-        background: var(--eco-surface);
-      }
-
-      azc-history {
-        background: var(--eco-surface);
-        border-bottom: 1px solid var(--eco-border);
-        flex: 1;
-        min-height: 0;
-        overflow: auto;
-      }
-
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        .dashboard-layout {
-          grid-template-columns: 1fr;
-          grid-template-rows: auto 1fr;
-        }
         
-        .sidebar {
-          border-right: none;
-          border-bottom: 1px solid var(--eco-border);
-          max-height: 200px;
+        // Add mobile menu button if needed
+        if (window.innerWidth <= 768) {
+          const header = document.querySelector('.header-left');
+          const menuBtn = document.createElement('button');
+          menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+          menuBtn.className = 'mobile-menu-btn';
+          menuBtn.style.cssText = 'background: none; border: none; color: white; font-size: 1.2rem; margin-right: 1rem; cursor: pointer;';
+          menuBtn.addEventListener('click', toggleSidebar);
+          header.insertBefore(menuBtn, header.firstChild);
         }
-        
-        .env-status-grid {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 12px;
-          padding: 16px;
-        }
-        
-        .nav-brand {
-          font-size: 1rem;
-        }
-        
-        .nav-indicator {
-          display: none;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .env-status-grid {
-          grid-template-columns: 1fr;
-        }
-        
-        nav {
-          padding: 12px 16px;
-        }
-        
-        .nav-brand {
-          font-size: 0.9rem;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Navigation Header -->
-    <nav>
-      <div class="nav-brand">
-        <img src="/logo.svg" alt="EcoSentinel AI Logo" />
-        <span>EcoSentinel AI</span>
-      </div>
-      <div class="nav-actions">
-        <div class="nav-indicator">
-          <div class="status-dot"></div>
-          <span>Environmental Monitor Active</span>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Main Dashboard -->
-    <main>
-      <!-- Environmental Status Overview -->
-      <eco-dashboard id="envDashboard"></eco-dashboard>
-
-      <!-- Main Chat Interface Layout -->
-      <div class="dashboard-layout">
-        <!-- Sidebar with Chat History -->
-        <div class="sidebar">
-          <div class="language-selector">
-            <button id="lang-en" class="lang-btn active">English</button>
-            <button id="lang-sw" class="lang-btn">Kiswahili</button>
-          </div>
-          <azc-history id="chatHistory"></azc-history>
-        </div>
-
-        <!-- Main Chat Interface -->
-        <div class="main-content">
-          <azc-chat id="chat"></azc-chat>
-        </div>
-      </div>
-    </main>
-
-    <script type="module" src="/src/index.ts"></script>
-    <script>
-      // Generate a unique ID and store it in local storage
-      const userId = localStorage.getItem('userId') || crypto.randomUUID();
-      localStorage.setItem('userId', userId);
-
-      // Language configurations for EcoSentinel AI
-      const languageConfigs = {
-        en: {
-          enablePromptSuggestions: true,
-          promptSuggestions: [
-            '🌊 What is the flood risk in my area this week?',
-            '🌱 When should I plant maize based on weather patterns?',
-            '💨 How is the air quality in Nairobi today?',
-            '🌳 Are there any deforestation alerts in Central Kenya?',
-            '⚠️ What environmental risks should I prepare for?',
-            '📍 Give me hyperlocal environmental predictions',
-            '🏠 How can my community adapt to climate change?',
-            '🚨 What should I do during environmental emergencies?',
-            '🌾 What crops are best for this season in my area?',
-            '💧 Is the water quality safe in my location?',
-          ],
-          strings: {
-            promptSuggestionsTitle: 'Ask EcoSentinel AI about environmental risks and guidance',
-            citationsTitle: 'Environmental Data Sources:',
-            followUpQuestionsTitle: 'Related environmental questions:',
-            chatInputPlaceholder: 'Ask about environmental risks, weather forecasts, or local guidance...',
-            chatInputButtonLabel: 'Send environmental query',
-            assistant: 'EcoSentinel AI',
-            user: 'You',
-            errorMessage: 'Environmental intelligence service is temporarily unavailable. Please try again.',
-            newChatButton: 'New environmental query',
-            retryButton: 'Retry environmental query',
-          },
-        },
-        sw: {
-          enablePromptSuggestions: true,
-          promptSuggestions: [
-            '🌊 Ni hatari gani ya mafuriko katika eneo langu wiki hii?',
-            '🌱 Ni wakati gani bora wa kupanda mahindi kulingana na hali ya hewa?',
-            '💨 Je, ubora wa hewa Nairobi ni vipi leo?',
-            '🌳 Kuna onyo la ukataji misitu katika Kenya ya Kati?',
-            '⚠️ Ni hatari gani za mazingira ninapaswa kujiandalia?',
-            '📍 Nipe utabiri wa mazingira wa eneo langu',
-            '🏠 Jamii yangu iwezaje kubadilika na mabadiliko ya tabianchi?',
-            '🚨 Nifanye nini wakati wa dharura za mazingira?',
-            '🌾 Ni mazao gani bora kwa msimu huu eneo langu?',
-            '💧 Je, ubora wa maji ni salama eneo langu?',
-          ],
-          strings: {
-            promptSuggestionsTitle: 'Uliza EcoSentinel AI kuhusu hatari za mazingira na mwongozo',
-            citationsTitle: 'Vyanzo vya Data ya Mazingira:',
-            followUpQuestionsTitle: 'Maswali mengine yanayohusiana:',
-            chatInputPlaceholder: 'Uliza kuhusu hatari za mazingira, utabiri wa hali ya hewa, au mwongozo wa eneo lako...',
-            chatInputButtonLabel: 'Tuma swali la mazingira',
-            assistant: 'EcoSentinel AI',
-            user: 'Wewe',
-            errorMessage: 'Huduma ya akili ya mazingira haipatikani kwa sasa. Tafadhali jaribu tena.',
-            newChatButton: 'Mazungumzo mapya ya mazingira',
-            retryButton: 'Jaribu tena swali la mazingira',
-          },
-        }
-      };
-
-      // Current language state
-      let currentLanguage = localStorage.getItem('ecoSentinelLanguage') || 'en';
-
-      // Language switching functionality
-      function switchLanguage(lang) {
-        currentLanguage = lang;
-        localStorage.setItem('ecoSentinelLanguage', lang);
-        
-        // Update active button
-        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`lang-${lang}`).classList.add('active');
-        
-        // Update chat configuration
-        window.chat.options = languageConfigs[lang];
-        
-        // Dispatch language change event for other components
-        document.dispatchEvent(new CustomEvent('languageChanged', {
-          detail: { language: lang }
-        }));
-        
-        // Update navigation text
-        updateNavigationLanguage(lang);
-      }
-
-      // Update navigation elements based on language
-      function updateNavigationLanguage(lang) {
-        const navIndicator = document.querySelector('.nav-indicator span');
-        if (navIndicator) {
-          navIndicator.textContent = lang === 'sw' 
-            ? 'Ufuatiliaji wa Mazingira Unaendelea' 
-            : 'Environmental Monitor Active';
-        }
-      }
-
-      // Initialize chat components
-      window.chatHistory.userId = userId;
-      window.chatHistory.addEventListener('loadSession', (e) => {
-        const { id, messages } = e.detail;
-        window.chat.sessionId = id;
-        window.chat.messages = messages;
       });
 
-      window.chat.userId = userId;
-      window.chat.options = languageConfigs[currentLanguage];
-      window.chat.addEventListener('messagesUpdated', () => {
-        window.chatHistory.refresh();
-      });
-
-      // Handle environmental dashboard status card clicks
-      function handleStatusCardClick(event) {
-        const { status } = event.detail;
-        
-        // Auto-populate chat with environmental query based on language
-        let query;
-        if (currentLanguage === 'sw') {
-          query = `Niambie zaidi kuhusu ${status.title.toLowerCase()}: ${status.value} katika ${status.location}. Nifanye nini?`;
-        } else {
-          query = `Tell me more about ${status.title.toLowerCase()} status: ${status.value} in ${status.location}. What should I do?`;
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+          document.querySelector('.sidebar').classList.remove('open');
         }
-        
-        window.chat.question = query;
-      }
-
-      // Set up event listeners when DOM is loaded
-      document.addEventListener('DOMContentLoaded', () => {
-        // Language switcher event listeners
-        document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
-        document.getElementById('lang-sw').addEventListener('click', () => switchLanguage('sw'));
-        
-        // Environmental dashboard event listener
-        const envDashboard = document.getElementById('envDashboard');
-        if (envDashboard) {
-          envDashboard.addEventListener('status-card-click', handleStatusCardClick);
-        }
-        
-        // Set initial language
-        switchLanguage(currentLanguage);
       });
     </script>
   </body>
