@@ -1,740 +1,519 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="EcoSentinel AI - Community-Driven Environmental Risk Intelligence Platform">
-    <meta name="keywords" content="environmental intelligence, climate action, Kenya, UNEP, AI, flooding, air quality, deforestation">
-    <meta name="author" content="Gideon Kiprono">
-    <title>EcoSentinel AI - Environmental Risk Intelligence Platform</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Azure Maps SDK -->
-    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css">
-    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
-    
-    <!-- Chart.js for data visualization -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <style>
-      :root {
-        /* EcoSentinel AI Brand Colors */
-        --forest-green: #2E7D32;
-        --eco-green: #4CAF50;
-        --nature-green: #388E3C;
-        --tech-blue: #00BCD4;
-        --alert-orange: #FF9800;
-        --deep-blue: #1976D2;
-        --earth-red: #F44336;
-        --dark-forest: #1B5E20;
-        --light-green: #E8F5E8;
-        --sage: #C8E6C9;
-        --gray: #757575;
-        --light-gray: #F5F5F5;
-        --white: #FFFFFF;
-        
-        /* Layout */
-        --header-height: 64px;
-        --border-radius: 12px;
-        --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        
-        /* Animation */
-        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: 'Inter', Arial, sans-serif;
-        background: var(--light-gray);
-        color: #333;
-        overflow-x: hidden;
-      }
-
-      /* Modern Header */
-      .header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: var(--header-height);
-        background: white;
-        box-shadow: var(--shadow);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 24px;
-      }
-
-      .header-left {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-      }
-
-      .logo {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .logo-icon {
-        width: 32px;
-        height: 32px;
-        background: var(--forest-green);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-      }
-
-      .logo-text {
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 20px;
-        font-weight: 700;
-        color: #333;
-      }
-
-      .header-nav {
-        display: flex;
-        align-items: center;
-        gap: 32px;
-        margin-left: 48px;
-      }
-
-      .nav-item {
-        text-decoration: none;
-        color: #555;
-        font-weight: 500;
-        position: relative;
-        padding: 8px 4px;
-      }
-
-      .nav-item.active {
-        color: var(--forest-green);
-      }
-
-      .nav-item.active::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--forest-green);
-      }
-
-      .header-right {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-      }
-
-      .phone-number {
-        font-size: 14px;
-        color: #666;
-      }
-
-      /* Main Layout */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoSentinel AI - Environmental Risk Intelligence Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --forest-green: #2E7D32;
+      --eco-green: #4CAF50;
+      --alert-red: #F44336;
+      --alert-orange: #FF9800;
+      --tech-blue: #00BCD4;
+      --gray: #757575;
+      --light-gray: #F5F5F5;
+      --white: #FFFFFF;
+      --border-radius: 14px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.07);
+      --header-height: 64px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--light-gray);
+      color: #222;
+      min-height: 100vh;
+    }
+    .header {
+      height: var(--header-height);
+      background: var(--white);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--forest-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 22px;
+    }
+    .logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--forest-green);
+      letter-spacing: 0.5px;
+    }
+    .header-nav {
+      display: flex;
+      gap: 32px;
+      margin-left: 48px;
+      align-items: center;
+    }
+    .nav-item {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 16px;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.2s;
+    }
+    .nav-item.active,
+    .nav-item:hover {
+      color: var(--forest-green);
+    }
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 2px;
+      background: var(--forest-green);
+      border-radius: 2px;
+    }
+    .header-contact {
+      font-size: 15px;
+      color: #333;
+      margin-left: 24px;
+      opacity: 0.7;
+    }
+    .main-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 32px;
+      padding: 40px 32px;
+      min-height: calc(100vh - var(--header-height));
+    }
+    .card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-width: 0;
+      min-height: 0;
+    }
+    .chat-header {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .message-question {
+      background: var(--forest-green);
+      color: var(--white);
+      padding: 12px 18px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      width: fit-content;
+    }
+    .message.assistant {
+      background: #F6F6F6;
+      color: #222;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+    .tree-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .tree-img {
+      width: 70px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+    .tree-label {
+      font-size: 13px;
+      color: var(--forest-green);
+      font-weight: 600;
+    }
+    .message.user {
+      align-self: flex-end;
+      background: var(--tech-blue);
+      color: var(--white);
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 15px;
+      margin-bottom: 8px;
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .jane-profile {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #4CAF50;
+      margin-right: 6px;
+      background: #e8f5e9;
+    }
+    .alerts-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--forest-green);
+      margin-bottom: 8px;
+    }
+    .alert-item {
+      background: #FEE8E8;
+      border-left: 4px solid var(--alert-red);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .alert-title {
+      font-weight: 600;
+      color: var(--alert-red);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+    }
+    .alert-content {
+      font-size: 15px;
+      color: #222;
+    }
+    .air-quality {
+      background: #FFF3E0;
+      border-left: 4px solid var(--alert-orange);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .air-title {
+      font-weight: 600;
+      color: var(--alert-orange);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+    }
+    .gauge-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .gauge {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .gauge::before {
+      content: '';
+      display: block;
+      width: 48px;
+      height: 24px;
+      border-top: 8px solid var(--alert-red);
+      border-radius: 48px 48px 0 0;
+      position: absolute;
+      top: 12px; left: 6px;
+    }
+    .gauge-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--alert-red);
+      margin-left: 8px;
+    }
+    .precautions {
+      font-size: 15px;
+      color: var(--forest-green);
+      background: #E8F5E8;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dashboard-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--forest-green);
+      margin-bottom: 8px;
+    }
+    .chart-container {
+      width: 100%;
+      height: 180px;
+      margin-bottom: 8px;
+    }
+    .legend {
+      display: flex;
+      gap: 24px;
+      margin-top: 8px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #222;
+    }
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+    .map-card {
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .map-container {
+      width: 100%;
+      height: 100%;
+      min-height: 320px;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      position: relative;
+    }
+    .map-attribution {
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      font-size: 11px;
+      color: #888;
+      background: rgba(255,255,255,0.7);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    @media (max-width: 1024px) {
       .main-container {
-        margin-top: var(--header-height);
-        display: flex;
-        min-height: calc(100vh - var(--header-height));
-      }
-
-      .content-column {
-        width: 400px;
-        background: white;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-      }
-
-      .map-column {
-        flex: 1;
-        position: relative;
-      }
-
-      .map-container {
-        height: 100%;
-        width: 100%;
-      }
-
-      /* Chat Interface */
-      .chat-container {
-        display: flex;
-        flex-direction: column;
-        background: white;
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
-        overflow: hidden;
-      }
-
-      .chat-header {
-        padding: 12px 16px;
-        background: white;
-        border-bottom: 1px solid #eee;
-        font-weight: 600;
-      }
-
-      .chat-messages {
-        flex: 1;
-        padding: 16px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        min-height: 240px;
-        max-height: 320px;
-      }
-
-      .message {
-        max-width: 85%;
-        padding: 12px 16px;
-        border-radius: 18px;
-        font-size: 14px;
-        line-height: 1.4;
-      }
-
-      .message.user {
-        align-self: flex-end;
-        background: var(--tech-blue);
-        color: white;
-        border-bottom-right-radius: 4px;
-      }
-
-      .message.assistant {
-        align-self: flex-start;
-        background: #f0f0f0;
-        color: #333;
-        border-bottom-left-radius: 4px;
-      }
-
-      .message-question {
-        display: inline-block;
-        background: var(--dark-forest);
-        color: white;
-        padding: 8px 16px;
-        border-radius: 20px;
-        margin: 6px 0;
-        font-size: 14px;
-        cursor: pointer;
-      }
-
-      .chat-input-container {
-        padding: 12px 16px;
-        border-top: 1px solid #eee;
-        display: flex;
-        gap: 12px;
-      }
-
-      .chat-input {
-        flex: 1;
-        padding: 10px 16px;
-        border: 1px solid #ddd;
-        border-radius: 20px;
-        outline: none;
-        transition: var(--transition);
-      }
-
-      .chat-input:focus {
-        border-color: var(--tech-blue);
-        box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.2);
-      }
-
-      .chat-send {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--tech-blue);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-      }
-
-      /* Alerts Section */
-      .alerts-section {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .section-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 4px;
-      }
-
-      .alert-item {
-        background: #FEE8E8;
-        border-left: 4px solid var(--earth-red);
-        padding: 16px;
-        border-radius: 8px;
-      }
-
-      .alert-item.warning {
-        background: #FFF3E0;
-        border-left-color: var(--alert-orange);
-      }
-
-      .alert-title {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: var(--earth-red);
-      }
-
-      .alert-item.warning .alert-title {
-        color: var(--alert-orange);
-      }
-
-      .alert-content {
-        font-size: 14px;
-      }
-
-      .air-quality-gauge {
-        text-align: center;
-        margin: 12px 0;
-      }
-
-      .gauge-value {
-        font-size: 20px;
-        font-weight: 700;
-      }
-
-      /* Dashboard Section */
-      .dashboard-section {
-        border-radius: var(--border-radius);
-        background: white;
-        padding: 20px;
-        box-shadow: var(--shadow);
-      }
-
-      .chart-container {
-        height: 220px;
-      }
-
-      /* Legend */
-      .chart-legend {
-        display: flex;
-        justify-content: center;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, minmax(0, 1fr));
         gap: 24px;
-        margin-top: 12px;
+        padding: 24px 8px;
       }
-
-      .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-      }
-
-      .legend-color {
-        width: 12px;
-        height: 12px;
-        border-radius: 2px;
-      }
-
-      /* Responsive Design */
-      @media (max-width: 1024px) {
-        .main-container {
-          flex-direction: column;
-        }
-        
-        .content-column {
-          width: 100%;
-          height: auto;
-        }
-        
-        .map-column {
-          height: 400px;
-        }
-      }
-
-      @media (max-width: 768px) {
-        .header-nav {
-          display: none;
-        }
-        
-        .phone-number {
-          display: none;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Header -->
-    <header class="header">
-      <div class="header-left">
-        <div class="logo">
-          <div class="logo-icon">
-            <i class="fas fa-leaf"></i>
-          </div>
-          <div class="logo-text">EcoSentinel AI</div>
-        </div>
-        <nav class="header-nav">
-          <a href="#" class="nav-item active">Chat</a>
-          <a href="#" class="nav-item">Alerts</a>
-          <a href="#" class="nav-item">About</a>
-        </nav>
+      .map-container { min-height: 220px; }
+    }
+    @media (max-width: 600px) {
+      .header { flex-direction: column; align-items: flex-start; padding: 0 12px; height: auto; }
+      .header-nav { margin-left: 0; gap: 18px; }
+      .main-container { padding: 12px 2px; gap: 12px; }
+      .card, .map-card { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+      <div class="logo-text">EcoSentinel AI</div>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-item active">Home</a>
+      <a href="#" class="nav-item">Chat</a>
+      <a href="#" class="nav-item">Alerts</a>
+      <a href="#" class="nav-item">Dashboard</a>
+      <a href="#" class="nav-item">About</a>
+    
+  </header>
+  <main class="main-container">
+    <!-- Chat Card -->
+    <section class="card">
+      <div class="chat-header">Hello! How can I assist you today?</div>
+      <div class="message-question">Which trees are best for planting in Kibera?</div>
+      <div class="message assistant">
+        For planting in Kibera: I recommend native Acacia trees such as Acacia xanthophloea. They can help reduce flooding and improve soil quality.
       </div>
-      <div class="header-right">
-        <div class="phone-number">+254-712.345678</div>
-        <div class="language-toggle">
-          <button id="lang-en" class="lang-btn active">EN</button>
-          <button id="lang-sw" class="lang-btn">SW</button>
+      <div class="tree-info">
+        <span class="tree-label">Acacia xanthophloea</span>
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80" alt="Acacia tree" class="tree-img">
+      </div>
+      <div class="message user">
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80" alt="Jane profile" class="jane-profile">
+        Jane: Text me today's air quality →
+      </div>
+    </section>
+    <!-- Map Card -->
+    <section class="map-card card">
+      <div class="map-container" id="mapContainer"></div>
+      <div class="map-attribution">Map data &copy; OpenStreetMap contributors</div>
+    </section>
+    <!-- Alerts Card -->
+    <section class="card">
+      <div class="alerts-title">Alerts</div>
+      <div class="alert-item">
+        <div class="alert-title"><i class="fas fa-exclamation-triangle"></i> Flood risk in Kawangware</div>
+        <div class="alert-content">Evacuate low-lying areas immediately</div>
+      </div>
+      <div class="air-quality">
+        <div class="air-title"><i class="fas fa-wind"></i> Today's air quality forecast: → Mathare</div>
+        <div class="gauge-row">
+          <div class="gauge"></div>
+          <span class="gauge-value">UNSAFE</span>
         </div>
       </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="main-container">
-      <!-- Left Column - Chat & Alerts -->
-      <div class="content-column">
-        <!-- Chat Interface -->
-        <div class="chat-container">
-          <div class="chat-header">Hello! How can I assist you today?</div>
-          <div class="chat-messages" id="chatMessages">
-            <div class="message-question">Which trees are best for planting in Kibera?</div>
-            <div class="message assistant">
-              For planting in Kibera: I recommend native Acacia trees such as Acacia xanthophloea. They can help reduce flooding and improve soil quality.
-            </div>
-            <div class="message user">
-              Jane: Text me today's air quality →
-            </div>
-          </div>
-          <div class="chat-input-container">
-            <input type="text" class="chat-input" id="chatInput" placeholder="Ask about environmental risks in your area...">
-            <button class="chat-send" id="chatSend">
-              <i class="fas fa-paper-plane"></i>
-            </button>
-          </div>
+      <div class="precautions">
+        <i class="fas fa-shield-alt"></i>
+        Take precautions (AQI=164)
+      </div>
+    </section>
+    <!-- Dashboard Card -->
+    <section class="card">
+      <div class="dashboard-title">Dashboard</div>
+      <div class="chart-container">
+        <canvas id="environmentalChart"></canvas>
+      </div>
+      <div class="legend">
+        <div class="legend-item">
+          <span class="legend-color" style="background: #2E7D32;"></span>
+          Planting
         </div>
-        
-        <!-- Alerts Section -->
-        <div class="alerts-section">
-          <h3 class="section-title">Alerts</h3>
-          
-          <div class="alert-item">
-            <div class="alert-title">
-              <i class="fas fa-exclamation-triangle"></i>
-              Flood risk in Kawangware
-            </div>
-            <div class="alert-content">
-              Evacuate low-lying areas immediately
-            </div>
-          </div>
-          
-          <div class="alert-item warning">
-            <div class="alert-title">
-              <i class="fas fa-wind"></i>
-              Today's air quality Forecast: → Mathare
-            </div>
-            <div class="alert-content">
-              Take precautions (AQI = 164)
-            </div>
-            <div class="air-quality-gauge">
-              <img src="https://via.placeholder.com/300x100/FFFFFF/888888?text=AQI+Gauge" alt="Air Quality Gauge" style="max-width: 100%; height: auto;">
-              <div class="gauge-value">UNSAFE</div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Dashboard Section -->
-        <div class="dashboard-section">
-          <h3 class="section-title">Planting & Pollution Alerts</h3>
-          <div class="chart-container">
-            <canvas id="environmentalChart"></canvas>
-          </div>
-          <div class="chart-legend">
-            <div class="legend-item">
-              <div class="legend-color" style="background-color: #1B5E20;"></div>
-              <span>Planting</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color" style="background-color: #4CAF50;"></div>
-              <span>Pollution alerts</span>
-            </div>
-          </div>
+        <div class="legend-item">
+          <span class="legend-color" style="background: #4CAF50;"></span>
+          Pollution Alerts
         </div>
       </div>
-      
-      <!-- Right Column - Map -->
-      <div class="map-column">
-        <div id="mapContainer" class="map-container"></div>
-      </div>
-    </main>
-
-    <!-- Scripts -->
-    <script type="module" src="/src/index.ts"></script>
-    <script>
-      // Language configurations
-      const languages = {
-        en: {
-          greeting: 'Hello! How can I assist you today?',
-          chatPlaceholder: 'Ask about environmental risks in your area...',
-          alertsTitle: 'Alerts',
-          floodAlert: 'Flood risk in Kawangware',
-          evacuateMessage: 'Evacuate low-lying areas immediately',
-          airQualityTitle: 'Today\'s air quality Forecast:',
-          precautionsMessage: 'Take precautions (AQI = 164)',
-          dashboardTitle: 'Planting & Pollution Alerts',
-          planting: 'Planting',
-          pollution: 'Pollution alerts',
-          unsafe: 'UNSAFE'
-        },
-        sw: {
-          greeting: 'Hujambo! Nawezaje kukusaidia leo?',
-          chatPlaceholder: 'Uliza kuhusu hatari za mazingira eneo lako...',
-          alertsTitle: 'Tahadhari',
-          floodAlert: 'Hatari ya mafuriko katika Kawangware',
-          evacuateMessage: 'Hama maeneo ya chini mara moja',
-          airQualityTitle: 'Ubora wa hewa leo:',
-          precautionsMessage: 'Chukua tahadhari (AQI = 164)',
-          dashboardTitle: 'Upanzi na Tahadhari za Uchafuzi',
-          planting: 'Upanzi',
-          pollution: 'Tahadhari za uchafuzi',
-          unsafe: 'SI SALAMA'
-        }
-      };
-
-      let currentLanguage = 'en';
-
-      // Language switching
-      document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
-      document.getElementById('lang-sw').addEventListener('click', () => switchLanguage('sw'));
-
-      function switchLanguage(lang) {
-        currentLanguage = lang;
-        
-        // Update active button
-        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`lang-${lang}`).classList.add('active');
-        
-        // Update text content with translations
-        const texts = languages[lang];
-        document.querySelector('.chat-header').textContent = texts.greeting;
-        document.getElementById('chatInput').placeholder = texts.chatPlaceholder;
-        document.querySelector('.section-title').textContent = texts.alertsTitle;
-        document.querySelector('.alert-title').innerHTML = 
-          `<i class="fas fa-exclamation-triangle"></i> ${texts.floodAlert}`;
-        document.querySelector('.alert-content').textContent = texts.evacuateMessage;
-        
-        // Update other elements
-        const airQualityTitle = document.querySelectorAll('.alert-title')[1];
-        airQualityTitle.innerHTML = `<i class="fas fa-wind"></i> ${texts.airQualityTitle} → Mathare`;
-        
-        document.querySelectorAll('.alert-content')[1].textContent = texts.precautionsMessage;
-        document.querySelector('.gauge-value').textContent = texts.unsafe;
-        document.querySelectorAll('.section-title')[1].textContent = texts.dashboardTitle;
-        
-        // Update legend
-        document.querySelectorAll('.legend-item span')[0].textContent = texts.planting;
-        document.querySelectorAll('.legend-item span')[1].textContent = texts.pollution;
-      }
-
-      // Chat functionality
-      const chatInput = document.getElementById('chatInput');
-      const chatSend = document.getElementById('chatSend');
-      const chatMessages = document.getElementById('chatMessages');
-
-      function sendMessage() {
-        const message = chatInput.value.trim();
-        if (!message) return;
-
-        // Add user message
-        const userMsg = document.createElement('div');
-        userMsg.className = 'message user';
-        userMsg.textContent = message;
-        chatMessages.appendChild(userMsg);
-
-        // Clear input
-        chatInput.value = '';
-
-        // Simulate AI response
-        setTimeout(() => {
-          const aiMsg = document.createElement('div');
-          aiMsg.className = 'message assistant';
-          aiMsg.textContent = generateResponse(message);
-          chatMessages.appendChild(aiMsg);
-          chatMessages.scrollTop = chatMessages.scrollHeight;
-        }, 1000);
-
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-
-      function generateResponse(message) {
-        const responses = {
-          en: [
-            "Based on current data, the flood risk in your area is moderate. Consider preparing emergency supplies.",
-            "Air quality is currently at 156 AQI (Moderate). Sensitive individuals should limit outdoor activities.",
-            "The heat index is 28°C. Stay hydrated and seek shade during peak hours.",
-            "Forest cover in your region is stable at 92%. Continue supporting conservation efforts.",
-            "I can help you understand environmental risks. What specific area or concern would you like to know about?"
-          ],
-          sw: [
-            "Kulingana na data za sasa, hatari ya mafuriko eneo lako ni wastani. Zingatia kujiandaa na vifaa vya dharura.",
-            "Ubora wa hewa kwa sasa ni 156 AQI (Wastani). Watu wenye mchocheo wanapaswa kupunguza shughuli za nje.",
-            "Kiwango cha joto ni 28°C. Kunywa maji mengi na utafute kivuli wakati wa joto kali.",
-            "Mlolongo wa misitu eneo lako ni thabiti kwa 92%. Endelea kuunga mkono juhudi za uhifadhi.",
-            "Ninaweza kukusaidia kuelewa hatari za mazingira. Je, ungependa kujua kuhusu eneo gani au jambo la ziada?"
-          ]
-        };
-        
-        const langResponses = responses[currentLanguage];
-        return langResponses[Math.floor(Math.random() * langResponses.length)];
-      }
-
-      chatSend.addEventListener('click', sendMessage);
-      chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
+    </section>
+  </main>
+  <!-- MapLibre GL JS for OpenStreetMap -->
+  <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
+  <script>
+    // MapLibre GL JS - OpenStreetMap
+    document.addEventListener('DOMContentLoaded', function() {
+      const map = new maplibregl.Map({
+        container: 'mapContainer',
+        style: 'https://demotiles.maplibre.org/style.json',
+        center: [36.8219, -1.2921], // Nairobi
+        zoom: 11,
+        attributionControl: false
       });
+      // Add sample bubbles and labels
+      const locations = [
+        { lng: 36.8219, lat: -1.2921, size: 30, color: "#4CAF50", label: "Nairobi" },
+        { lng: 36.8172, lat: -1.2740, size: 20, color: "#8BC34A", label: "Westlands" },
+        { lng: 36.8537, lat: -1.3098, size: 15, color: "#4CAF50", label: "Embakasi" },
+        { lng: 36.8566, lat: -1.2699, size: 25, color: "#FFC107", label: "Mathare" },
+        { lng: 36.7816, lat: -1.3127, size: 35, color: "#FF9800", label: "Kibera" },
+        { lng: 36.8795, lat: -1.2240, size: 12, color: "#4CAF50", label: "Kasarani" }
+      ];
+      locations.forEach(loc => {
+        const el = document.createElement('div');
+        el.style.width = `${loc.size}px`;
+        el.style.height = `${loc.size}px`;
+        el.style.background = loc.color;
+        el.style.borderRadius = '50%';
+        el.style.opacity = '0.7';
+        el.style.border = '2px solid #fff';
+        el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
+        new maplibregl.Marker(el)
+          .setLngLat([loc.lng, loc.lat])
+          .addTo(map);
 
-      // Initialize Azure Maps
-      function initializeMap() {
-        // Create a map instance
-        const map = new atlas.Map('mapContainer', {
-          center: [36.8219, -1.2921], // Nairobi coordinates
-          zoom: 11,
-          style: 'road',
-          authOptions: {
-            authType: 'subscriptionKey',
-            subscriptionKey: 'YOUR_AZURE_MAPS_KEY' // Replace with your Azure Maps key
-          }
+        // Add label
+        const label = document.createElement('div');
+        label.style.position = 'absolute';
+        label.style.transform = 'translate(-50%, -50%)';
+        label.style.background = 'rgba(255,255,255,0.8)';
+        label.style.padding = '2px 8px';
+        label.style.borderRadius = '6px';
+        label.style.fontSize = '13px';
+        label.style.color = '#222';
+        label.style.fontWeight = '600';
+        label.style.pointerEvents = 'none';
+        label.innerText = loc.label;
+        // Use map.project to position label
+        map.on('render', () => {
+          const point = map.project([loc.lng, loc.lat]);
+          label.style.left = `${point.x}px`;
+          label.style.top = `${point.y - loc.size / 2 - 12}px`;
         });
+        map.getContainer().appendChild(label);
+      });
+    });
 
-        // Wait until the map resources are ready
-        map.events.add('ready', function() {
-          // Add some sample environmental data points
-          const locations = [
-            [-1.2921, 36.8219, 20, "#4CAF50"], // Nairobi Central
-            [-1.2740, 36.8172, 35, "#8BC34A"], // Westlands
-            [-1.3098, 36.8537, 15, "#4CAF50"], // Embakasi
-            [-1.2699, 36.8566, 25, "#FFC107"], // Mathare
-            [-1.3127, 36.7816, 40, "#FF9800"], // Kibera
-            [-1.2240, 36.8795, 12, "#4CAF50"]  // Kasarani
-          ];
-          
-          // Create data source and add it to the map
-          const dataSource = new atlas.source.DataSource();
-          map.sources.add(dataSource);
-          
-          // Add points to the data source
-          for (const location of locations) {
-            const point = new atlas.data.Feature(
-              new atlas.data.Point([location[1], location[0]]),
-              {
-                size: location[2],
-                color: location[3]
-              }
-            );
-            dataSource.add(point);
-          }
-          
-          // Add a bubble layer to render the points
-          map.layers.add(new atlas.layer.BubbleLayer(dataSource, null, {
-            radius: ['get', 'size'],
-            color: ['get', 'color'],
-            opacity: 0.7,
-            strokeWidth: 0
-          }));
-        });
-      }
-
-      // Initialize Chart.js chart for environmental data
-      function initializeChart() {
-        const ctx = document.getElementById('environmentalChart').getContext('2d');
-        
-        const chartData = {
-          labels: ['Apr 21', 'Apr 22', 'Apr 23', 'Apr 24', 'Apr 25', 'Apr 26'],
+    // Chart.js Dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+      const ctx = document.getElementById('environmentalChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Apr 21', 'Apr 22', 'Apr 23', 'Apr 24', 'Apr 25'],
           datasets: [
             {
               label: 'Planting',
-              data: [2, 13, 12, 9, 17, 13],
-              borderColor: '#1B5E20',
-              backgroundColor: 'rgba(27, 94, 32, 0.1)',
+              data: [8, 24, 19, 17, 22],
+              borderColor: '#2E7D32',
+              backgroundColor: 'rgba(46,125,50,0.08)',
               borderWidth: 2,
               tension: 0.3,
               pointRadius: 0
             },
             {
               label: 'Pollution Alerts',
-              data: [1, 3, 2, 8, 10, 3],
+              data: [5, 10, 8, 14, 16],
               borderColor: '#4CAF50',
-              backgroundColor: 'rgba(76, 175, 80, 0.1)',
+              backgroundColor: 'rgba(76,175,80,0.08)',
               borderWidth: 2,
               tension: 0.3,
               pointRadius: 0
             }
           ]
-        };
-        
-        const chartConfig = {
-          type: 'line',
-          data: chartData,
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: false
-              },
-              tooltip: {
-                mode: 'index',
-                intersect: false
-              }
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { drawBorder: false },
+              ticks: { maxTicksLimit: 5 }
             },
-            scales: {
-              y: {
-                beginAtZero: true,
-                grid: {
-                  drawBorder: false
-                },
-                ticks: {
-                  maxTicksLimit: 5
-                }
-              },
-              x: {
-                grid: {
-                  display: false
-                }
-              }
+            x: {
+              grid: { display: false }
             }
           }
-        };
-        
-        new Chart(ctx, chartConfig);
-      }
-
-      // Initialize on load
-      document.addEventListener('DOMContentLoaded', () => {
-        initializeMap();
-        initializeChart();
-        
-        // Add question click handlers
-        document.querySelector('.message-question').addEventListener('click', () => {
-          chatInput.value = document.querySelector('.message-question').textContent;
-          sendMessage();
-        });
+        }
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>
