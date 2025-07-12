@@ -349,9 +349,8 @@
       <a href="index.html" class="nav-item active">Home</a>
       <a href="#" class="nav-item">Chat</a>
       <a href="#" class="nav-item">Alerts</a>
-      <a href="#" class="nav-item">Dashboard</a>
-      <a href="#" class="nav-item">About</a>
-    
+      <a href="#" class="nav-item">About</a>>
+    </nav>
   </header>
   <main class="main-container">
     <!-- Chat Card -->
@@ -362,11 +361,11 @@
         For planting in Kibera: I recommend native Acacia trees such as Acacia xanthophloea. They can help reduce flooding and improve soil quality.
       </div>
       <div class="tree-info">
-        <span class="tree-label">Acacia xanthophloea</span>
         <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80" alt="Acacia tree" class="tree-img">
+        <span class="tree-label">Acacia xanthophloea</span>
       </div>
       <div class="message user">
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80" alt="Jane profile" class="jane-profile">
+        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&w=200&q=80" alt="Jane profile" class="jane-profile">
         Jane: Text me today's air quality →
       </div>
     </section>
@@ -425,15 +424,17 @@
         zoom: 11,
         attributionControl: false
       });
-      // Add sample bubbles and labels
+      
+      // Add simple markers without labels for cleaner look
       const locations = [
-        { lng: 36.8219, lat: -1.2921, size: 30, color: "#4CAF50", label: "Nairobi" },
-        { lng: 36.8172, lat: -1.2740, size: 20, color: "#8BC34A", label: "Westlands" },
-        { lng: 36.8537, lat: -1.3098, size: 15, color: "#4CAF50", label: "Embakasi" },
-        { lng: 36.8566, lat: -1.2699, size: 25, color: "#FFC107", label: "Mathare" },
-        { lng: 36.7816, lat: -1.3127, size: 35, color: "#FF9800", label: "Kibera" },
-        { lng: 36.8795, lat: -1.2240, size: 12, color: "#4CAF50", label: "Kasarani" }
+        { lng: 36.8219, lat: -1.2921, size: 30, color: "#4CAF50" }, // Nairobi Central
+        { lng: 36.8172, lat: -1.2740, size: 20, color: "#8BC34A" }, // Westlands
+        { lng: 36.8537, lat: -1.3098, size: 15, color: "#4CAF50" }, // Embakasi
+        { lng: 36.8566, lat: -1.2699, size: 25, color: "#FFC107" }, // Mathare
+        { lng: 36.7816, lat: -1.3127, size: 35, color: "#FF9800" }, // Kibera
+        { lng: 36.8795, lat: -1.2240, size: 12, color: "#4CAF50" }  // Kasarani
       ];
+      
       locations.forEach(loc => {
         const el = document.createElement('div');
         el.style.width = `${loc.size}px`;
@@ -446,26 +447,6 @@
         new maplibregl.Marker(el)
           .setLngLat([loc.lng, loc.lat])
           .addTo(map);
-
-        // Add label
-        const label = document.createElement('div');
-        label.style.position = 'absolute';
-        label.style.transform = 'translate(-50%, -50%)';
-        label.style.background = 'rgba(255,255,255,0.8)';
-        label.style.padding = '2px 8px';
-        label.style.borderRadius = '6px';
-        label.style.fontSize = '13px';
-        label.style.color = '#222';
-        label.style.fontWeight = '600';
-        label.style.pointerEvents = 'none';
-        label.innerText = loc.label;
-        // Use map.project to position label
-        map.on('render', () => {
-          const point = map.project([loc.lng, loc.lat]);
-          label.style.left = `${point.x}px`;
-          label.style.top = `${point.y - loc.size / 2 - 12}px`;
-        });
-        map.getContainer().appendChild(label);
       });
     });
 
@@ -505,10 +486,12 @@
             y: {
               beginAtZero: true,
               grid: { drawBorder: false },
-              ticks: { maxTicksLimit: 5 }
+              ticks: { maxTicksLimit: 5 },
+              title: { display: true, text: 'Alerts' }
             },
             x: {
-              grid: { display: false }
+              grid: { display: false },
+              title: { display: true, text: 'Date' }
             }
           }
         }
