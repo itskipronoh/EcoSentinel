@@ -141,7 +141,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 8px;
+      margin-bottom: 16px;
     }
     .tree-img {
       width: 70px;
@@ -156,17 +156,18 @@
       font-weight: 600;
     }
     .message.user {
-      align-self: flex-end;
       background: var(--tech-blue);
       color: var(--white);
       border-radius: 12px;
       padding: 10px 16px;
       font-size: 15px;
       margin-bottom: 8px;
-      width: fit-content;
+      max-width: 280px;
       display: flex;
       align-items: center;
       gap: 10px;
+      align-self: flex-start;
+      margin-left: 0;
     }
     .jane-profile {
       width: 28px;
@@ -174,8 +175,12 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid #4CAF50;
-      margin-right: 6px;
+      flex-shrink: 0;
       background: #e8f5e9;
+    }
+    .user-message-content {
+      flex: 1;
+      text-align: left;
     }
     .alerts-title {
       font-size: 18px;
@@ -266,6 +271,31 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      position: relative;
+    }
+    .precautions::before {
+      content: '';
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #81C784 0%, #4CAF50 100%);
+      border-radius: 50%;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .precautions::after {
+      content: '✓';
+      position: absolute;
+      right: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
     }
     .dashboard-title {
       font-size: 18px;
@@ -349,7 +379,7 @@
       <a href="index.html" class="nav-item active">Home</a>
       <a href="#" class="nav-item">Chat</a>
       <a href="#" class="nav-item">Alerts</a>
-      <a href="#" class="nav-item">About</a>>
+      <a href="#" class="nav-item">About</a>
     </nav>
   </header>
   <main class="main-container">
@@ -361,12 +391,12 @@
         For planting in Kibera: I recommend native Acacia trees such as Acacia xanthophloea. They can help reduce flooding and improve soil quality.
       </div>
       <div class="tree-info">
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80" alt="Acacia tree" class="tree-img">
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA3MCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjcwIiBoZWlnaHQ9IjQ4IiByeD0iOCIgZmlsbD0iIzRDQUY1MCIvPgo8cGF0aCBkPSJNMzUgNTBDNDYuMDQ1NyA1MCA1NSA0MS4wNDU3IDU1IDMwQzU1IDE4Ljk1NDMgNDYuMDQ1NyAxMCAzNSAxMEMyMy45NTQzIDEwIDE1IDE4Ljk1NDMgMTUgMzBDMTUgNDEuMDQ1NyAyMy45NTQzIDUwIDM1IDUwWiIgZmlsbD0iIzJFNzUzMiIgZmlsbC1vcGFjaXR5PSIwLjciLz4KPHBhdGggZD0iTTM1IDQ1QzQzLjI4NDMgNDUgNTAgMzguMjg0MyA1MCAzMEM1MCAyMS43MTU3IDQzLjI4NDMgMTUgMzUgMTVDMjYuNzE1NyAxNSAyMCAyMS43MTU3IDIwIDMwQzIwIDM4LjI4NDMgMjYuNzE1NyA0NSAzNSA0NVoiIGZpbGw9IiM2NkJCNkEiLz4KPHJlY3QgeD0iMzMiIHk9IjMwIiB3aWR0aD0iNCIgaGVpZ2h0PSIxOCIgZmlsbD0iIzNFMjcyMyIvPgo8L3N2Zz4K" alt="Acacia tree" class="tree-img">
         <span class="tree-label">Acacia xanthophloea</span>
       </div>
       <div class="message user">
-        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&w=200&q=80" alt="Jane profile" class="jane-profile">
-        Jane: Text me today's air quality →
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAyOCAyOCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTQiIGN5PSIxNCIgcj0iMTQiIGZpbGw9IiNGRkM0QzQiLz4KPGNpcmNsZSBjeD0iMTQiIGN5PSIxMSIgcj0iNSIgZmlsbD0iI0ZGQjM5NCIvPgo8cGF0aCBkPSJNOSAyMEM5IDIzIDEwIDI1IDE0IDI1UzE5IDIzIDE5IDIwVjE4SDlaIiBmaWxsPSIjRkZCMzk0Ii8+CjxjaXJjbGUgY3g9IjEwLjUiIGN5PSI5LjUiIHI9IjEuNSIgZmlsbD0iIzMzMyIvPgo8Y2lyY2xlIGN4PSIxNy41IiBjeT0iOS41IiByPSIxLjUiIGZpbGw9IiMzMzMiLz4KPGVsbGlwc2UgY3g9IjE0IiBjeT0iMTMiIHJ4PSIyIiByeT0iMSIgZmlsbD0iI0ZGODY4NiIvPgo8L3N2Zz4K" alt="Jane profile" class="jane-profile">
+        <span class="user-message-content">Jane: Text me today's air quality →</span>
       </div>
     </section>
     <!-- Map Card -->
