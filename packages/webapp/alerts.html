@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSentinel - Environmental Alerts</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>EcoSentinel</h1>
+            </div>
+            <ul>
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="chat.html" class="nav-item active">Chat</a>
+      <a href="alerts.html" class="nav-item">Alerts</a>
+      <a href="#" class="nav-item">About</a>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="alerts-hero">
+            <h2>Environmental Alerts</h2>
+            <p>Stay informed about critical environmental conditions in your area</p>
+        </section>
+
+        <section class="alerts-dashboard">
+            <div class="alert-filters">
+                <button class="filter-btn active" data-filter="all">All Alerts</button>
+                <button class="filter-btn" data-filter="critical">Critical</button>
+                <button class="filter-btn" data-filter="warning">Warning</button>
+                <button class="filter-btn" data-filter="info">Info</button>
+            </div>
+
+            <div class="alerts-container">
+                <div class="alert-card critical" data-category="critical">
+                    <div class="alert-icon">⚠️</div>
+                    <div class="alert-content">
+                        <h3>Air Quality Alert</h3>
+                        <p>PM2.5 levels exceed safe limits in downtown area</p>
+                        <span class="alert-time">2 hours ago</span>
+                    </div>
+                    <div class="alert-status critical">Critical</div>
+                </div>
+
+                <div class="alert-card warning" data-category="warning">
+                    <div class="alert-icon">🌡️</div>
+                    <div class="alert-content">
+                        <h3>Temperature Warning</h3>
+                        <p>Unusual temperature spike detected in industrial zone</p>
+                        <span class="alert-time">4 hours ago</span>
+                    </div>
+                    <div class="alert-status warning">Warning</div>
+                </div>
+
+                <div class="alert-card info" data-category="info">
+                    <div class="alert-icon">💧</div>
+                    <div class="alert-content">
+                        <h3>Water Quality Update</h3>
+                        <p>Monthly water quality report available for review</p>
+                        <span class="alert-time">1 day ago</span>
+                    </div>
+                    <div class="alert-status info">Info</div>
+                </div>
+
+                <div class="alert-card warning" data-category="warning">
+                    <div class="alert-icon">🔊</div>
+                    <div class="alert-content">
+                        <h3>Noise Level Warning</h3>
+                        <p>Noise pollution exceeds recommended levels near school zone</p>
+                        <span class="alert-time">6 hours ago</span>
+                    </div>
+                    <div class="alert-status warning">Warning</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 EcoSentinel. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
