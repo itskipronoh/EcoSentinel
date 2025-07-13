@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoSentinel AI - About</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --forest-green: #2E7D32;
+      --eco-green: #4CAF50;
+      --light-green: #E8F5E8;
+      --tech-blue: #00BCD4;
+      --alert-red: #F44336;
+      --alert-orange: #FF9800;
+      --warning-yellow: #FFC107;
+      --gray: #757575;
+      --light-gray: #F5F5F5;
+      --white: #FFFFFF;
+      --border-radius: 14px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.07);
+      --header-height: 64px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--light-gray);
+      color: #222;
+      min-height: 100vh;
+    }
+
+    .header {
+      height: var(--header-height);
+      background: var(--white);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--forest-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 22px;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--forest-green);
+      letter-spacing: 0.5px;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 32px;
+      margin-left: 48px;
+      align-items: center;
+    }
+
+    .nav-item {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 16px;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.2s;
+    }
+
+    .nav-item.active,
+    .nav-item:hover {
+      color: var(--forest-green);
+    }
+
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 2px;
+      background: var(--forest-green);
+      border-radius: 2px;
+    }
+
+    .header-contact {
+      font-size: 15px;
+      color: #333;
+      margin-left: 24px;
+      opacity: 0.7;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 32px;
+    }
+
+    .about-header {
+      margin-bottom: 40px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--forest-green);
+      margin-bottom: 24px;
+    }
+
+    .app-section {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      margin-bottom: 40px;
+    }
+
+    .app-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--forest-green);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .app-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--forest-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 24px;
+    }
+
+    .app-description {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #444;
+      margin-bottom: 20px;
+    }
+
+    .learn-more-link {
+      color: var(--tech-blue);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .learn-more-link:hover {
+      color: #00ACC1;
+      text-decoration: underline;
+    }
+
+    .partners-section {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .partners-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--forest-green);
+      margin-bottom: 32px;
+    }
+
+    .partners-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .partner-card {
+      background: #FAFAFA;
+      border: 1px solid #E0E0E0;
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .partner-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      border-color: var(--eco-green);
+    }
+
+    .partner-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 28px;
+      color: var(--white);
+    }
+
+    .unep-logo {
+      background: linear-gradient(135deg, #1976D2, #1565C0);
+    }
+
+    .copernicus-logo {
+      background: linear-gradient(135deg, #FF5722, #E64A19);
+    }
+
+    .kenya-logo {
+      background: linear-gradient(135deg, #4CAF50, #388E3C);
+    }
+
+    .sentinel-logo {
+      background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+    }
+
+    .community-logo {
+      background: linear-gradient(135deg, #FF9800, #F57C00);
+    }
+
+    .partner-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--forest-green);
+      margin-bottom: 8px;
+    }
+
+    .partner-description {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .features-section {
+      margin-top: 40px;
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .features-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--forest-green);
+      margin-bottom: 24px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      background: #FAFAFA;
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--eco-green);
+      color: var(--white);
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .feature-content h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--forest-green);
+      margin-bottom: 4px;
+    }
+
+    .feature-content p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 0 16px;
+      }
+
+      .header-nav {
+        gap: 16px;
+        margin-left: 16px;
+      }
+
+      .main-container {
+        padding: 24px 16px;
+      }
+
+      .app-section,
+      .partners-section,
+      .features-section {
+        padding: 24px;
+      }
+
+      .app-title {
+        font-size: 24px;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .partners-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+      <div class="logo-text">EcoSentinel AI</div>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="chat.html" class="nav-item">Chat</a>
+      <a href="alerts.html" class="nav-item">Alerts</a>
+      <a href="about.html" class="nav-item active">About</a>
+    </nav>
+    <div class="header-contact">-234-712 245678</div>
+  </header>
+
+  <main class="main-container">
+    <div class="about-header">
+      <h1 class="page-title">About</h1>
+    </div>
+
+    <section class="app-section">
+      <h2 class="app-title">
+        <div class="app-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        EcoSentinel AI
+      </h2>
+      <p class="app-description">
+        EcoSentinel AI delivers real-time environmental insights, alerts, and recommendations for Nairobi's informal settlements. It uses AI-powered predictive modeling and open datasets to monitor air quality, flood risks, water contamination, and climate patterns. 
+        <a href="#features" class="learn-more-link">Learn more</a>
+      </p>
+    </section>
+
+    <section class="partners-section">
+      <h2 class="partners-title">Partners</h2>
+      <div class="partners-grid">
+        <div class="partner-card">
+          <div class="partner-logo unep-logo">
+            <i class="fas fa-globe-africa"></i>
+          </div>
+          <h3 class="partner-name">UNEP Environmental Data</h3>
+          <p class="partner-description">Global environmental indicators and climate data for comprehensive monitoring</p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-logo copernicus-logo">
+            <i class="fas fa-satellite"></i>
+          </div>
+          <h3 class="partner-name">Copernicus Satellite Imagery</h3>
+          <p class="partner-description">Real-time earth observation and satellite monitoring for environmental changes</p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-logo kenya-logo">
+            <i class="fas fa-database"></i>
+          </div>
+          <h3 class="partner-name">Kenya Open Data Portal</h3>
+          <p class="partner-description">Local government datasets and official statistics for informed decision making</p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-logo sentinel-logo">
+            <i class="fas fa-eye"></i>
+          </div>
+          <h3 class="partner-name">SentinelHub</h3>
+          <p class="partner-description">High-resolution satellite monitoring and advanced earth observation analytics</p>
+        </div>
+
+        <div class="partner-card">
+          <div class="partner-logo community-logo">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3 class="partner-name">Community Reports</h3>
+          <p class="partner-description">Crowd-sourced environmental observations from local communities and residents</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section" id="features">
+      <h2 class="features-title">Key Features</h2>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-wind"></i>
+          </div>
+          <div class="feature-content">
+            <h4>Air Quality Monitoring</h4>
+            <p>Real-time tracking of PM2.5, PM10, and other pollutants with health impact assessments</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="feature-content">
+            <h4>Flood Risk Alerts</h4>
+            <p>Predictive flood modeling and early warning systems for vulnerable communities</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-tint"></i>
+          </div>
+          <div class="feature-content">
+            <h4>Water Quality Assessment</h4>
+            <p>Monitoring water contamination levels and providing safe water source recommendations</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-tree"></i>
+          </div>
+          <div class="feature-content">
+            <h4>Tree Planting Recommendations</h4>
+            <p>AI-powered suggestions for optimal tree species and planting locations</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="feature-content">
+            <h4>Environmental Analytics</h4>
+            <p>Advanced data visualization and trend analysis for environmental patterns</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <div class="feature-content">
+            <h4>Mobile Accessibility</h4>
+            <p>Responsive design ensuring access to environmental data on any device</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add animation on scroll for partner cards
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe partner cards for animation
+    document.querySelectorAll('.partner-card').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(card);
+    });
+
+    // Add click tracking for partner cards
+    document.querySelectorAll('.partner-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const partnerName = this.querySelector('.partner-name').textContent;
+        console.log('Partner clicked:', partnerName);
+        // You can add analytics tracking here
+      });
+    });
+  </script>
+</body>
+</html>
