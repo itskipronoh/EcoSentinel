@@ -149,6 +149,12 @@
       object-fit: cover;
       border-radius: 8px;
       border: 1px solid #eee;
+      background: linear-gradient(135deg, #81C784, #4CAF50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
     }
     .tree-label {
       font-size: 13px;
@@ -176,7 +182,13 @@
       object-fit: cover;
       border: 2px solid #4CAF50;
       flex-shrink: 0;
-      background: #e8f5e9;
+      background: linear-gradient(135deg, #FFB74D, #FFA726);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 12px;
     }
     .user-message-content {
       flex: 1;
@@ -277,8 +289,18 @@
       width: 40px;
       height: 40px;
       margin-left: auto;
-      background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9InVybCgjZ3JhZGllbnQwKSIvPgo8cGF0aCBkPSJNMTQgMjBMMTggMjRMMjYgMTYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MCIgeDE9IjAiIHkxPSIwIiB4Mj0iNDAiIHkyPSI0MCI+CjxzdG9wIHN0b3AtY29sb3I9IiM4MUM3ODQiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNENBRjUwIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+') no-repeat center;
-      background-size: contain;
+      background: linear-gradient(135deg, #81C784, #4CAF50);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .precautions-visual::after {
+      content: '✓';
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
     }
     .dashboard-title {
       font-size: 18px;
@@ -374,11 +396,11 @@
         For planting in Kibera: I recommend native Acacia trees such as Acacia xanthophloea. They can help reduce flooding and improve soil quality.
       </div>
       <div class="tree-info">
-        <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=200&q=80" alt="Acacia tree" class="tree-img">
+        <div class="tree-img">🌳</div>
         <span class="tree-label">Acacia xanthophloea</span>
       </div>
       <div class="message user">
-        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&w=56&h=56&q=80" alt="Jane profile" class="jane-profile">
+        <div class="jane-profile">J</div>
         <span class="user-message-content">Jane: Text me today's air quality →</span>
       </div>
     </section>
