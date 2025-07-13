@@ -166,8 +166,8 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      align-self: flex-start;
-      margin-left: 0;
+      align-self: flex-end;
+      margin-left: auto;
     }
     .jane-profile {
       width: 28px;
@@ -273,29 +273,12 @@
       gap: 8px;
       position: relative;
     }
-    .precautions::before {
-      content: '';
+    .precautions-visual {
       width: 40px;
       height: 40px;
-      background: linear-gradient(135deg, #81C784 0%, #4CAF50 100%);
-      border-radius: 50%;
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .precautions::after {
-      content: '✓';
-      position: absolute;
-      right: 22px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: white;
-      font-weight: bold;
-      font-size: 18px;
+      margin-left: auto;
+      background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9InVybCgjZ3JhZGllbnQwKSIvPgo8cGF0aCBkPSJNMTQgMjBMMTggMjRMMjYgMTYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MCIgeDE9IjAiIHkxPSIwIiB4Mj0iNDAiIHkyPSI0MCI+CjxzdG9wIHN0b3AtY29sb3I9IiM4MUM3ODQiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNENBRjUwIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+') no-repeat center;
+      background-size: contain;
     }
     .dashboard-title {
       font-size: 18px;
@@ -391,11 +374,11 @@
         For planting in Kibera: I recommend native Acacia trees such as Acacia xanthophloea. They can help reduce flooding and improve soil quality.
       </div>
       <div class="tree-info">
-        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA3MCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjcwIiBoZWlnaHQ9IjQ4IiByeD0iOCIgZmlsbD0iIzRDQUY1MCIvPgo8cGF0aCBkPSJNMzUgNTBDNDYuMDQ1NyA1MCA1NSA0MS4wNDU3IDU1IDMwQzU1IDE4Ljk1NDMgNDYuMDQ1NyAxMCAzNSAxMEMyMy45NTQzIDEwIDE1IDE4Ljk1NDMgMTUgMzBDMTUgNDEuMDQ1NyAyMy45NTQzIDUwIDM1IDUwWiIgZmlsbD0iIzJFNzUzMiIgZmlsbC1vcGFjaXR5PSIwLjciLz4KPHBhdGggZD0iTTM1IDQ1QzQzLjI4NDMgNDUgNTAgMzguMjg0MyA1MCAzMEM1MCAyMS43MTU3IDQzLjI4NDMgMTUgMzUgMTVDMjYuNzE1NyAxNSAyMCAyMS43MTU3IDIwIDMwQzIwIDM4LjI4NDMgMjYuNzE1NyA0NSAzNSA0NVoiIGZpbGw9IiM2NkJCNkEiLz4KPHJlY3QgeD0iMzMiIHk9IjMwIiB3aWR0aD0iNCIgaGVpZ2h0PSIxOCIgZmlsbD0iIzNFMjcyMyIvPgo8L3N2Zz4K" alt="Acacia tree" class="tree-img">
+        <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=200&q=80" alt="Acacia tree" class="tree-img">
         <span class="tree-label">Acacia xanthophloea</span>
       </div>
       <div class="message user">
-        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAyOCAyOCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTQiIGN5PSIxNCIgcj0iMTQiIGZpbGw9IiNGRkM0QzQiLz4KPGNpcmNsZSBjeD0iMTQiIGN5PSIxMSIgcj0iNSIgZmlsbD0iI0ZGQjM5NCIvPgo8cGF0aCBkPSJNOSAyMEM5IDIzIDEwIDI1IDE0IDI1UzE5IDIzIDE5IDIwVjE4SDlaIiBmaWxsPSIjRkZCMzk0Ii8+CjxjaXJjbGUgY3g9IjEwLjUiIGN5PSI5LjUiIHI9IjEuNSIgZmlsbD0iIzMzMyIvPgo8Y2lyY2xlIGN4PSIxNy41IiBjeT0iOS41IiByPSIxLjUiIGZpbGw9IiMzMzMiLz4KPGVsbGlwc2UgY3g9IjE0IiBjeT0iMTMiIHJ4PSIyIiByeT0iMSIgZmlsbD0iI0ZGODY4NiIvPgo8L3N2Zz4K" alt="Jane profile" class="jane-profile">
+        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&w=56&h=56&q=80" alt="Jane profile" class="jane-profile">
         <span class="user-message-content">Jane: Text me today's air quality →</span>
       </div>
     </section>
@@ -421,6 +404,7 @@
       <div class="precautions">
         <i class="fas fa-shield-alt"></i>
         Take precautions (AQI=164)
+        <div class="precautions-visual"></div>
       </div>
     </section>
     <!-- Dashboard Card -->
