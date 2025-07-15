@@ -474,40 +474,76 @@
         </div>
       </section>
     </main>
-    <!-- MapLibre GL JS for OpenStreetMap -->
-    <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
-    <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
+    <!-- Azure Maps SDK -->
+    <link
+      rel="stylesheet"
+      href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css"
+      type="text/css"
+    />
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
     <script>
-      // MapLibre GL JS - OpenStreetMap
+      // Azure Maps
       document.addEventListener('DOMContentLoaded', function () {
-        const map = new maplibregl.Map({
-          container: 'mapContainer',
-          style: 'https://demotiles.maplibre.org/style.json',
+        const map = new atlas.Map('mapContainer', {
           center: [36.8219, -1.2921], // Nairobi
           zoom: 11,
-          attributionControl: false,
+          style: 'satellite_road_labels',
+          authOptions: {
+            authType: 'anonymous',
+          },
         });
 
-        // Add simple markers without labels for cleaner look
-        const locations = [
-          { lng: 36.8219, lat: -1.2921, size: 30, color: '#4CAF50' }, // Nairobi Central
-          { lng: 36.8172, lat: -1.274, size: 20, color: '#8BC34A' }, // Westlands
-          { lng: 36.8537, lat: -1.3098, size: 15, color: '#4CAF50' }, // Embakasi
-          { lng: 36.8566, lat: -1.2699, size: 25, color: '#FFC107' }, // Mathare
-          { lng: 36.7816, lat: -1.3127, size: 35, color: '#FF9800' }, // Kibera
-          { lng: 36.8795, lat: -1.224, size: 12, color: '#4CAF50' }, // Kasarani
-        ];
+        map.events.add('ready', function () {
+          // Create data source
+          const dataSource = new atlas.source.DataSource();
+          map.sources.add(dataSource);
 
-        locations.forEach((loc) => {
-          const el = document.createElement('div');
-          el.style.width = `${loc.size}px`;
-          el.style.height = `${loc.size}px`;
-          el.style.background = loc.color;
-          el.style.borderRadius = '50%';
-          el.style.opacity = '0.7';
-          el.style.border = '2px solid #fff';
-          el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
-          new maplibregl.Marker(el).setLngLat([loc.lng, loc.lat]).addTo(map);
+          // Add locations with environmental data
+          const locations = [
+            { lng: 36.8219, lat: -1.2921, size: 30, color: '#4CAF50', name: 'Nairobi Central' },
+            { lng: 36.8172, lat: -1.274, size: 20, color: '#8BC34A', name: 'Westlands' },
+            { lng: 36.8537, lat: -1.3098, size: 15, color: '#4CAF50', name: 'Embakasi' },
+            { lng: 36.8566, lat: -1.2699, size: 25, color: '#FFC107', name: 'Mathare' },
+            { lng: 36.7816, lat: -1.3127, size: 35, color: '#FF9800', name: 'Kibera' },
+            { lng: 36.8795, lat: -1.224, size: 12, color: '#4CAF50', name: 'Kasarani' },
+          ];
+
+          locations.forEach((loc) => {
+            // Create point feature
+            const point = new atlas.data.Feature(new atlas.data.Point([loc.lng, loc.lat]), {
+              name: loc.name,
+              color: loc.color,
+              size: loc.size,
+            });
+
+            dataSource.add(point);
+          });
+
+          // Add bubble layer for environmental monitoring points
+          map.layers.add(
+            new atlas.layer.BubbleLayer(dataSource, null, {
+              radius: ['case', ['has', 'size'], ['/', ['get', 'size'], 2], 8],
+              color: ['case', ['has', 'color'], ['get', 'color'], '#4CAF50'],
+              strokeColor: '#fff',
+              strokeWidth: 2,
+              opacity: 0.7,
+            }),
+          );
+
+          // Add popup on click
+          const popup = new atlas.Popup();
+          map.events.add('click', function (e) {
+            const shapes = map.layers.getRenderedShapes(e.position);
+            if (shapes.length > 0) {
+              const properties = shapes[0].getProperties();
+              popup.setOptions({
+                content: `<div style="padding: 10px;"><strong>${properties.name}</strong><br/>Environmental Monitoring Point</div>`,
+                position: shapes[0].getCoordinates(),
+                pixelOffset: [0, -10],
+              });
+              popup.open(map);
+            }
+          });
         });
       });
 

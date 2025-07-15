@@ -4,6 +4,10 @@
       "route": "/index.html",
       "serve": "/index.html"
     },
+     {
+      "route": "/azure-maps-config.js",
+      "serve": "/azure-maps-config.js"
+    },
     {
       "route": "/chat.html",
       "serve": "/chat.html"
