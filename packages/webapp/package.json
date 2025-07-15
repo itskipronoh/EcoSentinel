@@ -4,13 +4,20 @@
   "description": "EcoSentinel AI - Community-Driven Environmental Risk Intelligence Platform Web Application",
   "private": true,
   "type": "module",
-  "keywords": ["environmental intelligence", "climate action", "Kenya", "UNEP", "AI", "sustainability"],
+  "keywords": [
+    "environmental intelligence",
+    "climate action",
+    "Kenya",
+    "UNEP",
+    "AI",
+    "sustainability"
+  ],
   "author": "Gideon Kiprono <kipronoyegon68@gmail.com>",
   "license": "MIT",
   "homepage": "https://ecosentinelai.azurestaticapps.net",
   "repository": {
-  "type": "git",
-  "url": "https://github.com/itskipronoh/EcoSentinel.git"
+    "type": "git",
+    "url": "https://github.com/itskipronoh/EcoSentinel.git"
   },
   "scripts": {
     "build": "npm run clean && vite build",
@@ -29,9 +36,9 @@
     "lit": "^3.0.0"
   },
   "devDependencies": {
-    "vite": "^6.0.2",
+    "@types/node": "^20.0.0",
     "live-server": "^1.2.2",
-    "@types/node": "^20.0.0"
+    "vite": "^6.0.2"
   },
   "files": [
     "dist"

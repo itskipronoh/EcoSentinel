@@ -486,7 +486,7 @@
         <div class="chat-history" id="chatHistory">
           <!-- Chat history will be populated here -->
         </div>
-
+        <script type="module" src="./src/index.ts"></script>
         <div class="suggested-prompts">
           <div class="sidebar-title" style="font-size: 14px; margin-bottom: 12px">Quick Questions</div>
           <div class="prompt-item" onclick="sendQuickPrompt('What\'s the air quality in Nairobi today?')">
@@ -563,7 +563,8 @@
       localStorage.setItem('userId', userId);
 
       // API Configuration - Update this to match your backend
-      const API_BASE_URL = 'func-api-t2z2frqgsbaym.azurewebsites.net'; // Update with your API URL
+      const API_BASE_URL = 'https://func-api-t2z2frqgsbaym.azurewebsites.net'; 
+      
 
       // Initialize chat
       document.addEventListener('DOMContentLoaded', function () {
@@ -653,7 +654,7 @@
 
         try {
           // Call your API here - update this endpoint to match your backend
-          const response = await fetch(`${API_BASE_URL}/chat`, {
+          const response = await fetch(`${API_BASE_URL}/api/chats`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

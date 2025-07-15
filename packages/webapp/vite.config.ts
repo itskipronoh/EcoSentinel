@@ -6,6 +6,7 @@ import { defineConfig } from 'vite';
 process.env.VITE_API_URL = process.env.API_URL ?? '';
 console.log(`Using chat API base URL: "${process.env.VITE_API_URL}"`);
 
+
 export default defineConfig({
   build: {
     outDir: './dist',

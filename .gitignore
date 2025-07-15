@@ -14,10 +14,10 @@ yarn-error.log*
 # Deployment
 *.env
 .azure
-.staticwebapp
-.vscode/
-.vscode-test/
-.staticwebapp.config.json
+*.local
+# Build output
+.env
+
 
 # Misc
 .DS_Store

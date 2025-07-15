@@ -493,7 +493,7 @@
           authOptions: {
             authType: import.meta.env.VITE_AUTH_TYPE,
             subscriptionKey:import.meta.env.VITE_SUBSCRIPTION_KEY
-
+        
           },
         });
 
@@ -600,4 +600,25 @@
       });
     </script>
   </body>
+</html>
+onsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { drawBorder: false },
+              ticks: { maxTicksLimit: 5 },
+              title: { display: true, text: 'Alerts' }
+            },
+            x: {
+              grid: { display: false },
+              title: { display: true, text: 'Date' }
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
 </html>

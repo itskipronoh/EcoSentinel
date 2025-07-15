@@ -73,9 +73,6 @@
   },
   "platform": {
     "apiRuntime": "node:18"
-  },
-  "environmentVariables": {
-    "AZURE_MAPS_CLIENT_ID": ""
   }
 
 }
