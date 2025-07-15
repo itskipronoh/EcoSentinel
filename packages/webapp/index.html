@@ -1,541 +1,563 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EcoSentinel AI - Environmental Risk Intelligence Platform</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    :root {
-      --forest-green: #2E7D32;
-      --eco-green: #4CAF50;
-      --alert-red: #F44336;
-      --alert-orange: #FF9800;
-      --tech-blue: #00BCD4;
-      --gray: #757575;
-      --light-gray: #F5F5F5;
-      --white: #FFFFFF;
-      --border-radius: 14px;
-      --shadow: 0 2px 8px rgba(0,0,0,0.07);
-      --header-height: 64px;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', Arial, sans-serif;
-      background: var(--light-gray);
-      color: #222;
-      min-height: 100vh;
-    }
-    .header {
-      height: var(--header-height);
-      background: var(--white);
-      box-shadow: var(--shadow);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 32px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: var(--forest-green);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--white);
-      font-size: 22px;
-    }
-    .logo-text {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--forest-green);
-      letter-spacing: 0.5px;
-    }
-    .header-nav {
-      display: flex;
-      gap: 32px;
-      margin-left: 48px;
-      align-items: center;
-    }
-    .nav-item {
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-      font-size: 16px;
-      padding: 8px 0;
-      position: relative;
-      transition: color 0.2s;
-    }
-    .nav-item.active,
-    .nav-item:hover {
-      color: var(--forest-green);
-    }
-    .nav-item.active::after {
-      content: '';
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      height: 2px;
-      background: var(--forest-green);
-      border-radius: 2px;
-    }
-    .header-contact {
-      font-size: 15px;
-      color: #333;
-      margin-left: 24px;
-      opacity: 0.7;
-    }
-    .main-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      gap: 32px;
-      padding: 40px 32px;
-      min-height: calc(100vh - var(--header-height));
-    }
-    .card {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow);
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      min-width: 0;
-      min-height: 0;
-    }
-    .chat-header {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .message-question {
-      background: var(--forest-green);
-      color: var(--white);
-      padding: 12px 18px;
-      border-radius: 16px;
-      font-size: 16px;
-      font-weight: 500;
-      margin-bottom: 8px;
-      width: fit-content;
-    }
-    .message.assistant {
-      background: #F6F6F6;
-      color: #222;
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 15px;
-      margin-bottom: 8px;
-    }
-    .tree-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    .tree-img {
-      width: 70px;
-      height: 48px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid #eee;
-      background: linear-gradient(135deg, #81C784, #4CAF50);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 24px;
-    }
-    .tree-label {
-      font-size: 13px;
-      color: var(--forest-green);
-      font-weight: 600;
-    }
-    .message.user {
-      background: var(--tech-blue);
-      color: var(--white);
-      border-radius: 12px;
-      padding: 10px 16px;
-      font-size: 15px;
-      margin-bottom: 8px;
-      max-width: 280px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      align-self: flex-end;
-      margin-left: auto;
-    }
-    .jane-profile {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #4CAF50;
-      flex-shrink: 0;
-      background: linear-gradient(135deg, #FFB74D, #FFA726);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 12px;
-    }
-    .user-message-content {
-      flex: 1;
-      text-align: left;
-    }
-    .alerts-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--forest-green);
-      margin-bottom: 8px;
-    }
-    .alert-item {
-      background: #FEE8E8;
-      border-left: 4px solid var(--alert-red);
-      border-radius: 8px;
-      padding: 14px 16px;
-      margin-bottom: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .alert-title {
-      font-weight: 600;
-      color: var(--alert-red);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 15px;
-    }
-    .alert-content {
-      font-size: 15px;
-      color: #222;
-    }
-    .air-quality {
-      background: #FFF3E0;
-      border-left: 4px solid var(--alert-orange);
-      border-radius: 8px;
-      padding: 14px 16px;
-      margin-bottom: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .air-title {
-      font-weight: 600;
-      color: var(--alert-orange);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 15px;
-    }
-    .gauge-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 4px;
-    }
-    .gauge {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: #fff;
-      border: 2px solid #eee;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .gauge::before {
-      content: '';
-      display: block;
-      width: 48px;
-      height: 24px;
-      border-top: 8px solid var(--alert-red);
-      border-radius: 48px 48px 0 0;
-      position: absolute;
-      top: 12px; left: 6px;
-    }
-    .gauge-value {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--alert-red);
-      margin-left: 8px;
-    }
-    .precautions {
-      font-size: 15px;
-      color: var(--forest-green);
-      background: #E8F5E8;
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      position: relative;
-    }
-    .precautions-visual {
-      width: 40px;
-      height: 40px;
-      margin-left: auto;
-      background: linear-gradient(135deg, #81C784, #4CAF50);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .precautions-visual::after {
-      content: '✓';
-      color: white;
-      font-weight: bold;
-      font-size: 18px;
-    }
-    .dashboard-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--forest-green);
-      margin-bottom: 8px;
-    }
-    .chart-container {
-      width: 100%;
-      height: 180px;
-      margin-bottom: 8px;
-    }
-    .legend {
-      display: flex;
-      gap: 24px;
-      margin-top: 8px;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      color: #222;
-    }
-    .legend-color {
-      width: 14px;
-      height: 14px;
-      border-radius: 2px;
-      display: inline-block;
-    }
-    .map-card {
-      padding: 0;
-      overflow: hidden;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .map-container {
-      width: 100%;
-      height: 100%;
-      min-height: 320px;
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      position: relative;
-    }
-    .map-attribution {
-      position: absolute;
-      bottom: 8px;
-      right: 12px;
-      font-size: 11px;
-      color: #888;
-      background: rgba(255,255,255,0.7);
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    @media (max-width: 1024px) {
-      .main-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(4, minmax(0, 1fr));
-        gap: 24px;
-        padding: 24px 8px;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoSentinel AI - Environmental Risk Intelligence Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      :root {
+        --forest-green: #2e7d32;
+        --eco-green: #4caf50;
+        --alert-red: #f44336;
+        --alert-orange: #ff9800;
+        --tech-blue: #00bcd4;
+        --gray: #757575;
+        --light-gray: #f5f5f5;
+        --white: #ffffff;
+        --border-radius: 14px;
+        --shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+        --header-height: 64px;
       }
-      .map-container { min-height: 220px; }
-    }
-    @media (max-width: 600px) {
-      .header { flex-direction: column; align-items: flex-start; padding: 0 12px; height: auto; }
-      .header-nav { margin-left: 0; gap: 18px; }
-      .main-container { padding: 12px 2px; gap: 12px; }
-      .card, .map-card { padding: 12px; }
-    }
-  </style>
-</head>
-<body>
-  <header class="header">
-    <div class="logo">
-      <div class="logo-icon"><i class="fas fa-leaf"></i></div>
-      <div class="logo-text">EcoSentinel AI</div>
-    </div>
-    <nav class="header-nav">
-      <a href="index.html" class="nav-item active">Home</a>
-      <a href="chat.html" class="nav-item">Chat</a>
-      <a href="alerts.html" class="nav-item">Alerts</a>
-      <a href="about.html" class="nav-item">About</a>
-    </nav>
-  </header>
-  <main class="main-container">
-    <!-- Chat Card -->
-    <section class="card">
-      <div class="chat-header">Hello! How can I assist you today?</div>
-      <div class="message-question">Which trees are best for planting in Kibera?</div>
-      <div class="message assistant">
-        For planting in Kibera: I recommend native Acacia trees such as Acacia xanthophloea. They can help reduce flooding and improve soil quality.
-      </div>
-      <div class="tree-info">
-        <div class="tree-img">🌳</div>
-        <span class="tree-label">Acacia xanthophloea</span>
-      </div>
-      <div class="message user">
-        <div class="jane-profile">J</div>
-         <span class="user-message-content">
-        <a href="chat.html" style="color: inherit; text-decoration: none;">Jane: Text me today's air quality →</a>
-        </span>
-        <!-- <span class="user-message-content">Jane: Text me today's air quality →</span> -->
-      </div>
-    </section>
-    <!-- Map Card -->
-    <section class="map-card card">
-      <div class="map-container" id="mapContainer"></div>
-      <div class="map-attribution">Map data &copy; OpenStreetMap contributors</div>
-    </section>
-    <!-- Alerts Card -->
-    <section class="card">
-      <div class="alerts-title">Alerts</div>
-      <div class="alert-item">
-        <div class="alert-title"><i class="fas fa-exclamation-triangle"></i> Flood risk in Kawangware</div>
-        <div class="alert-content">Evacuate low-lying areas immediately</div>
-      </div>
-      <div class="air-quality">
-        <div class="air-title"><i class="fas fa-wind"></i> Today's air quality forecast: → Mathare</div>
-        <div class="gauge-row">
-          <div class="gauge"></div>
-          <span class="gauge-value">UNSAFE</span>
-        </div>
-      </div>
-      <div class="precautions">
-        <i class="fas fa-shield-alt"></i>
-        Take precautions (AQI=164)
-        <div class="precautions-visual"></div>
-      </div>
-    </section>
-    <!-- Dashboard Card -->
-    <section class="card">
-      <div class="dashboard-title">Dashboard</div>
-      <div class="chart-container">
-        <canvas id="environmentalChart"></canvas>
-      </div>
-      <div class="legend">
-        <div class="legend-item">
-          <span class="legend-color" style="background: #2E7D32;"></span>
-          Planting
-        </div>
-        <div class="legend-item">
-          <span class="legend-color" style="background: #4CAF50;"></span>
-          Pollution Alerts
-        </div>
-      </div>
-    </section>
-  </main>
-  <!-- MapLibre GL JS for OpenStreetMap -->
-  <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
-  <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
-  <script>
-    // MapLibre GL JS - OpenStreetMap
-    document.addEventListener('DOMContentLoaded', function() {
-      const map = new maplibregl.Map({
-        container: 'mapContainer',
-        style: 'https://demotiles.maplibre.org/style.json',
-        center: [36.8219, -1.2921], // Nairobi
-        zoom: 11,
-        attributionControl: false
-      });
-      
-      // Add simple markers without labels for cleaner look
-      const locations = [
-        { lng: 36.8219, lat: -1.2921, size: 30, color: "#4CAF50" }, // Nairobi Central
-        { lng: 36.8172, lat: -1.2740, size: 20, color: "#8BC34A" }, // Westlands
-        { lng: 36.8537, lat: -1.3098, size: 15, color: "#4CAF50" }, // Embakasi
-        { lng: 36.8566, lat: -1.2699, size: 25, color: "#FFC107" }, // Mathare
-        { lng: 36.7816, lat: -1.3127, size: 35, color: "#FF9800" }, // Kibera
-        { lng: 36.8795, lat: -1.2240, size: 12, color: "#4CAF50" }  // Kasarani
-      ];
-      
-      locations.forEach(loc => {
-        const el = document.createElement('div');
-        el.style.width = `${loc.size}px`;
-        el.style.height = `${loc.size}px`;
-        el.style.background = loc.color;
-        el.style.borderRadius = '50%';
-        el.style.opacity = '0.7';
-        el.style.border = '2px solid #fff';
-        el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
-        new maplibregl.Marker(el)
-          .setLngLat([loc.lng, loc.lat])
-          .addTo(map);
-      });
-    });
-
-    // Chart.js Dashboard
-    document.addEventListener('DOMContentLoaded', function() {
-      const ctx = document.getElementById('environmentalChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['Apr 21', 'Apr 22', 'Apr 23', 'Apr 24', 'Apr 25'],
-          datasets: [
-            {
-              label: 'Planting',
-              data: [8, 24, 19, 17, 22],
-              borderColor: '#2E7D32',
-              backgroundColor: 'rgba(46,125,50,0.08)',
-              borderWidth: 2,
-              tension: 0.3,
-              pointRadius: 0
-            },
-            {
-              label: 'Pollution Alerts',
-              data: [5, 10, 8, 14, 16],
-              borderColor: '#4CAF50',
-              backgroundColor: 'rgba(76,175,80,0.08)',
-              borderWidth: 2,
-              tension: 0.3,
-              pointRadius: 0
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: { drawBorder: false },
-              ticks: { maxTicksLimit: 5 },
-              title: { display: true, text: 'Alerts' }
-            },
-            x: {
-              grid: { display: false },
-              title: { display: true, text: 'Date' }
-            }
-          }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: 'Inter', Arial, sans-serif;
+        background: var(--light-gray);
+        color: #222;
+        min-height: 100vh;
+      }
+      .header {
+        height: var(--header-height);
+        background: var(--white);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 32px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .logo-icon {
+        width: 36px;
+        height: 36px;
+        background: var(--forest-green);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 22px;
+      }
+      .logo-text {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--forest-green);
+        letter-spacing: 0.5px;
+      }
+      .header-nav {
+        display: flex;
+        gap: 32px;
+        margin-left: 48px;
+        align-items: center;
+      }
+      .nav-item {
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        font-size: 16px;
+        padding: 8px 0;
+        position: relative;
+        transition: color 0.2s;
+      }
+      .nav-item.active,
+      .nav-item:hover {
+        color: var(--forest-green);
+      }
+      .nav-item.active::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 2px;
+        background: var(--forest-green);
+        border-radius: 2px;
+      }
+      .header-contact {
+        font-size: 15px;
+        color: #333;
+        margin-left: 24px;
+        opacity: 0.7;
+      }
+      .main-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 32px;
+        padding: 40px 32px;
+        min-height: calc(100vh - var(--header-height));
+      }
+      .card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        min-width: 0;
+        min-height: 0;
+      }
+      .chat-header {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .message-question {
+        background: var(--forest-green);
+        color: var(--white);
+        padding: 12px 18px;
+        border-radius: 16px;
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        width: fit-content;
+      }
+      .message.assistant {
+        background: #f6f6f6;
+        color: #222;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 15px;
+        margin-bottom: 8px;
+      }
+      .tree-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .tree-img {
+        width: 70px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #eee;
+        background: linear-gradient(135deg, #81c784, #4caf50);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+      }
+      .tree-label {
+        font-size: 13px;
+        color: var(--forest-green);
+        font-weight: 600;
+      }
+      .message.user {
+        background: var(--tech-blue);
+        color: var(--white);
+        border-radius: 12px;
+        padding: 10px 16px;
+        font-size: 15px;
+        margin-bottom: 8px;
+        max-width: 280px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        align-self: flex-end;
+        margin-left: auto;
+      }
+      .jane-profile {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #4caf50;
+        flex-shrink: 0;
+        background: linear-gradient(135deg, #ffb74d, #ffa726);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 12px;
+      }
+      .user-message-content {
+        flex: 1;
+        text-align: left;
+      }
+      .alerts-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--forest-green);
+        margin-bottom: 8px;
+      }
+      .alert-item {
+        background: #fee8e8;
+        border-left: 4px solid var(--alert-red);
+        border-radius: 8px;
+        padding: 14px 16px;
+        margin-bottom: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .alert-title {
+        font-weight: 600;
+        color: var(--alert-red);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+      }
+      .alert-content {
+        font-size: 15px;
+        color: #222;
+      }
+      .air-quality {
+        background: #fff3e0;
+        border-left: 4px solid var(--alert-orange);
+        border-radius: 8px;
+        padding: 14px 16px;
+        margin-bottom: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .air-title {
+        font-weight: 600;
+        color: var(--alert-orange);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+      }
+      .gauge-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 4px;
+      }
+      .gauge {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .gauge::before {
+        content: '';
+        display: block;
+        width: 48px;
+        height: 24px;
+        border-top: 8px solid var(--alert-red);
+        border-radius: 48px 48px 0 0;
+        position: absolute;
+        top: 12px;
+        left: 6px;
+      }
+      .gauge-value {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--alert-red);
+        margin-left: 8px;
+      }
+      .precautions {
+        font-size: 15px;
+        color: var(--forest-green);
+        background: #e8f5e8;
+        border-radius: 8px;
+        padding: 10px 14px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+      }
+      .precautions-visual {
+        width: 40px;
+        height: 40px;
+        margin-left: auto;
+        background: linear-gradient(135deg, #81c784, #4caf50);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .precautions-visual::after {
+        content: '✓';
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+      }
+      .dashboard-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--forest-green);
+        margin-bottom: 8px;
+      }
+      .chart-container {
+        width: 100%;
+        height: 180px;
+        margin-bottom: 8px;
+      }
+      .legend {
+        display: flex;
+        gap: 24px;
+        margin-top: 8px;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #222;
+      }
+      .legend-color {
+        width: 14px;
+        height: 14px;
+        border-radius: 2px;
+        display: inline-block;
+      }
+      .map-card {
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .map-container {
+        width: 100%;
+        height: 100%;
+        min-height: 320px;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        position: relative;
+      }
+      .map-attribution {
+        position: absolute;
+        bottom: 8px;
+        right: 12px;
+        font-size: 11px;
+        color: #888;
+        background: rgba(255, 255, 255, 0.7);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      @media (max-width: 1024px) {
+        .main-container {
+          grid-template-columns: 1fr;
+          grid-template-rows: repeat(4, minmax(0, 1fr));
+          gap: 24px;
+          padding: 24px 8px;
         }
+        .map-container {
+          min-height: 220px;
+        }
+      }
+      @media (max-width: 600px) {
+        .header {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 0 12px;
+          height: auto;
+        }
+        .header-nav {
+          margin-left: 0;
+          gap: 18px;
+        }
+        .main-container {
+          padding: 12px 2px;
+          gap: 12px;
+        }
+        .card,
+        .map-card {
+          padding: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+        <div class="logo-text">EcoSentinel AI</div>
+      </div>
+      <nav class="header-nav">
+        <a href="/" class="nav-item active">Home</a>
+        <a href="/chat" class="nav-item">Chat</a>
+        <a href="/alerts" class="nav-item">Alerts</a>
+        <a href="/about" class="nav-item">About</a>
+      </nav>
+    </header>
+    <main class="main-container">
+      <!-- Chat Card -->
+      <section class="card">
+        <div class="chat-header">Hello! How can I assist you today?</div>
+        <div class="message-question">Which trees are best for planting in Kibera?</div>
+        <div class="message assistant">
+          For planting in Kibera: I recommend native Acacia trees such as Acacia xanthophloea. They can help reduce
+          flooding and improve soil quality.
+        </div>
+        <div class="tree-info">
+          <div class="tree-img">🌳</div>
+          <span class="tree-label">Acacia xanthophloea</span>
+        </div>
+        <div class="message user">
+          <div class="jane-profile">J</div>
+          <span class="user-message-content">
+            <a href="/chat" style="color: inherit; text-decoration: none">Jane: Text me today's air quality →</a>
+          </span>
+          <!-- <span class="user-message-content">Jane: Text me today's air quality →</span> -->
+        </div>
+      </section>
+      <!-- Map Card -->
+      <section class="map-card card">
+        <div class="map-container" id="mapContainer"></div>
+        <div class="map-attribution">Map data &copy; OpenStreetMap contributors</div>
+      </section>
+      <!-- Alerts Card -->
+      <section class="card">
+        <div class="alerts-title">Alerts</div>
+        <div class="alert-item">
+          <div class="alert-title"><i class="fas fa-exclamation-triangle"></i> Flood risk in Kawangware</div>
+          <div class="alert-content">Evacuate low-lying areas immediately</div>
+        </div>
+        <div class="air-quality">
+          <div class="air-title"><i class="fas fa-wind"></i> Today's air quality forecast: → Mathare</div>
+          <div class="gauge-row">
+            <div class="gauge"></div>
+            <span class="gauge-value">UNSAFE</span>
+          </div>
+        </div>
+        <div class="precautions">
+          <i class="fas fa-shield-alt"></i>
+          Take precautions (AQI=164)
+          <div class="precautions-visual"></div>
+        </div>
+      </section>
+      <!-- Dashboard Card -->
+      <section class="card">
+        <div class="dashboard-title">Dashboard</div>
+        <div class="chart-container">
+          <canvas id="environmentalChart"></canvas>
+        </div>
+        <div class="legend">
+          <div class="legend-item">
+            <span class="legend-color" style="background: #2e7d32"></span>
+            Planting
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background: #4caf50"></span>
+            Pollution Alerts
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- MapLibre GL JS for OpenStreetMap -->
+    <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
+    <script>
+      // MapLibre GL JS - OpenStreetMap
+      document.addEventListener('DOMContentLoaded', function () {
+        const map = new maplibregl.Map({
+          container: 'mapContainer',
+          style: 'https://demotiles.maplibre.org/style.json',
+          center: [36.8219, -1.2921], // Nairobi
+          zoom: 11,
+          attributionControl: false,
+        });
+
+        // Add simple markers without labels for cleaner look
+        const locations = [
+          { lng: 36.8219, lat: -1.2921, size: 30, color: '#4CAF50' }, // Nairobi Central
+          { lng: 36.8172, lat: -1.274, size: 20, color: '#8BC34A' }, // Westlands
+          { lng: 36.8537, lat: -1.3098, size: 15, color: '#4CAF50' }, // Embakasi
+          { lng: 36.8566, lat: -1.2699, size: 25, color: '#FFC107' }, // Mathare
+          { lng: 36.7816, lat: -1.3127, size: 35, color: '#FF9800' }, // Kibera
+          { lng: 36.8795, lat: -1.224, size: 12, color: '#4CAF50' }, // Kasarani
+        ];
+
+        locations.forEach((loc) => {
+          const el = document.createElement('div');
+          el.style.width = `${loc.size}px`;
+          el.style.height = `${loc.size}px`;
+          el.style.background = loc.color;
+          el.style.borderRadius = '50%';
+          el.style.opacity = '0.7';
+          el.style.border = '2px solid #fff';
+          el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
+          new maplibregl.Marker(el).setLngLat([loc.lng, loc.lat]).addTo(map);
+        });
       });
-    });
-  </script>
-</body>
+
+      // Chart.js Dashboard
+      document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('environmentalChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['Apr 21', 'Apr 22', 'Apr 23', 'Apr 24', 'Apr 25'],
+            datasets: [
+              {
+                label: 'Planting',
+                data: [8, 24, 19, 17, 22],
+                borderColor: '#2E7D32',
+                backgroundColor: 'rgba(46,125,50,0.08)',
+                borderWidth: 2,
+                tension: 0.3,
+                pointRadius: 0,
+              },
+              {
+                label: 'Pollution Alerts',
+                data: [5, 10, 8, 14, 16],
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76,175,80,0.08)',
+                borderWidth: 2,
+                tension: 0.3,
+                pointRadius: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { drawBorder: false },
+                ticks: { maxTicksLimit: 5 },
+                title: { display: true, text: 'Alerts' },
+              },
+              x: {
+                grid: { display: false },
+                title: { display: true, text: 'Date' },
+              },
+            },
+          },
+        });
+      });
+    </script>
+  </body>
 </html>

@@ -1,752 +1,760 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EcoSentinel AI - Environmental Alerts</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --forest-green: #2E7D32;
-      --eco-green: #4CAF50;
-      --light-green: #E8F5E8;
-      --tech-blue: #00BCD4;
-      --alert-red: #F44336;
-      --alert-orange: #FF9800;
-      --warning-yellow: #FFC107;
-      --gray: #757575;
-      --light-gray: #F5F5F5;
-      --white: #FFFFFF;
-      --border-radius: 14px;
-      --shadow: 0 2px 8px rgba(0,0,0,0.07);
-      --header-height: 64px;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoSentinel AI - Environmental Alerts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+      :root {
+        --forest-green: #2e7d32;
+        --eco-green: #4caf50;
+        --light-green: #e8f5e8;
+        --tech-blue: #00bcd4;
+        --alert-red: #f44336;
+        --alert-orange: #ff9800;
+        --warning-yellow: #ffc107;
+        --gray: #757575;
+        --light-gray: #f5f5f5;
+        --white: #ffffff;
+        --border-radius: 14px;
+        --shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+        --header-height: 64px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Inter', Arial, sans-serif;
+        background: var(--light-gray);
+        color: #222;
+        min-height: 100vh;
+      }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Inter', Arial, sans-serif;
-      background: var(--light-gray);
-      color: #222;
-      min-height: 100vh;
-    }
-
-    .header {
-      height: var(--header-height);
-      background: var(--white);
-      box-shadow: var(--shadow);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 32px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: var(--forest-green);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--white);
-      font-size: 22px;
-    }
-
-    .logo-text {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--forest-green);
-      letter-spacing: 0.5px;
-    }
-
-    .header-nav {
-      display: flex;
-      gap: 32px;
-      margin-left: 48px;
-      align-items: center;
-    }
-
-    .nav-item {
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-      font-size: 16px;
-      padding: 8px 0;
-      position: relative;
-      transition: color 0.2s;
-    }
-
-    .nav-item.active,
-    .nav-item:hover {
-      color: var(--forest-green);
-    }
-
-    .nav-item.active::after {
-      content: '';
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      height: 2px;
-      background: var(--forest-green);
-      border-radius: 2px;
-    }
-
-    .header-contact {
-      font-size: 15px;
-      color: #333;
-      margin-left: 24px;
-      opacity: 0.7;
-    }
-
-    .main-container {
-      padding: 40px 32px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .search-container {
-      margin-bottom: 32px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .search-wrapper {
-      position: relative;
-      max-width: 600px;
-      width: 100%;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 12px 16px 12px 48px;
-      border: 2px solid #E0E0E0;
-      border-radius: var(--border-radius);
-      font-size: 16px;
-      font-family: inherit;
-      background: var(--white);
-      transition: border-color 0.2s;
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: var(--forest-green);
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--gray);
-      font-size: 18px;
-    }
-
-    .search-btn {
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: var(--forest-green);
-      color: var(--white);
-      border: none;
-      border-radius: 8px;
-      padding: 8px 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .search-btn:hover {
-      background: #1B5E20;
-    }
-
-    .alerts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-      margin-bottom: 40px;
-    }
-
-    .alert-card {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 24px;
-      box-shadow: var(--shadow);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .alert-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    }
-
-    .air-quality-card {
-      background: linear-gradient(135deg, #FFF3E0, #FFECB3);
-      border-left: 4px solid var(--alert-orange);
-    }
-
-    .weather-card {
-      background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
-      border-left: 4px solid var(--tech-blue);
-    }
-
-    .ai-insight-card {
-      background: linear-gradient(135deg, var(--light-green), #C8E6C9);
-      border-left: 4px solid var(--eco-green);
-    }
-
-    .water-quality-card {
-      background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
-      border-left: 4px solid var(--warning-yellow);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-
-    .card-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #333;
-    }
-
-    .card-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-    }
-
-    .air-quality-icon {
-      background: var(--alert-orange);
-      color: var(--white);
-    }
-
-    .weather-icon {
-      background: var(--tech-blue);
-      color: var(--white);
-    }
-
-    .ai-icon {
-      background: var(--eco-green);
-      color: var(--white);
-    }
-
-    .water-icon {
-      background: var(--warning-yellow);
-      color: var(--white);
-    }
-
-    .status-badge {
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .status-critical {
-      background: #FFEBEE;
-      color: var(--alert-red);
-    }
-
-    .status-warning {
-      background: #FFF3E0;
-      color: var(--alert-orange);
-    }
-
-    .status-info {
-      background: #E3F2FD;
-      color: var(--tech-blue);
-    }
-
-    .status-unverified {
-      background: #FFF8E1;
-      color: var(--warning-yellow);
-    }
-
-    .card-content {
-      margin-bottom: 16px;
-    }
-
-    .location-info {
-      font-size: 14px;
-      color: var(--gray);
-      margin-bottom: 8px;
-    }
-
-    .weather-info {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin: 12px 0;
-    }
-
-    .temp-display {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    .weather-detail {
-      font-size: 14px;
-      color: var(--gray);
-    }
-
-    .alerts-section {
-      margin-top: 40px;
-    }
-
-    .section-title {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--forest-green);
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .alert-item {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: var(--shadow);
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      transition: transform 0.2s;
-    }
-
-    .alert-item:hover {
-      transform: translateX(4px);
-    }
-
-    .alert-item.urgent {
-      border-left: 4px solid var(--alert-red);
-      background: linear-gradient(135deg, #FFEBEE, #FFCDD2);
-    }
-
-    .alert-item.warning {
-      border-left: 4px solid var(--alert-orange);
-      background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
-    }
-
-    .alert-item.info {
-      border-left: 4px solid var(--tech-blue);
-      background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
-    }
-
-    .alert-priority {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-top: 6px;
-      flex-shrink: 0;
-    }
-
-    .priority-urgent {
-      background: var(--alert-red);
-      box-shadow: 0 0 8px rgba(244, 67, 54, 0.4);
-    }
-
-    .priority-warning {
-      background: var(--alert-orange);
-      box-shadow: 0 0 8px rgba(255, 152, 0, 0.4);
-    }
-
-    .priority-info {
-      background: var(--tech-blue);
-      box-shadow: 0 0 8px rgba(0, 188, 212, 0.4);
-    }
-
-    .alert-content {
-      flex: 1;
-    }
-
-    .alert-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 4px;
-    }
-
-    .alert-description {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 8px;
-      line-height: 1.4;
-    }
-
-    .alert-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      color: var(--gray);
-    }
-
-    .alert-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .action-btn {
-      padding: 4px 8px;
-      border: 1px solid #E0E0E0;
-      border-radius: 6px;
-      background: var(--white);
-      color: var(--forest-green);
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-
-    .action-btn:hover {
-      background: var(--forest-green);
-      color: var(--white);
-    }
-
-    .map-section {
-      margin-top: 40px;
-      background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 24px;
-      box-shadow: var(--shadow);
-    }
-
-    .map-placeholder {
-      width: 100%;
-      height: 300px;
-      background: linear-gradient(135deg, #E8F5E8, #C8E6C9);
-      border-radius: var(--border-radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--forest-green);
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    @media (max-width: 768px) {
       .header {
-        padding: 0 16px;
+        height: var(--header-height);
+        background: var(--white);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 32px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
       }
 
-      .header-nav {
-        gap: 16px;
-        margin-left: 16px;
-      }
-
-      .main-container {
-        padding: 24px 16px;
-      }
-
-      .alerts-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-
-      .alert-item {
-        flex-direction: column;
+      .logo {
+        display: flex;
+        align-items: center;
         gap: 12px;
       }
 
-      .alert-meta {
-        flex-direction: column;
+      .logo-icon {
+        width: 36px;
+        height: 36px;
+        background: var(--forest-green);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 22px;
+      }
+
+      .logo-text {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--forest-green);
+        letter-spacing: 0.5px;
+      }
+
+      .header-nav {
+        display: flex;
+        gap: 32px;
+        margin-left: 48px;
+        align-items: center;
+      }
+
+      .nav-item {
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        font-size: 16px;
+        padding: 8px 0;
+        position: relative;
+        transition: color 0.2s;
+      }
+
+      .nav-item.active,
+      .nav-item:hover {
+        color: var(--forest-green);
+      }
+
+      .nav-item.active::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 2px;
+        background: var(--forest-green);
+        border-radius: 2px;
+      }
+
+      .header-contact {
+        font-size: 15px;
+        color: #333;
+        margin-left: 24px;
+        opacity: 0.7;
+      }
+
+      .main-container {
+        padding: 40px 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .search-container {
+        margin-bottom: 32px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .search-wrapper {
+        position: relative;
+        max-width: 600px;
+        width: 100%;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 12px 16px 12px 48px;
+        border: 2px solid #e0e0e0;
+        border-radius: var(--border-radius);
+        font-size: 16px;
+        font-family: inherit;
+        background: var(--white);
+        transition: border-color 0.2s;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--forest-green);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+        font-size: 18px;
+      }
+
+      .search-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--forest-green);
+        color: var(--white);
+        border: none;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .search-btn:hover {
+        background: #1b5e20;
+      }
+
+      .alerts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
+      }
+
+      .alert-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 24px;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .alert-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .air-quality-card {
+        background: linear-gradient(135deg, #fff3e0, #ffecb3);
+        border-left: 4px solid var(--alert-orange);
+      }
+
+      .weather-card {
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        border-left: 4px solid var(--tech-blue);
+      }
+
+      .ai-insight-card {
+        background: linear-gradient(135deg, var(--light-green), #c8e6c9);
+        border-left: 4px solid var(--eco-green);
+      }
+
+      .water-quality-card {
+        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+        border-left: 4px solid var(--warning-yellow);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+
+      .card-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #333;
+      }
+
+      .card-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+
+      .air-quality-icon {
+        background: var(--alert-orange);
+        color: var(--white);
+      }
+
+      .weather-icon {
+        background: var(--tech-blue);
+        color: var(--white);
+      }
+
+      .ai-icon {
+        background: var(--eco-green);
+        color: var(--white);
+      }
+
+      .water-icon {
+        background: var(--warning-yellow);
+        color: var(--white);
+      }
+
+      .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .status-critical {
+        background: #ffebee;
+        color: var(--alert-red);
+      }
+
+      .status-warning {
+        background: #fff3e0;
+        color: var(--alert-orange);
+      }
+
+      .status-info {
+        background: #e3f2fd;
+        color: var(--tech-blue);
+      }
+
+      .status-unverified {
+        background: #fff8e1;
+        color: var(--warning-yellow);
+      }
+
+      .card-content {
+        margin-bottom: 16px;
+      }
+
+      .location-info {
+        font-size: 14px;
+        color: var(--gray);
+        margin-bottom: 8px;
+      }
+
+      .weather-info {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 12px 0;
+      }
+
+      .temp-display {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .weather-detail {
+        font-size: 14px;
+        color: var(--gray);
+      }
+
+      .alerts-section {
+        margin-top: 40px;
+      }
+
+      .section-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--forest-green);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .alert-item {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow);
+        display: flex;
         align-items: flex-start;
+        gap: 16px;
+        transition: transform 0.2s;
+      }
+
+      .alert-item:hover {
+        transform: translateX(4px);
+      }
+
+      .alert-item.urgent {
+        border-left: 4px solid var(--alert-red);
+        background: linear-gradient(135deg, #ffebee, #ffcdd2);
+      }
+
+      .alert-item.warning {
+        border-left: 4px solid var(--alert-orange);
+        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      }
+
+      .alert-item.info {
+        border-left: 4px solid var(--tech-blue);
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      }
+
+      .alert-priority {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-top: 6px;
+        flex-shrink: 0;
+      }
+
+      .priority-urgent {
+        background: var(--alert-red);
+        box-shadow: 0 0 8px rgba(244, 67, 54, 0.4);
+      }
+
+      .priority-warning {
+        background: var(--alert-orange);
+        box-shadow: 0 0 8px rgba(255, 152, 0, 0.4);
+      }
+
+      .priority-info {
+        background: var(--tech-blue);
+        box-shadow: 0 0 8px rgba(0, 188, 212, 0.4);
+      }
+
+      .alert-content {
+        flex: 1;
+      }
+
+      .alert-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 4px;
+      }
+
+      .alert-description {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 8px;
+        line-height: 1.4;
+      }
+
+      .alert-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: var(--gray);
+      }
+
+      .alert-actions {
+        display: flex;
         gap: 8px;
       }
-    }
-  </style>
-</head>
-<body>
-  <header class="header">
-    <div class="logo">
-      <div class="logo-icon"><i class="fas fa-leaf"></i></div>
-      <div class="logo-text">EcoSentinel AI</div>
-    </div>
-    <nav class="header-nav">
-      <a href="index.html" class="nav-item">Home</a>
-      <a href="chat.html" class="nav-item">Chat</a>
-      <a href="alerts.html" class="nav-item active">Alerts</a>
-      <a href="about.html" class="nav-item">About</a>
-    </nav>
-  </header>
 
-  <main class="main-container">
-    <!-- Search Section -->
-    <div class="search-container">
-      <div class="search-wrapper">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" class="search-input" placeholder="Search alerts, locations, or environmental data...">
-        <button class="search-btn">Search</button>
-      </div>
-    </div>
-
-    <!-- Environmental Status Cards -->
-    <div class="alerts-grid">
-      <!-- Air Quality Card -->
-      <div class="alert-card air-quality-card">
-        <div class="card-header">
-          <h3 class="card-title">Air Quality</h3>
-          <div class="card-icon air-quality-icon">
-            <i class="fas fa-wind"></i>
-          </div>
-        </div>
-        <div class="card-content">
-          <div class="status-badge status-critical">Unsafe</div>
-          <div class="location-info">in Mathare</div>
-          <p>PM2.5 levels exceed safe limits. Avoid outdoor activities.</p>
-        </div>
-      </div>
-
-      <!-- Weather Forecast Card -->
-      <div class="alert-card weather-card">
-        <div class="card-header">
-          <h3 class="card-title">Weather Forecast</h3>
-          <div class="card-icon weather-icon">
-            <i class="fas fa-cloud-sun"></i>
-          </div>
-        </div>
-        <div class="card-content">
-          <div class="location-info">Nairobi</div>
-          <div class="weather-info">
-            <div class="temp-display">
-              <i class="fas fa-sun" style="color: #FFA726;"></i>
-              <span>28°</span>
-            </div>
-            <div class="temp-display">
-              <i class="fas fa-cloud" style="color: #90A4AE;"></i>
-              <span>17°</span>
-            </div>
-          </div>
-          <div class="weather-detail">Partly cloudy with moderate temperatures</div>
-        </div>
-      </div>
-
-      <!-- AI Insight Card -->
-      <div class="alert-card ai-insight-card">
-        <div class="card-header">
-          <h3 class="card-title">AI Insight</h3>
-          <div class="card-icon ai-icon">
-            <i class="fas fa-brain"></i>
-          </div>
-        </div>
-        <div class="card-content">
-          <div class="status-badge status-info">Recommendation</div>
-          <p>Plant Acacia trees to reduce flood risk and improve soil quality in urban areas.</p>
-        </div>
-      </div>
-
-      <!-- Water Quality Card -->
-      <div class="alert-card water-quality-card">
-        <div class="card-header">
-          <h3 class="card-title">Water Quality</h3>
-          <div class="card-icon water-icon">
-            <i class="fas fa-tint"></i>
-          </div>
-        </div>
-        <div class="card-content">
-          <div class="status-badge status-unverified">Unverified</div>
-          <div class="location-info">in Kibera</div>
-          <p>Water quality data pending verification. Use alternative sources.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Alerts Section -->
-    <section class="alerts-section">
-      <h2 class="section-title">
-        <i class="fas fa-exclamation-triangle"></i>
-        Active Alerts
-      </h2>
-
-      <!-- Urgent Alert -->
-      <div class="alert-item urgent">
-        <div class="alert-priority priority-urgent"></div>
-        <div class="alert-content">
-          <h3 class="alert-title">
-            <i class="fas fa-exclamation-triangle" style="color: var(--alert-red); margin-right: 8px;"></i>
-            URGENT - Flood risk in Kawangware
-          </h3>
-          <p class="alert-description">
-            Evacuate the following areas: Xview, map! Heavy rainfall has caused water levels to rise rapidly in low-lying areas.
-          </p>
-          <div class="alert-meta">
-            <span>June 1, 2024</span>
-            <div class="alert-actions">
-              <a href="#" class="action-btn">View Map</a>
-              <a href="#" class="action-btn">Emergency Info</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Air Quality Alert -->
-      <div class="alert-item warning">
-        <div class="alert-priority priority-warning"></div>
-        <div class="alert-content">
-          <h3 class="alert-title">
-            <i class="fas fa-wind" style="color: var(--alert-orange); margin-right: 8px;"></i>
-            Air Quality Alert - Unsafe levels in Mathare
-          </h3>
-          <p class="alert-description">
-            PM2.5 concentrations have reached 164 AQI (Unhealthy). Sensitive groups should avoid outdoor activities.
-          </p>
-          <div class="alert-meta">
-            <span>June 8, 2024</span>
-            <div class="alert-actions">
-              <a href="#" class="action-btn">View Details</a>
-              <a href="#" class="action-btn">Health Advisory</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Water Quality Alert -->
-      <div class="alert-item info">
-        <div class="alert-priority priority-info"></div>
-        <div class="alert-content">
-          <h3 class="alert-title">
-            <i class="fas fa-tint" style="color: var(--tech-blue); margin-right: 8px;"></i>
-            Water Quality Alert
-          </h3>
-          <p class="alert-description">
-            Contamination detected in Kibera water sources. Avoid using water from unverified sources until further notice.
-          </p>
-          <div class="alert-meta">
-            <span>2 hours ago</span>
-            <div class="alert-actions">
-              <a href="#" class="action-btn">Alternative Sources</a>
-              <a href="#" class="action-btn">Report Issue</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Temperature Warning -->
-      <div class="alert-item warning">
-        <div class="alert-priority priority-warning"></div>
-        <div class="alert-content">
-          <h3 class="alert-title">
-            <i class="fas fa-thermometer-half" style="color: var(--alert-orange); margin-right: 8px;"></i>
-            Temperature Spike Warning
-          </h3>
-          <p class="alert-description">
-            Unusual temperature increase detected in industrial zones. Monitor for potential heat-related health risks.
-          </p>
-          <div class="alert-meta">
-            <span>4 hours ago</span>
-            <div class="alert-actions">
-              <a href="#" class="action-btn">View Trends</a>
-              <a href="#" class="action-btn">Safety Tips</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Noise Pollution Alert -->
-      <div class="alert-item warning">
-        <div class="alert-priority priority-warning"></div>
-        <div class="alert-content">
-          <h3 class="alert-title">
-            <i class="fas fa-volume-up" style="color: var(--alert-orange); margin-right: 8px;"></i>
-            Noise Pollution Alert
-          </h3>
-          <p class="alert-description">
-            Noise levels exceeding 85dB detected near school zones. Potential impact on children's health and learning.
-          </p>
-          <div class="alert-meta">
-            <span>6 hours ago</span>
-            <div class="alert-actions">
-              <a href="#" class="action-btn">Noise Map</a>
-              <a href="#" class="action-btn">Report Source</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Map Section -->
-    <section class="map-section">
-      <h2 class="section-title">
-        <i class="fas fa-map-marked-alt"></i>
-        Environmental Monitoring Map
-      </h2>
-      <div class="map-placeholder">
-        <i class="fas fa-map" style="margin-right: 12px;"></i>
-        Interactive Environmental Map - Click to View Details
-      </div>
-    </section>
-  </main>
-
-  <script>
-    // Search functionality
-    document.querySelector('.search-input').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        performSearch();
+      .action-btn {
+        padding: 4px 8px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        background: var(--white);
+        color: var(--forest-green);
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 500;
+        transition: all 0.2s;
       }
-    });
 
-    document.querySelector('.search-btn').addEventListener('click', performSearch);
-
-    function performSearch() {
-      const searchTerm = document.querySelector('.search-input').value;
-      if (searchTerm.trim()) {
-        // Implement search logic here
-        console.log('Searching for:', searchTerm);
-        // You can integrate with your backend API here
+      .action-btn:hover {
+        background: var(--forest-green);
+        color: var(--white);
       }
-    }
 
-    // Alert interaction
-    document.querySelectorAll('.action-btn').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const action = this.textContent;
-        console.log('Action clicked:', action);
-        // Implement action handlers here
+      .map-section {
+        margin-top: 40px;
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+
+      .map-placeholder {
+        width: 100%;
+        height: 300px;
+        background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+        border-radius: var(--border-radius);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--forest-green);
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      @media (max-width: 768px) {
+        .header {
+          padding: 0 16px;
+        }
+
+        .header-nav {
+          gap: 16px;
+          margin-left: 16px;
+        }
+
+        .main-container {
+          padding: 24px 16px;
+        }
+
+        .alerts-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .alert-item {
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .alert-meta {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+        <div class="logo-text">EcoSentinel AI</div>
+      </div>
+      <nav class="header-nav">
+        <a href="/" class="nav-item">Home</a>
+        <a href="/chat" class="nav-item">Chat</a>
+        <a href="/alerts" class="nav-item active">Alerts</a>
+        <a href="/about" class="nav-item">About</a>
+      </nav>
+    </header>
+
+    <main class="main-container">
+      <!-- Search Section -->
+      <div class="search-container">
+        <div class="search-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Search alerts, locations, or environmental data..." />
+          <button class="search-btn">Search</button>
+        </div>
+      </div>
+
+      <!-- Environmental Status Cards -->
+      <div class="alerts-grid">
+        <!-- Air Quality Card -->
+        <div class="alert-card air-quality-card">
+          <div class="card-header">
+            <h3 class="card-title">Air Quality</h3>
+            <div class="card-icon air-quality-icon">
+              <i class="fas fa-wind"></i>
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="status-badge status-critical">Unsafe</div>
+            <div class="location-info">in Mathare</div>
+            <p>PM2.5 levels exceed safe limits. Avoid outdoor activities.</p>
+          </div>
+        </div>
+
+        <!-- Weather Forecast Card -->
+        <div class="alert-card weather-card">
+          <div class="card-header">
+            <h3 class="card-title">Weather Forecast</h3>
+            <div class="card-icon weather-icon">
+              <i class="fas fa-cloud-sun"></i>
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="location-info">Nairobi</div>
+            <div class="weather-info">
+              <div class="temp-display">
+                <i class="fas fa-sun" style="color: #ffa726"></i>
+                <span>28°</span>
+              </div>
+              <div class="temp-display">
+                <i class="fas fa-cloud" style="color: #90a4ae"></i>
+                <span>17°</span>
+              </div>
+            </div>
+            <div class="weather-detail">Partly cloudy with moderate temperatures</div>
+          </div>
+        </div>
+
+        <!-- AI Insight Card -->
+        <div class="alert-card ai-insight-card">
+          <div class="card-header">
+            <h3 class="card-title">AI Insight</h3>
+            <div class="card-icon ai-icon">
+              <i class="fas fa-brain"></i>
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="status-badge status-info">Recommendation</div>
+            <p>Plant Acacia trees to reduce flood risk and improve soil quality in urban areas.</p>
+          </div>
+        </div>
+
+        <!-- Water Quality Card -->
+        <div class="alert-card water-quality-card">
+          <div class="card-header">
+            <h3 class="card-title">Water Quality</h3>
+            <div class="card-icon water-icon">
+              <i class="fas fa-tint"></i>
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="status-badge status-unverified">Unverified</div>
+            <div class="location-info">in Kibera</div>
+            <p>Water quality data pending verification. Use alternative sources.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alerts Section -->
+      <section class="alerts-section">
+        <h2 class="section-title">
+          <i class="fas fa-exclamation-triangle"></i>
+          Active Alerts
+        </h2>
+
+        <!-- Urgent Alert -->
+        <div class="alert-item urgent">
+          <div class="alert-priority priority-urgent"></div>
+          <div class="alert-content">
+            <h3 class="alert-title">
+              <i class="fas fa-exclamation-triangle" style="color: var(--alert-red); margin-right: 8px"></i>
+              URGENT - Flood risk in Kawangware
+            </h3>
+            <p class="alert-description">
+              Evacuate the following areas: Xview, map! Heavy rainfall has caused water levels to rise rapidly in
+              low-lying areas.
+            </p>
+            <div class="alert-meta">
+              <span>June 1, 2024</span>
+              <div class="alert-actions">
+                <a href="#" class="action-btn">View Map</a>
+                <a href="#" class="action-btn">Emergency Info</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Air Quality Alert -->
+        <div class="alert-item warning">
+          <div class="alert-priority priority-warning"></div>
+          <div class="alert-content">
+            <h3 class="alert-title">
+              <i class="fas fa-wind" style="color: var(--alert-orange); margin-right: 8px"></i>
+              Air Quality Alert - Unsafe levels in Mathare
+            </h3>
+            <p class="alert-description">
+              PM2.5 concentrations have reached 164 AQI (Unhealthy). Sensitive groups should avoid outdoor activities.
+            </p>
+            <div class="alert-meta">
+              <span>June 8, 2024</span>
+              <div class="alert-actions">
+                <a href="#" class="action-btn">View Details</a>
+                <a href="#" class="action-btn">Health Advisory</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Water Quality Alert -->
+        <div class="alert-item info">
+          <div class="alert-priority priority-info"></div>
+          <div class="alert-content">
+            <h3 class="alert-title">
+              <i class="fas fa-tint" style="color: var(--tech-blue); margin-right: 8px"></i>
+              Water Quality Alert
+            </h3>
+            <p class="alert-description">
+              Contamination detected in Kibera water sources. Avoid using water from unverified sources until further
+              notice.
+            </p>
+            <div class="alert-meta">
+              <span>2 hours ago</span>
+              <div class="alert-actions">
+                <a href="#" class="action-btn">Alternative Sources</a>
+                <a href="#" class="action-btn">Report Issue</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Temperature Warning -->
+        <div class="alert-item warning">
+          <div class="alert-priority priority-warning"></div>
+          <div class="alert-content">
+            <h3 class="alert-title">
+              <i class="fas fa-thermometer-half" style="color: var(--alert-orange); margin-right: 8px"></i>
+              Temperature Spike Warning
+            </h3>
+            <p class="alert-description">
+              Unusual temperature increase detected in industrial zones. Monitor for potential heat-related health
+              risks.
+            </p>
+            <div class="alert-meta">
+              <span>4 hours ago</span>
+              <div class="alert-actions">
+                <a href="#" class="action-btn">View Trends</a>
+                <a href="#" class="action-btn">Safety Tips</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Noise Pollution Alert -->
+        <div class="alert-item warning">
+          <div class="alert-priority priority-warning"></div>
+          <div class="alert-content">
+            <h3 class="alert-title">
+              <i class="fas fa-volume-up" style="color: var(--alert-orange); margin-right: 8px"></i>
+              Noise Pollution Alert
+            </h3>
+            <p class="alert-description">
+              Noise levels exceeding 85dB detected near school zones. Potential impact on children's health and
+              learning.
+            </p>
+            <div class="alert-meta">
+              <span>6 hours ago</span>
+              <div class="alert-actions">
+                <a href="#" class="action-btn">Noise Map</a>
+                <a href="#" class="action-btn">Report Source</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Map Section -->
+      <section class="map-section">
+        <h2 class="section-title">
+          <i class="fas fa-map-marked-alt"></i>
+          Environmental Monitoring Map
+        </h2>
+        <div class="map-placeholder">
+          <i class="fas fa-map" style="margin-right: 12px"></i>
+          Interactive Environmental Map - Click to View Details
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Search functionality
+      document.querySelector('.search-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          performSearch();
+        }
       });
-    });
 
-    // Auto-refresh alerts every 30 seconds
-    setInterval(() => {
-      // You can implement auto-refresh logic here
-      console.log('Refreshing alerts...');
-    }, 30000);
+      document.querySelector('.search-btn').addEventListener('click', performSearch);
 
-    // Add real-time timestamp updates
-    function updateTimestamps() {
-      const timeElements = document.querySelectorAll('.alert-meta span');
-      // Update relative timestamps
-    }
+      function performSearch() {
+        const searchTerm = document.querySelector('.search-input').value;
+        if (searchTerm.trim()) {
+          // Implement search logic here
+          console.log('Searching for:', searchTerm);
+          // You can integrate with your backend API here
+        }
+      }
 
-    setInterval(updateTimestamps, 60000); // Update every minute
-  </script>
-</body>
+      // Alert interaction
+      document.querySelectorAll('.action-btn').forEach((btn) => {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          const action = this.textContent;
+          console.log('Action clicked:', action);
+          // Implement action handlers here
+        });
+      });
+
+      // Auto-refresh alerts every 30 seconds
+      setInterval(() => {
+        // You can implement auto-refresh logic here
+        console.log('Refreshing alerts...');
+      }, 30000);
+
+      // Add real-time timestamp updates
+      function updateTimestamps() {
+        const timeElements = document.querySelectorAll('.alert-meta span');
+        // Update relative timestamps
+      }
+
+      setInterval(updateTimestamps, 60000); // Update every minute
+    </script>
+  </body>
 </html>

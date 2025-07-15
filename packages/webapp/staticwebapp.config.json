@@ -1,0 +1,61 @@
+{
+  "routes": [
+    {
+      "route": "/",
+      "serve": "/index.html"
+    },
+    {
+      "route": "/chat.html",
+      "serve": "/chat.html"
+    },
+    {
+      "route": "/alerts.html", 
+      "serve": "/alerts.html"
+    },
+    {
+      "route": "/about.html",
+      "serve": "/about.html"
+    },
+    {
+      "route": "/chat",
+      "serve": "/chat.html"
+    },
+    {
+      "route": "/alerts",
+      "serve": "/alerts.html"
+    },
+    {
+      "route": "/about",
+      "serve": "/about.html"
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": [
+      "/assets/*",
+      "/images/*", 
+      "/css/*",
+      "/js/*",
+      "*.{css,js,jpg,png,gif,ico,svg,woff,woff2,ttf,eot}"
+    ]
+  },
+  "mimeTypes": {
+    ".html": "text/html",
+    ".js": "text/javascript", 
+    ".css": "text/css",
+    ".json": "application/json",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".gif": "image/gif",
+    ".ico": "image/x-icon",
+    ".svg": "image/svg+xml"
+  },
+  "globalHeaders": {
+    "Cache-Control": "no-cache"
+  },
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/index.html"
+    }
+  }
+}
