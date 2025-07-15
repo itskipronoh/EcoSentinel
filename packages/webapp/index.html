@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EcoSentinel AI - Environmental Risk Intelligence Platform</title>
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -433,8 +435,7 @@
       </section>
       <!-- Map Card -->
       <section class="map-card card">
-        <div class="map-container" id="mapContainer"></div>
-        <div class="map-attribution">Map data &copy; OpenStreetMap contributors</div>
+        <div id="mapContainer" class="map-container"></div>
       </section>
       <!-- Alerts Card -->
       <section class="card">
@@ -484,12 +485,15 @@
     <script>
       // Azure Maps
       document.addEventListener('DOMContentLoaded', function () {
+        // Initialize map with subscription key authentication
         const map = new atlas.Map('mapContainer', {
           center: [36.8219, -1.2921], // Nairobi
           zoom: 11,
           style: 'satellite_road_labels',
           authOptions: {
-            authType: 'anonymous',
+            authType: import.meta.env.VITE_AUTH_TYPE,
+            subscriptionKey:import.meta.env.VITE_SUBSCRIPTION_KEY
+
           },
         });
 

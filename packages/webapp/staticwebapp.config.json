@@ -31,7 +31,12 @@
     {
       "route": "/about.html",
       "serve": "/about.html"
+    },
+     {
+      "route": "/api/*",
+      "allowedRoles": ["anonymous"]
     }
+
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
@@ -64,8 +69,13 @@
     "404": {
       "rewrite": "/index.html"
     }
+
   },
   "platform": {
     "apiRuntime": "node:18"
+  },
+  "environmentVariables": {
+    "AZURE_MAPS_CLIENT_ID": ""
   }
+
 }
