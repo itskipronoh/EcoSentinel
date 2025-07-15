@@ -7,9 +7,19 @@
   "keywords": ["environmental intelligence", "climate action", "Kenya", "UNEP", "AI", "sustainability"],
   "author": "Gideon Kiprono <kipronoyegon68@gmail.com>",
   "license": "MIT",
+  "homepage": "https://ecosentinelai.azurestaticapps.net",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/itskipronoh/EcoSentinel.git"
+  },
   "scripts": {
-    "dev": "vite --port 8000 --host",
-    "build": "vite build",
+     "build": "npm run copy:files",
+    "copy:files": "mkdir -p dist && cp *.html dist/ && cp *.js dist/ && cp staticwebapp.config.json dist/",
+    "dev": "npx live-server --port=3000 --host=localhost",
+    "start": "npx live-server --port=3000",
+    "deploy": "npm run build",
+    // "dev": "vite --port 8000 --host",
+    // "build": "vite build",
     "watch": "vite build --watch --minify false",
     "clean": "npx rimraf dist",
     "preview": "vite preview --port 8000"
@@ -20,6 +30,7 @@
   },
   "devDependencies": {
     "vite": "^6.0.2",
+    "live-server": "^1.2.2",
     "@types/node": "^20.0.0"
   },
   "files": [
