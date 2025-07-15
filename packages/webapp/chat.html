@@ -487,6 +487,7 @@
           <!-- Chat history will be populated here -->
         </div>
         <script type="module" src="./src/index.ts"></script>
+
         <div class="suggested-prompts">
           <div class="sidebar-title" style="font-size: 14px; margin-bottom: 12px">Quick Questions</div>
           <div class="prompt-item" onclick="sendQuickPrompt('What\'s the air quality in Nairobi today?')">
@@ -553,330 +554,330 @@
     </main>
 
     <script>
-      // Global variables
-      let currentSessionId = null;
-      let userId = localStorage.getItem('userId') || crypto.randomUUID();
-      let isLoading = false;
-      let chatHistory = JSON.parse(localStorage.getItem('ecosentinel_chatHistory')) || [];
+       // Global variables
+       let currentSessionId = null;
+       let userId = localStorage.getItem('userId') || crypto.randomUUID();
+       let isLoading = false;
+       let chatHistory = JSON.parse(localStorage.getItem('ecosentinel_chatHistory')) || [];
 
-      // Store user ID
-      localStorage.setItem('userId', userId);
+       // Store user ID
+       localStorage.setItem('userId', userId);
 
-      // API Configuration - Update this to match your backend
-      const API_BASE_URL = 'https://func-api-t2z2frqgsbaym.azurewebsites.net'; 
-      
 
-      // Initialize chat
-      document.addEventListener('DOMContentLoaded', function () {
-        loadChatHistory();
-        if (chatHistory.length === 0) {
-          startNewChat();
-        } else {
-          loadSession(chatHistory[0].id);
-        }
-      });
+      export const apiBaseUrl = import.meta.env.VITE_API_URL || '';
 
-      function startNewChat() {
-        currentSessionId = crypto.randomUUID();
-        clearMessages();
-        showWelcomeMessage();
 
-        const timestamp = new Date();
-        addToHistory(currentSessionId, 'New Conversation', timestamp);
-      }
+       // Initialize chat
+       document.addEventListener('DOMContentLoaded', function () {
+         loadChatHistory();
+         if (chatHistory.length === 0) {
+           startNewChat();
+         } else {
+           loadSession(chatHistory[0].id);
+         }
+       });
 
-      function clearMessages() {
-        const messagesContainer = document.getElementById('chatMessages');
-        messagesContainer.innerHTML = '';
-      }
+       function startNewChat() {
+         currentSessionId = crypto.randomUUID();
+         clearMessages();
+         showWelcomeMessage();
 
-      function showWelcomeMessage() {
-        const messagesContainer = document.getElementById('chatMessages');
-        messagesContainer.innerHTML = `
-        <div class="welcome-message" id="welcomeMessage">
-          <div class="welcome-title">Welcome to EcoSentinel AI</div>
-          <div class="welcome-subtitle">Your environmental monitoring and analysis assistant</div>
-          
-          <div class="quick-actions">
-            <div class="quick-action" onclick="sendQuickPrompt('What\\'s the current air quality in major Kenyan cities?')">
-              <div class="quick-action-icon"><i class="fas fa-wind"></i></div>
-              <div class="quick-action-title">Air Quality</div>
-              <div class="quick-action-desc">Check pollution levels</div>
-            </div>
-            <div class="quick-action" onclick="sendQuickPrompt('Recommend trees for reforestation in arid areas')">
-              <div class="quick-action-icon"><i class="fas fa-tree"></i></div>
-              <div class="quick-action-title">Tree Planting</div>
-              <div class="quick-action-desc">Get recommendations</div>
-            </div>
-            <div class="quick-action" onclick="sendQuickPrompt('Current flood and drought alerts for Kenya')">
-              <div class="quick-action-icon"><i class="fas fa-exclamation-triangle"></i></div>
-              <div class="quick-action-title">Risk Alerts</div>
-              <div class="quick-action-desc">Monitor threats</div>
-            </div>
-            <div class="quick-action" onclick="sendQuickPrompt('Analyze environmental trends in East Africa')">
-              <div class="quick-action-icon"><i class="fas fa-chart-line"></i></div>
-              <div class="quick-action-title">Data Analysis</div>
-              <div class="quick-action-desc">Environmental insights</div>
-            </div>
-          </div>
-        </div>
-      `;
-      }
+         const timestamp = new Date();
+         addToHistory(currentSessionId, 'New Conversation', timestamp);
+       }
 
-      function sendQuickPrompt(prompt) {
-        const input = document.getElementById('chatInput');
-        input.value = prompt;
-        sendMessage();
-      }
+       function clearMessages() {
+         const messagesContainer = document.getElementById('chatMessages');
+         messagesContainer.innerHTML = '';
+       }
 
-      async function sendMessage() {
-        const input = document.getElementById('chatInput');
-        const message = input.value.trim();
+       function showWelcomeMessage() {
+         const messagesContainer = document.getElementById('chatMessages');
+         messagesContainer.innerHTML = `
+         <div class="welcome-message" id="welcomeMessage">
+           <div class="welcome-title">Welcome to EcoSentinel AI</div>
+           <div class="welcome-subtitle">Your environmental monitoring and analysis assistant</div>
 
-        if (!message || isLoading) return;
+           <div class="quick-actions">
+             <div class="quick-action" onclick="sendQuickPrompt('What\\'s the current air quality in major Kenyan cities?')">
+               <div class="quick-action-icon"><i class="fas fa-wind"></i></div>
+               <div class="quick-action-title">Air Quality</div>
+               <div class="quick-action-desc">Check pollution levels</div>
+             </div>
+             <div class="quick-action" onclick="sendQuickPrompt('Recommend trees for reforestation in arid areas')">
+               <div class="quick-action-icon"><i class="fas fa-tree"></i></div>
+               <div class="quick-action-title">Tree Planting</div>
+               <div class="quick-action-desc">Get recommendations</div>
+             </div>
+             <div class="quick-action" onclick="sendQuickPrompt('Current flood and drought alerts for Kenya')">
+               <div class="quick-action-icon"><i class="fas fa-exclamation-triangle"></i></div>
+               <div class="quick-action-title">Risk Alerts</div>
+               <div class="quick-action-desc">Monitor threats</div>
+             </div>
+             <div class="quick-action" onclick="sendQuickPrompt('Analyze environmental trends in East Africa')">
+               <div class="quick-action-icon"><i class="fas fa-chart-line"></i></div>
+               <div class="quick-action-title">Data Analysis</div>
+               <div class="quick-action-desc">Environmental insights</div>
+             </div>
+           </div>
+         </div>
+       `;
+       }
 
-        // Clear welcome message if it exists
-        const welcomeMessage = document.getElementById('welcomeMessage');
-        if (welcomeMessage) {
-          welcomeMessage.remove();
-        }
+       function sendQuickPrompt(prompt) {
+         const input = document.getElementById('chatInput');
+         input.value = prompt;
+         sendMessage();
+       }
 
-        // Add user message to chat
-        addMessage(message, 'user');
-        input.value = '';
-        adjustTextareaHeight(input);
+       async function sendMessage() {
+         const input = document.getElementById('chatInput');
+         const message = input.value.trim();
 
-        // Show typing indicator
-        showTypingIndicator();
+         if (!message || isLoading) return;
 
-        isLoading = true;
-        updateSendButton();
+         // Clear welcome message if it exists
+         const welcomeMessage = document.getElementById('welcomeMessage');
+         if (welcomeMessage) {
+           welcomeMessage.remove();
+         }
 
-        try {
-          // Call your API here - update this endpoint to match your backend
-          const response = await fetch(`${API_BASE_URL}/api/chats`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              message: message,
-              sessionId: currentSessionId,
-              userId: userId,
-              context: 'environmental_monitoring',
-            }),
-          });
+         // Add user message to chat
+         addMessage(message, 'user');
+         input.value = '';
+         adjustTextareaHeight(input);
 
-          if (!response.ok) {
-            throw new Error('Failed to get response from server');
-          }
+         // Show typing indicator
+         showTypingIndicator();
 
-          const data = await response.json();
+         isLoading = true;
+         updateSendButton();
 
-          // Remove typing indicator
-          hideTypingIndicator();
+         try {
+           // Call your API here - update this endpoint to match your backend
+           const response = await fetch(`${apiBaseUrl}/api/chats`, {
+             method: 'POST',
+             headers: {
+               'Content-Type': 'application/json',
+             },
+             body: JSON.stringify({
+               message: message,
+               sessionId: currentSessionId,
+               userId: userId,
+               context: 'environmental_monitoring',
+             }),
+           });
 
-          // Add assistant response
-          addMessage(data.response || data.message, 'assistant');
+           if (!response.ok) {
+             throw new Error('Failed to get response from server');
+           }
 
-          // Update session in history
-          if (currentSessionId) {
-            updateHistorySession(currentSessionId, message);
-          }
-        } catch (error) {
-          console.error('Error sending message:', error);
-          hideTypingIndicator();
-          addMessage(
-            'Sorry, I encountered an error while processing your request. Please try again later.',
-            'assistant',
-            true,
-          );
-        } finally {
-          isLoading = false;
-          updateSendButton();
-        }
-      }
+           const data = await response.json();
 
-      function addMessage(content, sender, isError = false) {
-        const messagesContainer = document.getElementById('chatMessages');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}`;
+           // Remove typing indicator
+           hideTypingIndicator();
 
-        const avatarIcon = sender === 'user' ? 'fa-user' : 'fa-robot';
+           // Add assistant response
+           addMessage(data.response || data.message, 'assistant');
 
-        messageDiv.innerHTML = `
-        <div class="message-avatar">
-          <i class="fas ${avatarIcon}"></i>
-        </div>
-        <div class="message-content" ${isError ? 'style="background: #ffebee; color: #c62828;"' : ''}>
-          ${content}
-        </div>
-      `;
+           // Update session in history
+           if (currentSessionId) {
+             updateHistorySession(currentSessionId, message);
+           }
+         } catch (error) {
+           console.error('Error sending message:', error);
+           hideTypingIndicator();
+           addMessage(
+             'Sorry, I encountered an error while processing your request. Please try again later.',
+             'assistant',
+             true,
+           );
+         } finally {
+           isLoading = false;
+           updateSendButton();
+         }
+       }
 
-        messagesContainer.appendChild(messageDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+       function addMessage(content, sender, isError = false) {
+         const messagesContainer = document.getElementById('chatMessages');
+         const messageDiv = document.createElement('div');
+         messageDiv.className = `message ${sender}`;
 
-        // Save message to session
-        saveMessageToSession(currentSessionId, content, sender);
-      }
+         const avatarIcon = sender === 'user' ? 'fa-user' : 'fa-robot';
 
-      function showTypingIndicator() {
-        const messagesContainer = document.getElementById('chatMessages');
-        const typingDiv = document.createElement('div');
-        typingDiv.className = 'typing-indicator';
-        typingDiv.id = 'typingIndicator';
+         messageDiv.innerHTML = `
+         <div class="message-avatar">
+           <i class="fas ${avatarIcon}"></i>
+         </div>
+         <div class="message-content" ${isError ? 'style="background: #ffebee; color: #c62828;"' : ''}>
+           ${content}
+         </div>
+       `;
 
-        typingDiv.innerHTML = `
-        <div class="message-avatar">
-          <i class="fas fa-robot"></i>
-        </div>
-        <div class="typing-dots">
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-        </div>
-      `;
+         messagesContainer.appendChild(messageDiv);
+         messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-        messagesContainer.appendChild(typingDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      }
+         // Save message to session
+         saveMessageToSession(currentSessionId, content, sender);
+       }
 
-      function hideTypingIndicator() {
-        const typingIndicator = document.getElementById('typingIndicator');
-        if (typingIndicator) {
-          typingIndicator.remove();
-        }
-      }
+       function showTypingIndicator() {
+         const messagesContainer = document.getElementById('chatMessages');
+         const typingDiv = document.createElement('div');
+         typingDiv.className = 'typing-indicator';
+         typingDiv.id = 'typingIndicator';
 
-      function updateSendButton() {
-        const sendBtn = document.getElementById('sendBtn');
-        sendBtn.disabled = isLoading;
-      }
+         typingDiv.innerHTML = `
+         <div class="message-avatar">
+           <i class="fas fa-robot"></i>
+         </div>
+         <div class="typing-dots">
+           <div class="typing-dot"></div>
+           <div class="typing-dot"></div>
+           <div class="typing-dot"></div>
+         </div>
+       `;
 
-      function handleInputKeydown(event) {
-        if (event.key === 'Enter' && !event.shiftKey) {
-          event.preventDefault();
-          sendMessage();
-        }
-      }
+         messagesContainer.appendChild(typingDiv);
+         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+       }
 
-      function adjustTextareaHeight(textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
-      }
+       function hideTypingIndicator() {
+         const typingIndicator = document.getElementById('typingIndicator');
+         if (typingIndicator) {
+           typingIndicator.remove();
+         }
+       }
 
-      function addToHistory(sessionId, title, timestamp) {
-        const session = {
-          id: sessionId,
-          title: title,
-          timestamp: timestamp,
-          messages: [],
-        };
+       function updateSendButton() {
+         const sendBtn = document.getElementById('sendBtn');
+         sendBtn.disabled = isLoading;
+       }
 
-        chatHistory.unshift(session);
-        localStorage.setItem('ecosentinel_chatHistory', JSON.stringify(chatHistory));
-        loadChatHistory();
-      }
+       function handleInputKeydown(event) {
+         if (event.key === 'Enter' && !event.shiftKey) {
+           event.preventDefault();
+           sendMessage();
+         }
+       }
 
-      function updateHistorySession(sessionId, lastMessage) {
-        const session = chatHistory.find((s) => s.id === sessionId);
-        if (session) {
-          session.title = lastMessage.length > 50 ? lastMessage.substring(0, 50) + '...' : lastMessage;
-          session.timestamp = new Date();
-          localStorage.setItem('ecosentinel_chatHistory', JSON.stringify(chatHistory));
-          loadChatHistory();
-        }
-      }
+       function adjustTextareaHeight(textarea) {
+         textarea.style.height = 'auto';
+         textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+       }
 
-      function saveMessageToSession(sessionId, content, sender) {
-        const session = chatHistory.find((s) => s.id === sessionId);
-        if (session) {
-          session.messages.push({ content, sender, timestamp: new Date() });
-          localStorage.setItem('ecosentinel_chatHistory', JSON.stringify(chatHistory));
-        }
-      }
+       function addToHistory(sessionId, title, timestamp) {
+         const session = {
+           id: sessionId,
+           title: title,
+           timestamp: timestamp,
+           messages: [],
+         };
 
-      function loadChatHistory() {
-        const historyContainer = document.getElementById('chatHistory');
-        historyContainer.innerHTML = '';
+         chatHistory.unshift(session);
+         localStorage.setItem('ecosentinel_chatHistory', JSON.stringify(chatHistory));
+         loadChatHistory();
+       }
 
-        chatHistory.forEach((session) => {
-          const historyItem = document.createElement('div');
-          historyItem.className = 'chat-history-item';
-          if (session.id === currentSessionId) {
-            historyItem.classList.add('active');
-          }
+       function updateHistorySession(sessionId, lastMessage) {
+         const session = chatHistory.find((s) => s.id === sessionId);
+         if (session) {
+           session.title = lastMessage.length > 50 ? lastMessage.substring(0, 50) + '...' : lastMessage;
+           session.timestamp = new Date();
+           localStorage.setItem('ecosentinel_chatHistory', JSON.stringify(chatHistory));
+           loadChatHistory();
+         }
+       }
 
-          historyItem.innerHTML = `
-          <div style="font-weight: 500; margin-bottom: 4px;">${session.title}</div>
-          <div style="font-size: 12px; opacity: 0.7;">${new Date(session.timestamp).toLocaleDateString()}</div>
-        `;
+       function saveMessageToSession(sessionId, content, sender) {
+         const session = chatHistory.find((s) => s.id === sessionId);
+         if (session) {
+           session.messages.push({ content, sender, timestamp: new Date() });
+           localStorage.setItem('ecosentinel_chatHistory', JSON.stringify(chatHistory));
+         }
+       }
 
-          historyItem.onclick = () => loadSession(session.id);
-          historyContainer.appendChild(historyItem);
-        });
-      }
+       function loadChatHistory() {
+         const historyContainer = document.getElementById('chatHistory');
+         historyContainer.innerHTML = '';
 
-      function loadSession(sessionId) {
-        currentSessionId = sessionId;
-        clearMessages();
+         chatHistory.forEach((session) => {
+           const historyItem = document.createElement('div');
+           historyItem.className = 'chat-history-item';
+           if (session.id === currentSessionId) {
+             historyItem.classList.add('active');
+           }
 
-        const session = chatHistory.find((s) => s.id === sessionId);
-        if (session && session.messages && session.messages.length > 0) {
-          session.messages.forEach((msg) => {
-            addMessageWithoutSaving(msg.content, msg.sender);
-          });
-        } else {
-          showWelcomeMessage();
-        }
+           historyItem.innerHTML = `
+           <div style="font-weight: 500; margin-bottom: 4px;">${session.title}</div>
+           <div style="font-size: 12px; opacity: 0.7;">${new Date(session.timestamp).toLocaleDateString()}</div>
+         `;
 
-        loadChatHistory(); // Refresh to update active state
-      }
+           historyItem.onclick = () => loadSession(session.id);
+           historyContainer.appendChild(historyItem);
+         });
+       }
 
-      function addMessageWithoutSaving(content, sender) {
-        const messagesContainer = document.getElementById('chatMessages');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}`;
+       function loadSession(sessionId) {
+         currentSessionId = sessionId;
+         clearMessages();
 
-        const avatarIcon = sender === 'user' ? 'fa-user' : 'fa-robot';
+         const session = chatHistory.find((s) => s.id === sessionId);
+         if (session && session.messages && session.messages.length > 0) {
+           session.messages.forEach((msg) => {
+             addMessageWithoutSaving(msg.content, msg.sender);
+           });
+         } else {
+           showWelcomeMessage();
+         }
 
-        messageDiv.innerHTML = `
-        <div class="message-avatar">
-          <i class="fas ${avatarIcon}"></i>
-        </div>
-        <div class="message-content">
-          ${content}
-        </div>
-      `;
+         loadChatHistory(); // Refresh to update active state
+       }
 
-        messagesContainer.appendChild(messageDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      }
+       function addMessageWithoutSaving(content, sender) {
+         const messagesContainer = document.getElementById('chatMessages');
+         const messageDiv = document.createElement('div');
+         messageDiv.className = `message ${sender}`;
 
-      // Event listeners for chat history navigation
-      window.chatHistory = {
-        userId: userId,
-        addEventListener: function (event, callback) {
-          if (event === 'loadSession') {
-            // Custom event handling for session loading
-            document.addEventListener('loadSession', callback);
-          }
-        },
-        refresh: function () {
-          loadChatHistory();
-        },
-      };
+         const avatarIcon = sender === 'user' ? 'fa-user' : 'fa-robot';
 
-      window.chat = {
-        userId: userId,
-        sessionId: currentSessionId,
-        messages: [],
-        addEventListener: function (event, callback) {
-          if (event === 'messagesUpdated') {
-            document.addEventListener('messagesUpdated', callback);
-          }
-        },
-      };
+         messageDiv.innerHTML = `
+         <div class="message-avatar">
+           <i class="fas ${avatarIcon}"></i>
+         </div>
+         <div class="message-content">
+           ${content}
+         </div>
+       `;
+
+         messagesContainer.appendChild(messageDiv);
+         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+       }
+
+       // Event listeners for chat history navigation
+       window.chatHistory = {
+         userId: userId,
+         addEventListener: function (event, callback) {
+           if (event === 'loadSession') {
+             // Custom event handling for session loading
+             document.addEventListener('loadSession', callback);
+           }
+         },
+         refresh: function () {
+           loadChatHistory();
+         },
+       };
+
+       window.chat = {
+         userId: userId,
+         sessionId: currentSessionId,
+         messages: [],
+         addEventListener: function (event, callback) {
+           if (event === 'messagesUpdated') {
+             document.addEventListener('messagesUpdated', callback);
+           }
+         },
+       };
     </script>
   </body>
 </html>

@@ -17,7 +17,10 @@ yarn-error.log*
 *.local
 # Build output
 .env
+env/
 
+# Configuration files
+.hintrc
 
 # Misc
 .DS_Store

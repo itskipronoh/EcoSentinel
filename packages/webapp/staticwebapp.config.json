@@ -4,7 +4,7 @@
       "route": "/index.html",
       "serve": "/index.html"
     },
-     {
+    {
       "route": "/azure-maps-config.js",
       "serve": "/azure-maps-config.js"
     },
@@ -13,7 +13,7 @@
       "serve": "/chat.html"
     },
     {
-      "route": "/alerts.html", 
+      "route": "/alerts.html",
       "serve": "/alerts.html"
     },
     {
@@ -32,25 +32,18 @@
       "route": "/about.html",
       "serve": "/about.html"
     },
-     {
+    {
       "route": "/api/*",
       "allowedRoles": ["anonymous"]
     }
-
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": [
-      "/assets/*",
-      "/images/*", 
-      "/css/*",
-      "/js/*",
-      "*.{css,js,jpg,png,gif,ico,svg,woff,woff2,ttf,eot}"
-    ]
+    "exclude": ["/assets/*", "/images/*", "/css/*", "/js/*", "*.{css,js,jpg,png,gif,ico,svg,woff,woff2,ttf,eot}"]
   },
   "mimeTypes": {
     ".html": "text/html",
-    ".js": "text/javascript", 
+    ".js": "text/javascript",
     ".css": "text/css",
     ".json": "application/json",
     ".png": "image/png",
@@ -69,10 +62,8 @@
     "404": {
       "rewrite": "/index.html"
     }
-
   },
   "platform": {
     "apiRuntime": "node:18"
   }
-
 }

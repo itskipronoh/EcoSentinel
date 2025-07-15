@@ -4,14 +4,7 @@
   "description": "EcoSentinel AI - Community-Driven Environmental Risk Intelligence Platform Web Application",
   "private": true,
   "type": "module",
-  "keywords": [
-    "environmental intelligence",
-    "climate action",
-    "Kenya",
-    "UNEP",
-    "AI",
-    "sustainability"
-  ],
+  "keywords": ["environmental intelligence", "climate action", "Kenya", "UNEP", "AI", "sustainability"],
   "author": "Gideon Kiprono <kipronoyegon68@gmail.com>",
   "license": "MIT",
   "homepage": "https://ecosentinelai.azurestaticapps.net",
@@ -33,14 +26,15 @@
   },
   "dependencies": {
     "@microsoft/ai-chat-protocol": "^1.0.0-beta.20240814.1",
+    "azure-maps-control": "^3.6.1",
+    "chart.js": "^4.5.0",
     "lit": "^3.0.0"
   },
   "devDependencies": {
+    "@types/chart.js": "^2.9.41",
     "@types/node": "^20.0.0",
     "live-server": "^1.2.2",
     "vite": "^6.0.2"
   },
-  "files": [
-    "dist"
-  ]
+  "files": ["dist"]
 }

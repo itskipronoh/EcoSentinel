@@ -1,45 +1,47 @@
-import { LitElement, css, html, nothing } from 'lit';
-import { repeat } from 'lit/directives/repeat.js';
-import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { customElement, property, state } from 'lit/decorators.js';
+import {
+	LitElement, css, html, nothing,
+} from 'lit';
+import {repeat} from 'lit/directives/repeat.js';
+import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
+import {customElement, property, state} from 'lit/decorators.js';
 import panelSvg from '../../assets/panel.svg?raw';
 import deleteSvg from '../../assets/delete.svg?raw';
 
 export type ChatSession = {
-  id: string;
-  title: string;
+	id: string;
+	title: string;
 };
 
 export type HistoryComponentState = {
-  hasError: boolean;
-  isLoading: boolean;
+	hasError: boolean;
+	isLoading: boolean;
 };
 
 export type HistoryComponentOptions = {
-  apiUrl?: string;
-  strings: {
-    openSidebar: string;
-    closeSidebar: string;
-    chats: string;
-    deleteChatButton: string;
-    errorMessage: string;
-    noChatHistory: string;
-  };
+	apiUrl?: string;
+	strings: {
+		openSidebar: string;
+		closeSidebar: string;
+		chats: string;
+		deleteChatButton: string;
+		errorMessage: string;
+		noChatHistory: string;
+	};
 };
 
 export const historyDefaultOptions: HistoryComponentOptions = {
-  apiUrl: '',
-  strings: {
-    openSidebar: 'Open sidebar',
-    closeSidebar: 'Close sidebar',
-    chats: 'Chats',
-    deleteChatButton: 'Delete chat',
-    errorMessage: 'Cannot load chat history',
-    noChatHistory: 'No chat history',
-  },
+	apiUrl: '',
+	strings: {
+		openSidebar: 'Open sidebar',
+		closeSidebar: 'Close sidebar',
+		chats: 'Chats',
+		deleteChatButton: 'Delete chat',
+		errorMessage: 'Cannot load chat history',
+		noChatHistory: 'No chat history',
+	},
 };
 
-export const isLargeScreen = () => window.matchMedia('(width >= 800px)').matches;
+export const isLargeScreen = () => globalThis.matchMedia('(width >= 800px)').matches;
 
 /**
  * A component that displays a list of chat sessions for a user.
@@ -51,174 +53,176 @@ export const isLargeScreen = () => window.matchMedia('(width >= 800px)').matches
  * */
 @customElement('azc-history')
 export class HistoryComponent extends LitElement {
-  @property({
-    type: Object,
-    converter: (value) => ({ ...historyDefaultOptions, ...JSON.parse(value ?? '{}') }),
-  })
-  options: HistoryComponentOptions = historyDefaultOptions;
+	@property({
+		type: Object,
+		converter: value => ({...historyDefaultOptions, ...JSON.parse(value ?? '{}')}),
+	})
+		options: HistoryComponentOptions = historyDefaultOptions;
 
-  @property({ type: Boolean, reflect: true }) open = isLargeScreen();
-  @property() userId = '';
-  @state() protected chats: ChatSession[] = [];
-  @state() protected hasError = false;
-  @state() protected isLoading = false;
+	@property({type: Boolean, reflect: true}) open = isLargeScreen();
+	@property() userId = '';
+	@state() protected chats: ChatSession[] = [];
+	@state() protected hasError = false;
+	@state() protected isLoading = false;
 
-  onPanelClicked() {
-    this.open = !this.open;
-  }
+	onPanelClicked() {
+		this.open = !this.open;
+	}
 
-  async onChatClicked(sessionId: string) {
-    try {
-      this.isLoading = true;
-      const response = await fetch(`${this.getApiUrl()}/api/chats/${sessionId}/?userId=${this.userId}`);
-      const messages = await response.json();
-      const loadSessionEvent = new CustomEvent('loadSession', {
-        detail: { id: sessionId, messages },
-        bubbles: true,
-      });
-      this.dispatchEvent(loadSessionEvent);
+	async onChatClicked(sessionId: string) {
+		try {
+			this.isLoading = true;
+			const response = await fetch(`${this.getApiUrl()}/api/chats/${sessionId}/?userId=${this.userId}`);
+			const messages = await response.json();
+			const loadSessionEvent = new CustomEvent('loadSession', {
+				detail: {id: sessionId, messages},
+				bubbles: true,
+			});
+			this.dispatchEvent(loadSessionEvent);
 
-      if (!isLargeScreen()) {
-        this.open = false;
-      }
-    } catch (error) {
-      console.error(error);
-    }
+			if (!isLargeScreen()) {
+				this.open = false;
+			}
+		} catch (error) {
+			console.error(error);
+		}
 
-    this.isLoading = false;
-  }
+		this.isLoading = false;
+	}
 
-  async onDeleteChatClicked(sessionId: string) {
-    try {
-      this.chats = this.chats.filter((chat) => chat.id !== sessionId);
+	async onDeleteChatClicked(sessionId: string) {
+		try {
+			this.chats = this.chats.filter(chat => chat.id !== sessionId);
 
-      await fetch(`${this.getApiUrl()}/api/chats/${sessionId}?userId=${this.userId}`, {
-        method: 'DELETE',
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
+			await fetch(`${this.getApiUrl()}/api/chats/${sessionId}?userId=${this.userId}`, {
+				method: 'DELETE',
+			});
+		} catch (error) {
+			console.error(error);
+		}
+	}
 
-  override requestUpdate(name?: string, oldValue?: any) {
-    switch (name) {
-      case 'userId': {
-        this.refresh();
-        break;
-      }
+	override requestUpdate(name?: string, oldValue?: any) {
+		switch (name) {
+			case 'userId': {
+				this.refresh();
+				break;
+			}
 
-      case 'chats': {
-        const chatsUpdatedEvent = new CustomEvent('chatsUpdated', {
-          detail: { chats: this.chats },
-          bubbles: true,
-        });
-        this.dispatchEvent(chatsUpdatedEvent);
-        break;
-      }
+			case 'chats': {
+				const chatsUpdatedEvent = new CustomEvent('chatsUpdated', {
+					detail: {chats: this.chats},
+					bubbles: true,
+				});
+				this.dispatchEvent(chatsUpdatedEvent);
+				break;
+			}
 
-      case 'hasError':
-      case 'isLoading': {
-        const state = {
-          hasError: this.hasError,
-          isLoading: this.isLoading,
-        };
-        const stateUpdatedEvent = new CustomEvent('stateChanged', {
-          detail: { state },
-          bubbles: true,
-        });
-        this.dispatchEvent(stateUpdatedEvent);
-        break;
-      }
+			case 'hasError':
+			case 'isLoading': {
+				const state = {
+					hasError: this.hasError,
+					isLoading: this.isLoading,
+				};
+				const stateUpdatedEvent = new CustomEvent('stateChanged', {
+					detail: {state},
+					bubbles: true,
+				});
+				this.dispatchEvent(stateUpdatedEvent);
+				break;
+			}
 
-      default:
-    }
+			default:
+		}
 
-    super.requestUpdate(name, oldValue);
-  }
+		super.requestUpdate(name, oldValue);
+	}
 
-  async refresh() {
-    if (!this.userId) {
-      return;
-    }
+	async refresh() {
+		if (!this.userId) {
+			return;
+		}
 
-    this.isLoading = true;
-    this.hasError = false;
-    try {
-      const response = await fetch(`${this.getApiUrl()}/api/chats?userId=${this.userId}`);
-      const chats = await response.json();
-      this.chats = chats;
-      this.isLoading = false;
-    } catch (error) {
-      this.hasError = true;
-      this.isLoading = false;
-      console.error(error);
-    }
-  }
+		this.isLoading = true;
+		this.hasError = false;
+		try {
+			const response = await fetch(`${this.getApiUrl()}/api/chats?userId=${this.userId}`);
+			const chats = await response.json();
+			this.chats = chats;
+			this.isLoading = false;
+		} catch (error) {
+			this.hasError = true;
+			this.isLoading = false;
+			console.error(error);
+		}
+	}
 
-  protected getApiUrl = () => this.options.apiUrl || import.meta.env.VITE_API_URL || '';
+	protected getApiUrl = () => this.options.apiUrl || import.meta.env.VITE_API_URL || '';
 
-  protected renderLoader = () =>
-    this.isLoading ? html`<slot name="loader"><div class="loader-animation"></div></slot>` : nothing;
+	protected renderLoader = () =>
+		this.isLoading ? html`<slot name="loader"><div class="loader-animation"></div></slot>` : nothing;
 
-  protected renderNoChatHistory = () =>
-    this.chats.length === 0 && !this.isLoading && !this.hasError
-      ? html`<div class="message">${this.options.strings.noChatHistory}</div>`
-      : nothing;
+	protected renderNoChatHistory = () =>
+		this.chats.length === 0 && !this.isLoading && !this.hasError
+			? html`<div class="message">${this.options.strings.noChatHistory}</div>`
+			: nothing;
 
-  protected renderError = () =>
-    this.hasError ? html`<div class="message error">${this.options.strings.errorMessage}</div>` : nothing;
+	protected renderError = () =>
+		this.hasError ? html`<div class="message error">${this.options.strings.errorMessage}</div>` : nothing;
 
-  protected renderPanelButton = (standalone?: boolean) => html`
-    <button
-      class="icon-button ${standalone ? 'panel-button' : ''}"
-      @click=${this.onPanelClicked}
-      title=${this.open ? this.options.strings.closeSidebar : this.options.strings.openSidebar}
-    >
-      ${unsafeSVG(panelSvg)}
-    </button>
-  `;
+	protected renderPanelButton = (standalone?: boolean) => html`
+		<button
+		  class="icon-button ${standalone ? 'panel-button' : ''}"
+		  @click=${this.onPanelClicked}
+		  title=${this.open ? this.options.strings.closeSidebar : this.options.strings.openSidebar}
+		>
+		  ${unsafeSVG(panelSvg)}
+		</button>
+	`;
 
-  protected renderChatEntry = (entry: ChatSession) => html`
-    <a
-      class="chat-entry"
-      href="#"
-      @click=${(event: Event) => {
-        event.preventDefault();
-        this.onChatClicked(entry.id);
-      }}
-      title=${entry.title}
-    >
-      <span class="chat-title">${entry.title}</span>
-      <button
-        class="icon-button"
-        @click=${(event: Event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          this.onDeleteChatClicked(entry.id);
-        }}
-        title="${this.options.strings.deleteChatButton}"
-      >
-        ${unsafeSVG(deleteSvg)}
-      </button>
-    </a>
-  `;
+	protected renderChatEntry = (entry: ChatSession) => html`
+		<a
+		  class="chat-entry"
+		  href="#"
+		  @click=${(event: Event) => {
+		event.preventDefault();
+		this.onChatClicked(entry.id);
+	}}
+		  title=${entry.title}
+		>
+		  <span class="chat-title">${entry.title}</span>
+		  <button
+		    class="icon-button"
+		    @click=${(event: Event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		this.onDeleteChatClicked(entry.id);
+	}}
+		    title="${this.options.strings.deleteChatButton}"
+		  >
+		    ${unsafeSVG(deleteSvg)}
+		  </button>
+		</a>
+	`;
 
-  protected override render() {
-    return html`<aside class="chats-panel">
-        <div class="buttons">
-          ${this.renderPanelButton()}
-          <slot name="buttons"></slot>
-        </div>
-        <div class="chats">
-          <h2>${this.options.strings.chats}</h2>
-          ${this.renderLoader()} ${repeat(this.chats, (entry) => this.renderChatEntry(entry))}
-          ${this.renderNoChatHistory()} ${this.renderError()}
-        </div>
-      </aside>
-      ${this.open ? nothing : this.renderPanelButton(true)} `;
-  }
+	protected override render() {
+		return html`
+			<aside class="chats-panel">
+			        <div class="buttons">
+			          ${this.renderPanelButton()}
+			          <slot name="buttons"></slot>
+			        </div>
+			        <div class="chats">
+			          <h2>${this.options.strings.chats}</h2>
+			          ${this.renderLoader()} ${repeat(this.chats, entry => this.renderChatEntry(entry))}
+			          ${this.renderNoChatHistory()} ${this.renderError()}
+			        </div>
+			      </aside>
+			      ${this.open ? nothing : this.renderPanelButton(true)} 
+		`;
+	}
 
-  static override styles = css`
+	static override styles = css`
     :host {
       /* Base properties */
       --primary: var(--azc-primary, #07f);
@@ -432,7 +436,7 @@ export class HistoryComponent extends LitElement {
 }
 
 declare global {
-  interface HTMLElementTagNameMap {
-    'azc-history': HistoryComponent;
-  }
+	interface HTMLElementTagNameMap {
+		'azc-history': HistoryComponent;
+	}
 }
