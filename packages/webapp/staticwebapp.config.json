@@ -1,7 +1,7 @@
 {
   "routes": [
     {
-      "route": "/",
+      "route": "/index.html",
       "serve": "/index.html"
     },
     {
@@ -17,15 +17,15 @@
       "serve": "/about.html"
     },
     {
-      "route": "/chat",
+      "route": "/chat.html",
       "serve": "/chat.html"
     },
     {
-      "route": "/alerts",
+      "route": "/alerts.html",
       "serve": "/alerts.html"
     },
     {
-      "route": "/about",
+      "route": "/about.html",
       "serve": "/about.html"
     }
   ],

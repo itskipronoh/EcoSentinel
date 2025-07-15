@@ -13,13 +13,14 @@
   "url": "https://github.com/itskipronoh/EcoSentinel.git"
   },
   "scripts": {
-     "build": "npm run copy:files",
+    "build": "npm run clean && npm run copy:files && vite build",
     "copy:files": "mkdir -p dist && cp *.html dist/ && cp *.js dist/ && cp staticwebapp.config.json dist/",
-    "dev": "npx live-server --port=3000 --host=localhost",
+    "dev": "npx live-server --port=8000 --host=localhost",
     "start": "npx live-server --port=3000",
     "deploy": "npm run build",
-    // "dev": "vite --port 8000 --host",
-    // "build": "vite build",
+    "lint": "eslint . --ext .js,.html",
+    "format": "prettier --write .",
+    "test": "echo \"No tests specified\" && exit 0",
     "watch": "vite build --watch --minify false",
     "clean": "npx rimraf dist",
     "preview": "vite preview --port 8000"
