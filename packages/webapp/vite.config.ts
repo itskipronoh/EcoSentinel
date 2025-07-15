@@ -1,4 +1,5 @@
 import process from 'node:process';
+import { resolve } from 'node:path'; // ✅ needed to resolve HTML paths
 import { defineConfig } from 'vite';
 
 // Expose environment variables to the client
@@ -11,6 +12,12 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        chat: resolve(__dirname, 'chat.html'),
+        alerts: resolve(__dirname, 'alerts.html'),
+        about: resolve(__dirname, 'about.html'),
+      },
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
