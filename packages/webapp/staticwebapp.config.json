@@ -33,7 +33,7 @@
       "serve": "/about.html"
     },
     {
-      "route": "/api/*",
+      "route": "/api/chats",
       "allowedRoles": ["anonymous"]
     }
   ],
