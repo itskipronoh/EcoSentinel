@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "npm run clean && vite build",
-    "dev": "npm run dev npx live-server --port=8000 --host=localhost",
+"dev": "npx live-server --port=8000 --host=localhost",
     "start": "npx live-server --port=3000",
     "deploy": "npm run build",
     "lint": "eslint . --ext .js,.html",

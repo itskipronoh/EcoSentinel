@@ -9,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
       :root {
         --forest-green: #2e7d32;
@@ -106,10 +109,285 @@
       .main-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
-        gap: 32px;
-        padding: 40px 32px;
+        grid-template-rows: auto 1fr auto;
+        gap: 24px;
+        padding: 32px;
         min-height: calc(100vh - var(--header-height));
+      }
+      
+      /* Real-time prediction banner */
+      .prediction-banner {
+        grid-column: 1 / -1;
+        background: linear-gradient(135deg, var(--forest-green), var(--eco-green));
+        color: white;
+        padding: 20px 24px;
+        border-radius: var(--border-radius);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow);
+      }
+      
+      .prediction-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      
+      .prediction-icon {
+        font-size: 32px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+      }
+      
+      .prediction-text h3 {
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+      
+      .prediction-text p {
+        opacity: 0.9;
+        font-size: 14px;
+      }
+      
+      .prediction-actions {
+        display: flex;
+        gap: 12px;
+      }
+      
+      .btn-primary, .btn-secondary {
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-block;
+      }
+      
+      .btn-primary {
+        background: white;
+        color: var(--forest-green);
+      }
+      
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      
+      .btn-primary:hover, .btn-secondary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      
+      /* Enhanced main grid */
+      .grid-main {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      
+      /* Status cards row */
+      .status-cards {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+      }
+      
+      .status-card {
+        background: white;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: transform 0.2s;
+      }
+      
+      .status-card:hover {
+        transform: translateY(-2px);
+      }
+      
+      .status-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+      }
+      
+      .status-flood { background: linear-gradient(135deg, #42a5f5, #2196f3); }
+      .status-air { background: linear-gradient(135deg, #ff9800, #f57c00); }
+      .status-forest { background: linear-gradient(135deg, #4caf50, #2e7d32); }
+      .status-weather { background: linear-gradient(135deg, #9c27b0, #7b1fa2); }
+      
+      .status-info h4 {
+        font-size: 16px;
+        margin-bottom: 4px;
+        color: #333;
+      }
+      
+      .status-value {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 2px;
+      }
+      
+      .status-label {
+        font-size: 12px;
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      /* Enhanced chart containers */
+      .chart-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      
+      .chart-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--forest-green);
+      }
+      
+      .chart-controls {
+        display: flex;
+        gap: 8px;
+      }
+      
+      .control-btn {
+        padding: 6px 12px;
+        border: 1px solid #ddd;
+        background: white;
+        border-radius: 6px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .control-btn.active {
+        background: var(--forest-green);
+        color: white;
+        border-color: var(--forest-green);
+      }
+      
+      .chart-content {
+        flex: 1;
+        position: relative;
+      }
+      
+      /* Map enhancements */
+      .map-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .map-header {
+        padding: 20px 24px 0;
+        background: white;
+      }
+      
+      .map-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--forest-green);
+        margin-bottom: 8px;
+      }
+      
+      .map-filters {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      
+      .filter-chip {
+        padding: 6px 12px;
+        background: #f5f5f5;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+      }
+      
+      .filter-chip.active {
+        background: var(--forest-green);
+        color: white;
+      }
+      
+      /* Loading states */
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        font-size: 14px;
+        color: #666;
+      }
+      
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid var(--forest-green);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 10px;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Real-time updates indicator */
+      .live-indicator {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #666;
+      }
+      
+      .live-dot {
+        width: 8px;
+        height: 8px;
+        background: #4caf50;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+      
+      @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
       }
       .card {
         background: var(--white);
@@ -369,14 +647,34 @@
       @media (max-width: 1024px) {
         .main-container {
           grid-template-columns: 1fr;
-          grid-template-rows: repeat(4, minmax(0, 1fr));
-          gap: 24px;
-          padding: 24px 8px;
+          grid-template-rows: auto auto auto;
+          gap: 16px;
+          padding: 16px;
         }
+        
+        .grid-main {
+          grid-template-columns: 1fr;
+        }
+        
+        .status-cards {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        
         .map-container {
-          min-height: 220px;
+          min-height: 250px;
+        }
+        
+        .prediction-banner {
+          flex-direction: column;
+          gap: 16px;
+          text-align: center;
+        }
+        
+        .prediction-actions {
+          justify-content: center;
         }
       }
+      
       @media (max-width: 600px) {
         .header {
           flex-direction: column;
@@ -388,13 +686,37 @@
           margin-left: 0;
           gap: 18px;
         }
+        
+        .status-cards {
+          grid-template-columns: 1fr;
+        }
+        
         .main-container {
-          padding: 12px 2px;
+          padding: 12px 8px;
           gap: 12px;
         }
+        
         .card,
-        .map-card {
-          padding: 12px;
+        .map-card,
+        .chart-card {
+          padding: 16px;
+        }
+        
+        .chart-controls,
+        .map-filters {
+          flex-wrap: wrap;
+        }
+        
+        .prediction-banner {
+          padding: 16px;
+        }
+        
+        .status-card {
+          padding: 16px;
+        }
+        
+        .chart-content {
+          height: 200px;
         }
       }
     </style>
@@ -412,10 +734,110 @@
         <a href="about.html" class="nav-item">About</a>
       </nav>
     </header>
+    
     <main class="main-container">
-      <!-- Chat Card -->
+      <!-- Real-time AI Predictions Banner -->
+      <section class="prediction-banner">
+        <div class="prediction-content">
+          <div class="prediction-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <div class="prediction-text">
+            <h3>🚨 AI Alert: Medium Flood Risk Detected</h3>
+            <p>Nairobi Central - Next 6 hours | Confidence: 87%</p>
+          </div>
+        </div>
+        <div class="prediction-actions">
+          <a href="#" class="btn-primary" onclick="updatePredictions()">Update Now</a>
+          <a href="alerts.html" class="btn-secondary">View Details</a>
+        </div>
+      </section>
+
+      <!-- Status Cards Grid -->
+      <section class="status-cards">
+        <div class="status-card">
+          <div class="status-icon status-flood">
+            <i class="fas fa-water"></i>
+          </div>
+          <div class="status-info">
+            <h4>Flood Risk</h4>
+            <div class="status-value" style="color: #ff9800;" id="floodRisk">MEDIUM</div>
+            <div class="status-label">Current Status</div>
+          </div>
+        </div>
+        
+        <div class="status-card">
+          <div class="status-icon status-air">
+            <i class="fas fa-wind"></i>
+          </div>
+          <div class="status-info">
+            <h4>Air Quality</h4>
+            <div class="status-value" style="color: #f44336;" id="airQuality">164</div>
+            <div class="status-label">AQI Index</div>
+          </div>
+        </div>
+        
+        <div class="status-card">
+          <div class="status-icon status-forest">
+            <i class="fas fa-tree"></i>
+          </div>
+          <div class="status-info">
+            <h4>Forest Cover</h4>
+            <div class="status-value" style="color: #4caf50;" id="forestCover">LOW</div>
+            <div class="status-label">Deforestation Risk</div>
+          </div>
+        </div>
+        
+        <div class="status-card">
+          <div class="status-icon status-weather">
+            <i class="fas fa-cloud-rain"></i>
+          </div>
+          <div class="status-info">
+            <h4>Weather Data</h4>
+            <div class="status-value" style="color: #2196f3;" id="rainfall">24.5mm</div>
+            <div class="status-label">24h Rainfall</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content Grid -->
+      <div class="grid-main">
+        <!-- Enhanced Interactive Map -->
+        <section class="map-card">
+          <div class="map-header">
+            <div class="chart-title">Environmental Risk Map</div>
+            <div class="live-indicator">
+              <div class="live-dot"></div>
+              Live Data
+            </div>
+            <div class="map-filters">
+              <button class="filter-chip active" onclick="toggleMapLayer('flood')">Flood Risk</button>
+              <button class="filter-chip" onclick="toggleMapLayer('air')">Air Quality</button>
+              <button class="filter-chip" onclick="toggleMapLayer('forest')">Deforestation</button>
+            </div>
+          </div>
+          <div id="mapContainer" class="map-container"></div>
+        </section>
+
+        <!-- Multi-Chart Dashboard -->
+        <section class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">Prediction Timeline</div>
+            <div class="chart-controls">
+              <button class="control-btn active" onclick="updateChart('24h')">24H</button>
+              <button class="control-btn" onclick="updateChart('7d')">7D</button>
+              <button class="control-btn" onclick="updateChart('30d')">30D</button>
+            </div>
+          </div>
+          <div class="chart-content">
+            <canvas id="predictionChart" width="400" height="200"></canvas>
+          </div>
+        </section>
+      </div>
+
+      <!-- AI Chat Interface -->
       <section class="card">
-        <div class="chat-header">Hello! How can I assist you today?</div>
+        <div class="chat-header">🤖 EcoSentinel AI Assistant</div>
         <div class="message-question">Which trees are best for planting in Kibera?</div>
         <div class="message assistant">
           For planting in Kibera: I recommend native Acacia trees such as Acacia xanthophloea. They can help reduce
@@ -430,60 +852,394 @@
           <span class="user-message-content">
             <a href="chat.html" style="color: inherit; text-decoration: none">Jane: Text me today's air quality →</a>
           </span>
-          <!-- <span class="user-message-content">Jane: Text me today's air quality →</span> -->
         </div>
       </section>
-      <!-- Map Card -->
-      <section class="map-card card">
-        <div id="mapContainer" class="map-container"></div>
-      </section>
-      <!-- Alerts Card -->
+
+      <!-- Enhanced Alerts Section -->
       <section class="card">
-        <div class="alerts-title">Alerts</div>
+        <div class="alerts-title">🚨 Active Environmental Alerts</div>
         <div class="alert-item">
-          <div class="alert-title"><i class="fas fa-exclamation-triangle"></i> Flood risk in Kawangware</div>
-          <div class="alert-content">Evacuate low-lying areas immediately</div>
+          <div class="alert-title"><i class="fas fa-exclamation-triangle"></i> HIGH Flood Risk - Kawangware</div>
+          <div class="alert-content">Evacuate low-lying areas immediately. 75.5mm rainfall recorded.</div>
         </div>
         <div class="air-quality">
-          <div class="air-title"><i class="fas fa-wind"></i> Today's air quality forecast: → Mathare</div>
+          <div class="air-title"><i class="fas fa-wind"></i> UNHEALTHY Air Quality - Mathare</div>
           <div class="gauge-row">
             <div class="gauge"></div>
-            <span class="gauge-value">UNSAFE</span>
+            <span class="gauge-value">AQI 164</span>
           </div>
         </div>
         <div class="precautions">
           <i class="fas fa-shield-alt"></i>
-          Take precautions (AQI=164)
+          📱 SMS alerts active for 3 locations
           <div class="precautions-visual"></div>
         </div>
-      </section>
-      <!-- Dashboard Card -->
-      <section class="card">
-        <div class="dashboard-title">Dashboard</div>
-        <div class="chart-container">
-          <canvas id="environmentalChart"></canvas>
-        </div>
-        <div class="legend">
-          <div class="legend-item">
-            <span class="legend-color" style="background: #2e7d32"></span>
-            Planting
+        
+        <!-- Real-time updates -->
+        <div style="margin-top: 16px; padding: 12px; background: #f8f9fa; border-radius: 8px;">
+          <div style="font-size: 12px; color: #666; margin-bottom: 8px;">
+            <i class="fas fa-sync-alt"></i> Last updated: <span id="lastUpdate">Just now</span>
           </div>
-          <div class="legend-item">
-            <span class="legend-color" style="background: #4caf50"></span>
-            Pollution Alerts
-          </div>
+          <button onclick="refreshAlerts()" style="background: var(--forest-green); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; cursor: pointer;">
+            Refresh Data
+          </button>
         </div>
       </section>
     </main>
-    <!-- Azure Maps SDK -->
+    <!-- Enhanced JavaScript for EcoSentinel AI -->
+    <script>
+      // Global variables for data management
+      let predictionChart = null;
+      let environmentalMap = null;
+      let currentMapLayer = 'flood';
+      let realTimeData = {
+        floodRisk: 'MEDIUM',
+        airQuality: 164,
+        forestCover: 'LOW',
+        rainfall: '24.5mm',
+        lastUpdate: new Date()
+      };
+
+      // Simulated ML prediction data from EcoSentinel AI
+      const mockPredictionData = {
+        '24h': {
+          labels: Array.from({length: 24}, (_, i) => {
+            const now = new Date();
+            now.setHours(now.getHours() + i);
+            return now.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'});
+          }),
+          floodRisk: Array.from({length: 24}, (_, i) => Math.max(0.1, 0.6 + Math.sin(i/4) * 0.3 + Math.random() * 0.1)),
+          airQuality: Array.from({length: 24}, (_, i) => Math.max(50, 140 + Math.sin(i/3) * 30 + Math.random() * 20)),
+          deforestation: Array.from({length: 24}, (_, i) => Math.max(0.1, 0.4 + Math.random() * 0.2))
+        },
+        '7d': {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          floodRisk: [0.3, 0.7, 0.8, 0.6, 0.4, 0.2, 0.5],
+          airQuality: [120, 165, 180, 155, 140, 95, 110],
+          deforestation: [0.3, 0.4, 0.5, 0.4, 0.3, 0.2, 0.4]
+        },
+        '30d': {
+          labels: Array.from({length: 30}, (_, i) => `Day ${i+1}`),
+          floodRisk: Array.from({length: 30}, () => Math.random() * 0.8 + 0.1),
+          airQuality: Array.from({length: 30}, () => Math.random() * 100 + 80),
+          deforestation: Array.from({length: 30}, () => Math.random() * 0.6 + 0.2)
+        }
+      };
+
+      // Initialize the dashboard
+      document.addEventListener('DOMContentLoaded', function() {
+        initializeMap();
+        initializePredictionChart();
+        startRealTimeUpdates();
+        updateLastUpdateTime();
+      });
+
+      // Initialize Leaflet map with environmental data
+      function initializeMap() {
+        // Initialize map centered on Nairobi
+        environmentalMap = L.map('mapContainer').setView([-1.2921, 36.8219], 11);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(environmentalMap);
+
+        // Add environmental monitoring points
+        const monitoringPoints = [
+          {lat: -1.2921, lng: 36.8219, name: 'Nairobi Central', flood: 0.6, air: 164, forest: 0.3},
+          {lat: -1.274, lng: 36.8172, name: 'Westlands', flood: 0.4, air: 120, forest: 0.2},
+          {lat: -1.3098, lng: 36.8537, name: 'Embakasi', flood: 0.3, air: 145, forest: 0.4},
+          {lat: -1.2699, lng: 36.8566, name: 'Mathare', flood: 0.8, air: 180, forest: 0.5},
+          {lat: -1.3127, lng: 36.7816, name: 'Kibera', flood: 0.9, air: 190, forest: 0.6},
+          {lat: -1.224, lng: 36.8795, name: 'Kasarani', flood: 0.2, air: 95, forest: 0.2}
+        ];
+
+        // Add markers for each monitoring point
+        monitoringPoints.forEach(point => {
+          const color = getColorByRisk(point[currentMapLayer]);
+          const marker = L.circleMarker([point.lat, point.lng], {
+            radius: 8 + (point[currentMapLayer] * 15),
+            fillColor: color,
+            color: '#fff',
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.7
+          }).addTo(environmentalMap);
+
+          marker.bindPopup(`
+            <div style="padding: 8px;">
+              <strong>${point.name}</strong><br/>
+              Flood Risk: ${(point.flood * 100).toFixed(0)}%<br/>
+              Air Quality: ${point.air} AQI<br/>
+              Deforestation Risk: ${(point.forest * 100).toFixed(0)}%
+            </div>
+          `);
+        });
+      }
+
+      // Get color based on risk level
+      function getColorByRisk(value) {
+        if (currentMapLayer === 'air') {
+          if (value > 150) return '#f44336';
+          if (value > 100) return '#ff9800';
+          return '#4caf50';
+        } else {
+          if (value > 0.7) return '#f44336';
+          if (value > 0.4) return '#ff9800';
+          return '#4caf50';
+        }
+      }
+
+      // Initialize prediction timeline chart
+      function initializePredictionChart() {
+        const ctx = document.getElementById('predictionChart').getContext('2d');
+        
+        predictionChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: mockPredictionData['24h'].labels,
+            datasets: [
+              {
+                label: 'Flood Risk',
+                data: mockPredictionData['24h'].floodRisk,
+                borderColor: '#2196f3',
+                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true
+              },
+              {
+                label: 'Air Quality Index',
+                data: mockPredictionData['24h'].airQuality.map(val => val / 200), // Normalize for display
+                borderColor: '#ff9800',
+                backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true
+              },
+              {
+                label: 'Deforestation Risk',
+                data: mockPredictionData['24h'].deforestation,
+                borderColor: '#4caf50',
+                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+                labels: {
+                  usePointStyle: true,
+                  padding: 20
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 1,
+                grid: {
+                  color: 'rgba(0,0,0,0.1)'
+                },
+                ticks: {
+                  callback: function(value) {
+                    return (value * 100).toFixed(0) + '%';
+                  }
+                }
+              },
+              x: {
+                grid: {
+                  display: false
+                }
+              }
+            },
+            interaction: {
+              intersect: false,
+              mode: 'index'
+            }
+          }
+        });
+      }
+
+      // Update chart with different time periods
+      function updateChart(period) {
+        // Update button states
+        document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        // Update chart data
+        const data = mockPredictionData[period];
+        predictionChart.data.labels = data.labels;
+        predictionChart.data.datasets[0].data = data.floodRisk;
+        predictionChart.data.datasets[1].data = data.airQuality.map(val => val / 200);
+        predictionChart.data.datasets[2].data = data.deforestation;
+        predictionChart.update();
+      }
+
+      // Toggle map layers
+      function toggleMapLayer(layer) {
+        currentMapLayer = layer;
+        
+        // Update button states
+        document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Reinitialize map with new layer
+        environmentalMap.remove();
+        initializeMap();
+      }
+
+      // Simulate real-time predictions from EcoSentinel AI
+      function updatePredictions() {
+        // Show loading state
+        const banner = document.querySelector('.prediction-banner');
+        const originalContent = banner.innerHTML;
+        
+        banner.innerHTML = `
+          <div class="prediction-content">
+            <div class="spinner"></div>
+            <div class="prediction-text">
+              <h3>🧠 Updating AI Predictions...</h3>
+              <p>Fetching latest environmental data from AccuWeather & satellite sources</p>
+            </div>
+          </div>
+        `;
+
+        // Simulate API call delay
+        setTimeout(() => {
+          // Update real-time values
+          realTimeData.floodRisk = Math.random() > 0.5 ? 'HIGH' : 'MEDIUM';
+          realTimeData.airQuality = Math.floor(Math.random() * 100) + 100;
+          realTimeData.rainfall = (Math.random() * 50 + 10).toFixed(1) + 'mm';
+          realTimeData.lastUpdate = new Date();
+
+          // Update display
+          updateDisplayValues();
+          
+          // Restore banner with new prediction
+          const riskLevel = realTimeData.floodRisk;
+          const alertIcon = riskLevel === 'HIGH' ? '🚨' : '⚠️';
+          
+          banner.innerHTML = `
+            <div class="prediction-content">
+              <div class="prediction-icon">
+                <i class="fas fa-brain"></i>
+              </div>
+              <div class="prediction-text">
+                <h3>${alertIcon} AI Alert: ${riskLevel} Flood Risk Detected</h3>
+                <p>Nairobi Central - Next 6 hours | Confidence: ${Math.floor(Math.random() * 20) + 80}%</p>
+              </div>
+            </div>
+            <div class="prediction-actions">
+              <a href="#" class="btn-primary" onclick="updatePredictions()">Update Now</a>
+              <a href="alerts.html" class="btn-secondary">View Details</a>
+            </div>
+          `;
+        }, 2000);
+      }
+
+      // Update display values
+      function updateDisplayValues() {
+        document.getElementById('floodRisk').textContent = realTimeData.floodRisk;
+        document.getElementById('floodRisk').style.color = realTimeData.floodRisk === 'HIGH' ? '#f44336' : '#ff9800';
+        
+        document.getElementById('airQuality').textContent = realTimeData.airQuality;
+        document.getElementById('rainfall').textContent = realTimeData.rainfall;
+        
+        updateLastUpdateTime();
+      }
+
+      // Refresh alerts
+      function refreshAlerts() {
+        const alertsSection = document.querySelector('.card:last-child');
+        alertsSection.style.opacity = '0.6';
+        
+        setTimeout(() => {
+          // Update timestamp
+          updateLastUpdateTime();
+          alertsSection.style.opacity = '1';
+          
+          // Add a flash effect
+          alertsSection.style.background = '#f0f8ff';
+          setTimeout(() => {
+            alertsSection.style.background = 'white';
+          }, 500);
+        }, 1000);
+      }
+
+      // Update last update time
+      function updateLastUpdateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+        
+        const updateElement = document.getElementById('lastUpdate');
+        if (updateElement) {
+          updateElement.textContent = timeString;
+        }
+      }
+
+      // Start real-time updates simulation
+      function startRealTimeUpdates() {
+        // Update every 30 seconds
+        setInterval(() => {
+          // Simulate small changes in values
+          if (Math.random() > 0.7) { // 30% chance of update
+            realTimeData.airQuality += Math.floor(Math.random() * 10 - 5); // ±5 change
+            realTimeData.airQuality = Math.max(50, Math.min(300, realTimeData.airQuality));
+            
+            document.getElementById('airQuality').textContent = realTimeData.airQuality;
+            updateLastUpdateTime();
+          }
+        }, 30000);
+      }
+
+      // Add some CSS animations
+      const style = document.createElement('style');
+      style.textContent = `
+        .status-card:hover .status-icon {
+          transform: scale(1.1);
+          transition: transform 0.2s;
+        }
+        
+        .prediction-banner {
+          animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+          from { transform: translateY(-20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .chart-card {
+          transition: box-shadow 0.3s;
+        }
+        
+        .chart-card:hover {
+          box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+      `;
+      document.head.appendChild(style);
+    </script>
+
+    <!-- EcoSentinel AI Integration -->
+    <script src="./src/ecosentinel-api.js"></script>
+    
+    <!-- Azure Maps SDK (keeping for compatibility) -->
     <link
       rel="stylesheet"
       href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css"
       type="text/css"
     />
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
-    <div id="mapContainer" style="height: 400px"></div>
-    <canvas id="environmentalChart" height="200"></canvas>
-    <script type="module" src="./src/main.ts"></script>
   </body>
 </html>
