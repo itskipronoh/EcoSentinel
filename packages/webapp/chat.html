@@ -486,7 +486,6 @@
         <div class="chat-history" id="chatHistory">
           <!-- Chat history will be populated here -->
         </div>
-        <script type="module" src="./src/index.ts"></script>
 
         <div class="suggested-prompts">
           <div class="sidebar-title" style="font-size: 14px; margin-bottom: 12px">Quick Questions</div>
@@ -554,46 +553,44 @@
     </main>
 
     <script>
-       // Global variables
-       let currentSessionId = null;
-       let userId = localStorage.getItem('userId') || crypto.randomUUID();
-       let isLoading = false;
-       let chatHistory = JSON.parse(localStorage.getItem('ecosentinel_chatHistory')) || [];
+      // Global variables
+      let currentSessionId = null;
+      let userId = localStorage.getItem('userId') || crypto.randomUUID();
+      let isLoading = false;
+      let chatHistory = JSON.parse(localStorage.getItem('ecosentinel_chatHistory')) || [];
 
-       // Store user ID
-       localStorage.setItem('userId', userId);
+      // Store user ID
+      localStorage.setItem('userId', userId);
 
+      const apiBaseUrl = 'https://func-api-t2z2frqgsbaym.azurewebsites.net/';
 
-      export const apiBaseUrl = import.meta.env.VITE_API_URL || '';
+      // Initialize chat
+      document.addEventListener('DOMContentLoaded', function () {
+        loadChatHistory();
+        if (chatHistory.length === 0) {
+          startNewChat();
+        } else {
+          loadSession(chatHistory[0].id);
+        }
+      });
 
+      function startNewChat() {
+        currentSessionId = crypto.randomUUID();
+        clearMessages();
+        showWelcomeMessage();
 
-       // Initialize chat
-       document.addEventListener('DOMContentLoaded', function () {
-         loadChatHistory();
-         if (chatHistory.length === 0) {
-           startNewChat();
-         } else {
-           loadSession(chatHistory[0].id);
-         }
-       });
+        const timestamp = new Date();
+        addToHistory(currentSessionId, 'New Conversation', timestamp);
+      }
 
-       function startNewChat() {
-         currentSessionId = crypto.randomUUID();
-         clearMessages();
-         showWelcomeMessage();
+      function clearMessages() {
+        const messagesContainer = document.getElementById('chatMessages');
+        messagesContainer.innerHTML = '';
+      }
 
-         const timestamp = new Date();
-         addToHistory(currentSessionId, 'New Conversation', timestamp);
-       }
-
-       function clearMessages() {
-         const messagesContainer = document.getElementById('chatMessages');
-         messagesContainer.innerHTML = '';
-       }
-
-       function showWelcomeMessage() {
-         const messagesContainer = document.getElementById('chatMessages');
-         messagesContainer.innerHTML = `
+      function showWelcomeMessage() {
+        const messagesContainer = document.getElementById('chatMessages');
+        messagesContainer.innerHTML = `
          <div class="welcome-message" id="welcomeMessage">
            <div class="welcome-title">Welcome to EcoSentinel AI</div>
            <div class="welcome-subtitle">Your environmental monitoring and analysis assistant</div>
@@ -622,90 +619,90 @@
            </div>
          </div>
        `;
-       }
+      }
 
-       function sendQuickPrompt(prompt) {
-         const input = document.getElementById('chatInput');
-         input.value = prompt;
-         sendMessage();
-       }
+      function sendQuickPrompt(prompt) {
+        const input = document.getElementById('chatInput');
+        input.value = prompt;
+        sendMessage();
+      }
 
-       async function sendMessage() {
-         const input = document.getElementById('chatInput');
-         const message = input.value.trim();
+      async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
 
-         if (!message || isLoading) return;
+        if (!message || isLoading) return;
 
-         // Clear welcome message if it exists
-         const welcomeMessage = document.getElementById('welcomeMessage');
-         if (welcomeMessage) {
-           welcomeMessage.remove();
-         }
+        // Clear welcome message if it exists
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        if (welcomeMessage) {
+          welcomeMessage.remove();
+        }
 
-         // Add user message to chat
-         addMessage(message, 'user');
-         input.value = '';
-         adjustTextareaHeight(input);
+        // Add user message to chat
+        addMessage(message, 'user');
+        input.value = '';
+        adjustTextareaHeight(input);
 
-         // Show typing indicator
-         showTypingIndicator();
+        // Show typing indicator
+        showTypingIndicator();
 
-         isLoading = true;
-         updateSendButton();
+        isLoading = true;
+        updateSendButton();
 
-         try {
-           // Call your API here - update this endpoint to match your backend
-           const response = await fetch(`${apiBaseUrl}/api/chats`, {
-             method: 'POST',
-             headers: {
-               'Content-Type': 'application/json',
-             },
-             body: JSON.stringify({
-               message: message,
-               sessionId: currentSessionId,
-               userId: userId,
-               context: 'environmental_monitoring',
-             }),
-           });
+        try {
+          // Call your API here - update this endpoint to match your backend
+          const response = await fetch(`${apiBaseUrl}/api/chats`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              message: message,
+              sessionId: currentSessionId,
+              userId: userId,
+              context: 'environmental_monitoring',
+            }),
+          });
 
-           if (!response.ok) {
-             throw new Error('Failed to get response from server');
-           }
+          if (!response.ok) {
+            throw new Error('Failed to get response from server');
+          }
 
-           const data = await response.json();
+          const data = await response.json();
 
-           // Remove typing indicator
-           hideTypingIndicator();
+          // Remove typing indicator
+          hideTypingIndicator();
 
-           // Add assistant response
-           addMessage(data.response || data.message, 'assistant');
+          // Add assistant response
+          addMessage(data.response || data.message, 'assistant');
 
-           // Update session in history
-           if (currentSessionId) {
-             updateHistorySession(currentSessionId, message);
-           }
-         } catch (error) {
-           console.error('Error sending message:', error);
-           hideTypingIndicator();
-           addMessage(
-             'Sorry, I encountered an error while processing your request. Please try again later.',
-             'assistant',
-             true,
-           );
-         } finally {
-           isLoading = false;
-           updateSendButton();
-         }
-       }
+          // Update session in history
+          if (currentSessionId) {
+            updateHistorySession(currentSessionId, message);
+          }
+        } catch (error) {
+          console.error('Error sending message:', error);
+          hideTypingIndicator();
+          addMessage(
+            'Sorry, I encountered an error while processing your request. Please try again later.',
+            'assistant',
+            true,
+          );
+        } finally {
+          isLoading = false;
+          updateSendButton();
+        }
+      }
 
-       function addMessage(content, sender, isError = false) {
-         const messagesContainer = document.getElementById('chatMessages');
-         const messageDiv = document.createElement('div');
-         messageDiv.className = `message ${sender}`;
+      function addMessage(content, sender, isError = false) {
+        const messagesContainer = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
 
-         const avatarIcon = sender === 'user' ? 'fa-user' : 'fa-robot';
+        const avatarIcon = sender === 'user' ? 'fa-user' : 'fa-robot';
 
-         messageDiv.innerHTML = `
+        messageDiv.innerHTML = `
          <div class="message-avatar">
            <i class="fas ${avatarIcon}"></i>
          </div>
@@ -714,20 +711,20 @@
          </div>
        `;
 
-         messagesContainer.appendChild(messageDiv);
-         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-         // Save message to session
-         saveMessageToSession(currentSessionId, content, sender);
-       }
+        // Save message to session
+        saveMessageToSession(currentSessionId, content, sender);
+      }
 
-       function showTypingIndicator() {
-         const messagesContainer = document.getElementById('chatMessages');
-         const typingDiv = document.createElement('div');
-         typingDiv.className = 'typing-indicator';
-         typingDiv.id = 'typingIndicator';
+      function showTypingIndicator() {
+        const messagesContainer = document.getElementById('chatMessages');
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'typing-indicator';
+        typingDiv.id = 'typingIndicator';
 
-         typingDiv.innerHTML = `
+        typingDiv.innerHTML = `
          <div class="message-avatar">
            <i class="fas fa-robot"></i>
          </div>
@@ -738,110 +735,110 @@
          </div>
        `;
 
-         messagesContainer.appendChild(typingDiv);
-         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-       }
+        messagesContainer.appendChild(typingDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
 
-       function hideTypingIndicator() {
-         const typingIndicator = document.getElementById('typingIndicator');
-         if (typingIndicator) {
-           typingIndicator.remove();
-         }
-       }
+      function hideTypingIndicator() {
+        const typingIndicator = document.getElementById('typingIndicator');
+        if (typingIndicator) {
+          typingIndicator.remove();
+        }
+      }
 
-       function updateSendButton() {
-         const sendBtn = document.getElementById('sendBtn');
-         sendBtn.disabled = isLoading;
-       }
+      function updateSendButton() {
+        const sendBtn = document.getElementById('sendBtn');
+        sendBtn.disabled = isLoading;
+      }
 
-       function handleInputKeydown(event) {
-         if (event.key === 'Enter' && !event.shiftKey) {
-           event.preventDefault();
-           sendMessage();
-         }
-       }
+      function handleInputKeydown(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          sendMessage();
+        }
+      }
 
-       function adjustTextareaHeight(textarea) {
-         textarea.style.height = 'auto';
-         textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
-       }
+      function adjustTextareaHeight(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+      }
 
-       function addToHistory(sessionId, title, timestamp) {
-         const session = {
-           id: sessionId,
-           title: title,
-           timestamp: timestamp,
-           messages: [],
-         };
+      function addToHistory(sessionId, title, timestamp) {
+        const session = {
+          id: sessionId,
+          title: title,
+          timestamp: timestamp,
+          messages: [],
+        };
 
-         chatHistory.unshift(session);
-         localStorage.setItem('ecosentinel_chatHistory', JSON.stringify(chatHistory));
-         loadChatHistory();
-       }
+        chatHistory.unshift(session);
+        localStorage.setItem('ecosentinel_chatHistory', JSON.stringify(chatHistory));
+        loadChatHistory();
+      }
 
-       function updateHistorySession(sessionId, lastMessage) {
-         const session = chatHistory.find((s) => s.id === sessionId);
-         if (session) {
-           session.title = lastMessage.length > 50 ? lastMessage.substring(0, 50) + '...' : lastMessage;
-           session.timestamp = new Date();
-           localStorage.setItem('ecosentinel_chatHistory', JSON.stringify(chatHistory));
-           loadChatHistory();
-         }
-       }
+      function updateHistorySession(sessionId, lastMessage) {
+        const session = chatHistory.find((s) => s.id === sessionId);
+        if (session) {
+          session.title = lastMessage.length > 50 ? lastMessage.substring(0, 50) + '...' : lastMessage;
+          session.timestamp = new Date();
+          localStorage.setItem('ecosentinel_chatHistory', JSON.stringify(chatHistory));
+          loadChatHistory();
+        }
+      }
 
-       function saveMessageToSession(sessionId, content, sender) {
-         const session = chatHistory.find((s) => s.id === sessionId);
-         if (session) {
-           session.messages.push({ content, sender, timestamp: new Date() });
-           localStorage.setItem('ecosentinel_chatHistory', JSON.stringify(chatHistory));
-         }
-       }
+      function saveMessageToSession(sessionId, content, sender) {
+        const session = chatHistory.find((s) => s.id === sessionId);
+        if (session) {
+          session.messages.push({ content, sender, timestamp: new Date() });
+          localStorage.setItem('ecosentinel_chatHistory', JSON.stringify(chatHistory));
+        }
+      }
 
-       function loadChatHistory() {
-         const historyContainer = document.getElementById('chatHistory');
-         historyContainer.innerHTML = '';
+      function loadChatHistory() {
+        const historyContainer = document.getElementById('chatHistory');
+        historyContainer.innerHTML = '';
 
-         chatHistory.forEach((session) => {
-           const historyItem = document.createElement('div');
-           historyItem.className = 'chat-history-item';
-           if (session.id === currentSessionId) {
-             historyItem.classList.add('active');
-           }
+        chatHistory.forEach((session) => {
+          const historyItem = document.createElement('div');
+          historyItem.className = 'chat-history-item';
+          if (session.id === currentSessionId) {
+            historyItem.classList.add('active');
+          }
 
-           historyItem.innerHTML = `
+          historyItem.innerHTML = `
            <div style="font-weight: 500; margin-bottom: 4px;">${session.title}</div>
            <div style="font-size: 12px; opacity: 0.7;">${new Date(session.timestamp).toLocaleDateString()}</div>
          `;
 
-           historyItem.onclick = () => loadSession(session.id);
-           historyContainer.appendChild(historyItem);
-         });
-       }
+          historyItem.onclick = () => loadSession(session.id);
+          historyContainer.appendChild(historyItem);
+        });
+      }
 
-       function loadSession(sessionId) {
-         currentSessionId = sessionId;
-         clearMessages();
+      function loadSession(sessionId) {
+        currentSessionId = sessionId;
+        clearMessages();
 
-         const session = chatHistory.find((s) => s.id === sessionId);
-         if (session && session.messages && session.messages.length > 0) {
-           session.messages.forEach((msg) => {
-             addMessageWithoutSaving(msg.content, msg.sender);
-           });
-         } else {
-           showWelcomeMessage();
-         }
+        const session = chatHistory.find((s) => s.id === sessionId);
+        if (session && session.messages && session.messages.length > 0) {
+          session.messages.forEach((msg) => {
+            addMessageWithoutSaving(msg.content, msg.sender);
+          });
+        } else {
+          showWelcomeMessage();
+        }
 
-         loadChatHistory(); // Refresh to update active state
-       }
+        loadChatHistory(); // Refresh to update active state
+      }
 
-       function addMessageWithoutSaving(content, sender) {
-         const messagesContainer = document.getElementById('chatMessages');
-         const messageDiv = document.createElement('div');
-         messageDiv.className = `message ${sender}`;
+      function addMessageWithoutSaving(content, sender) {
+        const messagesContainer = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
 
-         const avatarIcon = sender === 'user' ? 'fa-user' : 'fa-robot';
+        const avatarIcon = sender === 'user' ? 'fa-user' : 'fa-robot';
 
-         messageDiv.innerHTML = `
+        messageDiv.innerHTML = `
          <div class="message-avatar">
            <i class="fas ${avatarIcon}"></i>
          </div>
@@ -850,40 +847,40 @@
          </div>
        `;
 
-         messagesContainer.appendChild(messageDiv);
-         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-       }
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
 
-       // Event listeners for chat history navigation
-       window.chatHistory = {
-         userId: userId,
-         addEventListener: function (event, callback) {
-           if (event === 'loadSession') {
-             // Custom event handling for session loading
-             document.addEventListener('loadSession', callback);
-           }
-         },
-         refresh: function () {
-           loadChatHistory();
-         },
-       };
+      // Event listeners for chat history navigation
+      window.chatHistory = {
+        userId: userId,
+        addEventListener: function (event, callback) {
+          if (event === 'loadSession') {
+            // Custom event handling for session loading
+            document.addEventListener('loadSession', callback);
+          }
+        },
+        refresh: function () {
+          loadChatHistory();
+        },
+      };
 
-       window.chat = {
-         userId: userId,
-         sessionId: currentSessionId,
-         messages: [],
-         addEventListener: function (event, callback) {
-           if (event === 'messagesUpdated') {
-             document.addEventListener('messagesUpdated', callback);
-           }
-         },
-       };
+      window.chat = {
+        userId: userId,
+        sessionId: currentSessionId,
+        messages: [],
+        addEventListener: function (event, callback) {
+          if (event === 'messagesUpdated') {
+            document.addEventListener('messagesUpdated', callback);
+          }
+        },
+      };
 
-       window.sendQuickPrompt = sendQuickPrompt;
-       window.sendMessage = sendMessage;
-       window.startNewChat = startNewChat;
-       window.handleInputKeydown = handleInputKeydown;
-       window.adjustTextareaHeight = adjustTextareaHeight;
+      window.sendQuickPrompt = sendQuickPrompt;
+      window.sendMessage = sendMessage;
+      window.startNewChat = startNewChat;
+      window.handleInputKeydown = handleInputKeydown;
+      window.adjustTextareaHeight = adjustTextareaHeight;
     </script>
   </body>
 </html>
