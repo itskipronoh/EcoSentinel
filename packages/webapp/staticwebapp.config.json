@@ -2,35 +2,35 @@
   "routes": [
     {
       "route": "/index.html",
-      "serve": "/index.html"
+      "rewrite": "/index.html"
     },
     {
       "route": "/azure-maps-config.js",
-      "serve": "/azure-maps-config.js"
+      "rewrite": "/azure-maps-config.js"
     },
     {
       "route": "/chat.html",
-      "serve": "/chat.html"
+      "rewrite": "/chat.html"
     },
     {
       "route": "/alerts.html",
-      "serve": "/alerts.html"
+      "rewrite": "/alerts.html"
     },
     {
       "route": "/about.html",
-      "serve": "/about.html"
+      "rewrite": "/about.html"
     },
     {
       "route": "/chat.html",
-      "serve": "/chat.html"
+      "rewrite": "/chat.html"
     },
     {
       "route": "/alerts.html",
-      "serve": "/alerts.html"
+      "rewrite": "/alerts.html"
     },
     {
       "route": "/about.html",
-      "serve": "/about.html"
+      "rewrite": "/about.html"
     },
     {
       "route": "/api/chats",
