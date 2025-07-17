@@ -509,7 +509,7 @@
             <div class="quick-actions">
               <div
                 class="quick-action"
-                onclick="sendQuickPrompt('What\'s the current air quality in major Kenyan cities?')"
+                onclick="sendQuickPrompt('What\\'s the current air quality in major Kenyan cities?')"
               >
                 <div class="quick-action-icon"><i class="fas fa-wind"></i></div>
                 <div class="quick-action-title">Air Quality</div>
@@ -660,7 +660,7 @@
             body: JSON.stringify({
               messages: [
                 {
-                  role: 'assistant',
+                  role: 'user',
                   content: message,
                 },
               ],
@@ -671,7 +671,7 @@
           });
 
           if (!response.ok) {
-            throw new Error('Failed to get response from server');
+            throw new Error(`Failed to get response from server: ${response.statusText}`);
           }
 
           const reader = response.body.getReader();
@@ -685,8 +685,15 @@
             result += chunk;
           }
 
-          // Parse the result into JSON
-          const data = JSON.parse(result);
+          // Validate and parse the result into JSON
+          let data;
+          try {
+            data = JSON.parse(result.trim());
+          } catch (parseError) {
+            console.error('Error parsing JSON:', parseError);
+            console.error('Server response:', result);
+            throw new Error('Invalid JSON response from server');
+          }
 
           // Remove typing indicator
           hideTypingIndicator();
