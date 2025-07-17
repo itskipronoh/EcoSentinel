@@ -445,6 +445,35 @@
         box-shadow: var(--shadow);
       }
 
+      .map-controls {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .map-filter-btn {
+        padding: 8px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 20px;
+        background: var(--white);
+        color: var(--gray);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .map-filter-btn:hover {
+        border-color: var(--forest-green);
+        color: var(--forest-green);
+      }
+
+      .map-filter-btn.active {
+        background: var(--forest-green);
+        border-color: var(--forest-green);
+        color: var(--white);
+      }
+
       .map-placeholder {
         width: 100%;
         height: 300px;
@@ -708,10 +737,13 @@
           <i class="fas fa-map-marked-alt"></i>
           Environmental Monitoring Map
         </h2>
-        <div class="map-placeholder">
-          <i class="fas fa-map" style="margin-right: 12px"></i>
-          Interactive Environmental Map - Click to View Details
+        <div class="map-controls" style="margin-bottom: 16px;">
+          <button class="map-filter-btn active" data-layer="all">All Data</button>
+          <button class="map-filter-btn" data-layer="air">Air Quality</button>
+          <button class="map-filter-btn" data-layer="flood">Flood Risk</button>
+          <button class="map-filter-btn" data-layer="water">Water Quality</button>
         </div>
+        <div id="environmentalMap" style="width: 100%; height: 400px; border-radius: var(--border-radius);"></div>
       </section>
     </main>
 
@@ -724,7 +756,200 @@
       let currentLocation = null;
       let searchTimeout;
       let updateInterval;
+      let environmentalMap = null;
+      let mapMarkers = [];
+      let currentMapLayer = 'all';
       const API_BASE_URL = 'http://localhost:7071/api';
+
+      // Initialize the environmental monitoring map
+      function initializeEnvironmentalMap() {
+        // Initialize map centered on Nairobi
+        environmentalMap = L.map('environmentalMap').setView([-1.2921, 36.8219], 11);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(environmentalMap);
+
+        // Add environmental monitoring stations
+        addEnvironmentalStations();
+      }
+
+      // Add environmental monitoring stations to the map
+      async function addEnvironmentalStations() {
+        const stations = [
+          { name: 'Nairobi Central', lat: -1.2921, lng: 36.8219 },
+          { name: 'Westlands', lat: -1.274, lng: 36.8172 },
+          { name: 'Embakasi', lat: -1.3098, lng: 36.8537 },
+          { name: 'Mathare', lat: -1.2699, lng: 36.8566 },
+          { name: 'Kibera', lat: -1.3127, lng: 36.7816 },
+          { name: 'Kasarani', lat: -1.224, lng: 36.8795 },
+          { name: 'Kawangware', lat: -1.2832, lng: 36.7516 },
+          { name: 'Industrial Area', lat: -1.3197, lng: 36.8510 }
+        ];
+
+        for (const station of stations) {
+          try {
+            // Try to fetch real data from API
+            const stationData = await fetchLocationEnvironmentalData(station.name);
+            const data = stationData || generateLocationSpecificData(station.name);
+            
+            const marker = createEnvironmentalMarker(station, data);
+            mapMarkers.push({ marker, data, station, type: 'all' });
+            
+          } catch (error) {
+            console.error(`Error adding station ${station.name}:`, error);
+            // Add basic marker as fallback
+            const basicMarker = L.circleMarker([station.lat, station.lng], {
+              radius: 8,
+              fillColor: '#999',
+              color: '#fff',
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.7
+            }).addTo(environmentalMap);
+            
+            basicMarker.bindPopup(`<div style="padding: 8px;"><strong>${station.name}</strong><br/>Data temporarily unavailable</div>`);
+            mapMarkers.push({ marker: basicMarker, station, type: 'all' });
+          }
+        }
+      }
+
+      // Create environmental marker based on data
+      function createEnvironmentalMarker(station, data) {
+        let color = '#4caf50'; // Default green
+        let radius = 10;
+        let riskLevel = 'Normal';
+
+        // Determine marker color and size based on environmental data
+        if (data.airQuality && data.airQuality.aqi > 150) {
+          color = '#f44336'; // Red for bad air quality
+          radius = 15;
+          riskLevel = 'High Air Pollution';
+        } else if (data.floodRisk && data.floodRisk.level === 'High') {
+          color = '#2196f3'; // Blue for flood risk
+          radius = 15;
+          riskLevel = 'High Flood Risk';
+        } else if (data.waterQuality && data.waterQuality.status === 'Unverified') {
+          color = '#ff9800'; // Orange for water issues
+          radius = 12;
+          riskLevel = 'Water Quality Alert';
+        } else if (data.airQuality && data.airQuality.aqi > 100) {
+          color = '#ff9800'; // Orange for moderate air quality
+          radius = 12;
+          riskLevel = 'Moderate Pollution';
+        }
+
+        const marker = L.circleMarker([station.lat, station.lng], {
+          radius: radius,
+          fillColor: color,
+          color: '#fff',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.8
+        }).addTo(environmentalMap);
+
+        // Create detailed popup content
+        const popupContent = `
+          <div style="padding: 12px; min-width: 200px;">
+            <h4 style="margin: 0 0 8px 0; color: var(--forest-green);">${station.name}</h4>
+            <div style="margin: 8px 0;">
+              <strong>Status:</strong> <span style="color: ${color};">${riskLevel}</span>
+            </div>
+            ${data.airQuality ? `
+              <div style="margin: 4px 0;">
+                <strong>Air Quality:</strong> ${data.airQuality.aqi} AQI (${data.airQuality.status})
+              </div>
+            ` : ''}
+            ${data.weather ? `
+              <div style="margin: 4px 0;">
+                <strong>Temperature:</strong> ${data.weather.temperature}°C
+              </div>
+              <div style="margin: 4px 0;">
+                <strong>Rainfall:</strong> ${data.weather.rainfall24h}mm
+              </div>
+            ` : ''}
+            ${data.floodRisk ? `
+              <div style="margin: 4px 0;">
+                <strong>Flood Risk:</strong> ${data.floodRisk.level} (${data.floodRisk.probability}%)
+              </div>
+            ` : ''}
+            ${data.waterQuality ? `
+              <div style="margin: 4px 0;">
+                <strong>Water Quality:</strong> ${data.waterQuality.status}
+              </div>
+            ` : ''}
+            <div style="margin: 8px 0 4px 0; font-size: 11px; color: #666;">
+              Last updated: ${new Date().toLocaleTimeString()}
+            </div>
+            <button onclick="searchLocationData('${station.name}')" style="
+              background: var(--forest-green); 
+              color: white; 
+              border: none; 
+              padding: 6px 12px; 
+              border-radius: 4px; 
+              cursor: pointer; 
+              font-size: 12px;
+              margin-top: 8px;
+            ">View Details</button>
+          </div>
+        `;
+
+        marker.bindPopup(popupContent);
+        return marker;
+      }
+
+      // Filter map markers based on selected layer
+      function filterMapMarkers(layer) {
+        currentMapLayer = layer;
+        
+        // Update button states
+        document.querySelectorAll('.map-filter-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`[data-layer="${layer}"]`).classList.add('active');
+
+        // Clear existing markers
+        mapMarkers.forEach(item => {
+          environmentalMap.removeLayer(item.marker);
+        });
+
+        // Add markers based on filter
+        mapMarkers.forEach(item => {
+          let shouldShow = false;
+          
+          if (layer === 'all') {
+            shouldShow = true;
+          } else if (layer === 'air' && item.data.airQuality) {
+            shouldShow = item.data.airQuality.aqi > 100; // Show only problematic air quality
+          } else if (layer === 'flood' && item.data.floodRisk) {
+            shouldShow = item.data.floodRisk.level !== 'Low'; // Show medium/high flood risk
+          } else if (layer === 'water' && item.data.waterQuality) {
+            shouldShow = item.data.waterQuality.status !== 'Good'; // Show water quality issues
+          }
+
+          if (shouldShow) {
+            item.marker.addTo(environmentalMap);
+          }
+        });
+      }
+
+      // Refresh map data
+      async function refreshMapData() {
+        console.log('Refreshing environmental map data...');
+        
+        // Clear existing markers
+        mapMarkers.forEach(item => {
+          environmentalMap.removeLayer(item.marker);
+        });
+        mapMarkers = [];
+
+        // Re-add stations with fresh data
+        await addEnvironmentalStations();
+        
+        // Apply current filter
+        if (currentMapLayer !== 'all') {
+          filterMapMarkers(currentMapLayer);
+        }
+      }
 
       // Utility function to format rainfall values to minimal decimal places
       function formatRainfall(value) {
@@ -786,6 +1011,25 @@
             updateCardsWithRealData(mockData);
             updateAlertsWithLocationData(location, mockData);
             startRealTimeUpdates();
+          }
+
+          // Center map on searched location if map is initialized
+          if (environmentalMap && location.toLowerCase() !== 'nairobi') {
+            const coords = await getLocationCoordinates(location);
+            if (coords) {
+              environmentalMap.setView([coords.lat, coords.lng], 13);
+              
+              // Add a temporary marker for the searched location
+              const searchMarker = L.marker([coords.lat, coords.lng])
+                .addTo(environmentalMap)
+                .bindPopup(`<div style="padding: 8px;"><strong>${location}</strong><br/>Search Result</div>`)
+                .openPopup();
+              
+              // Remove the search marker after 5 seconds
+              setTimeout(() => {
+                environmentalMap.removeLayer(searchMarker);
+              }, 5000);
+            }
           }
           
         } catch (error) {
@@ -1152,10 +1396,26 @@
       document.addEventListener('DOMContentLoaded', function() {
         console.log('🌍 EcoSentinel Alerts - Real-time Environmental Monitoring Loaded');
         
+        // Initialize the environmental monitoring map
+        setTimeout(() => {
+          initializeEnvironmentalMap();
+        }, 1000);
+        
+        // Set up map filter button event listeners
+        document.querySelectorAll('.map-filter-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const layer = this.getAttribute('data-layer');
+            filterMapMarkers(layer);
+          });
+        });
+        
         // Set default location to Nairobi for initial data
         setTimeout(() => {
           searchLocationData('Nairobi');
-        }, 1000);
+        }, 2000);
+
+        // Auto-refresh map data every 5 minutes
+        setInterval(refreshMapData, 300000);
       });
     </script>
   </body>
