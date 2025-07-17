@@ -671,7 +671,7 @@
           });
 
           if (!response.ok) {
-            throw new Error(`Failed to get response from server: ${response.statusText}`);
+            throw new Error('Failed to get response from server');
           }
 
           const reader = response.body.getReader();
@@ -685,15 +685,8 @@
             result += chunk;
           }
 
-          // Validate and parse the result into JSON
-          let data;
-          try {
-            data = JSON.parse(result.trim());
-          } catch (parseError) {
-            console.error('Error parsing JSON:', parseError);
-            console.error('Server response:', result);
-            throw new Error('Invalid JSON response from server');
-          }
+          // Parse the result into JSON
+          const data = JSON.parse(result);
 
           // Remove typing indicator
           hideTypingIndicator();
