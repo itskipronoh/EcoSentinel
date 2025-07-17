@@ -673,6 +673,7 @@
           if (!response.ok) {
             throw new Error('Failed to get response from server');
           }
+
           const reader = response.body.getReader();
           const decoder = new TextDecoder();
           let result = '';
@@ -683,6 +684,9 @@
             const chunk = decoder.decode(value, { stream: true });
             result += chunk;
           }
+
+          // Parse the result into JSON
+          const data = JSON.parse(result);
 
           // Remove typing indicator
           hideTypingIndicator();
