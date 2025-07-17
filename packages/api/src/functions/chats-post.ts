@@ -30,9 +30,6 @@ Never say "I don't know". Be helpful, resourceful, and clear. When referencing d
 Wrap 2–3 possible follow-up questions in double angle brackets, e.g.:
 <<Can I access historical pollution data?>>
 <<How does weather affect air quality?>>
-
-SOURCES:
-{context}
 `;
 
 const titleSystemPrompt = `Create a title for this chat session, based on the user question. The title should be less than 32 characters and relevant to environmental monitoring or sustainability. Do NOT use double-quotes.`;
