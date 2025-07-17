@@ -652,7 +652,7 @@
 
         try {
           // Call your API here - update this endpoint to match your backend
-          const response = await fetch(`${apiBaseUrl}/api/chats`, {
+          const response = await fetch(`${apiBaseUrl}/api/chats/stream`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -664,6 +664,7 @@
               context: 'environmental_monitoring',
             }),
           });
+          const reader = response.body.getReader();
 
           if (!response.ok) {
             throw new Error('Failed to get response from server');
