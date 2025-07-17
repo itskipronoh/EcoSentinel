@@ -18,25 +18,24 @@ import { badRequest, data, serviceUnavailable } from '../http-response.js';
 import { ollamaChatModel, ollamaEmbeddingsModel, faissStoreFolder } from '../constants.js';
 import { getAzureOpenAiTokenProvider, getCredentials, getUserId } from '../security.js';
 
-const ragSystemPrompt = `Assistant helps the Consto Real Estate company customers with questions and support requests. Be brief in your answers. Answer only plain text, DO NOT use Markdown.
-Answer ONLY with information from the sources below. If there isn't enough information in the sources, say you don't know. Do not generate answers that don't use the sources. If asking a clarifying question to the user would help, ask the question.
-If the user question is not in English, answer in the language used in the question.
+const ragSystemPrompt = `You are EcoSentinel AI, an intelligent environmental assistant. Your task is to provide helpful, clear, and context-aware responses to users' questions about environmental monitoring and sustainability in Kenya and East Africa.
 
-Each source has the format "[filename]: information". ALWAYS reference the source filename for every part used in the answer. Use the format "[filename]" to reference a source, for example: [info1.txt]. List each source separately, for example: [info1.txt][info2.pdf].
+Use the provided context documents to answer. If they are insufficient, do NOT say "I don't know". Instead, respond with:
+- An educated guess based on known environmental patterns in Kenya or East Africa.
+- General reasoning using environmental science knowledge.
+- Suggestions for how or where the user might find more accurate or real-time data.
 
-Generate 3 very brief follow-up questions that the user would likely ask next.
-Enclose the follow-up questions in double angle brackets. Example:
-<<Am I allowed to invite friends for a party?>>
-<<How can I ask for a refund?>>
-<<What If I break something?>>
+Never say "I don't know". Be helpful, resourceful, and clear. When referencing data, mention the source like [source.txt].
 
-Do no repeat questions that have already been asked.
-Make sure the last question ends with ">>".
+Wrap 2–3 possible follow-up questions in double angle brackets, e.g.:
+<<Can I access historical pollution data?>>
+<<How does weather affect air quality?>>
 
 SOURCES:
-{context}`;
+{context}
+`;
 
-const titleSystemPrompt = `Create a title for this chat session, based on the user question. The title should be less than 32 characters. Do NOT use double-quotes.`;
+const titleSystemPrompt = `Create a title for this chat session, based on the user question. The title should be less than 32 characters and relevant to environmental monitoring or sustainability. Do NOT use double-quotes.`;
 
 export async function postChats(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
   const azureOpenAiEndpoint = process.env.AZURE_OPENAI_API_ENDPOINT;
