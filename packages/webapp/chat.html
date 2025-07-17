@@ -651,7 +651,7 @@
         updateSendButton();
 
         try {
-          // Call your API here - update this endpoint to match your backend
+          // Call your API here
           const response = await fetch(`${apiBaseUrl}/api/chats/stream`, {
             method: 'POST',
             headers: {
@@ -691,7 +691,7 @@
             fullResponse += chunk;
           }
 
-          // Parse the full response
+          // Process the response
           const lines = fullResponse.split('\n').filter((line) => line.trim());
           let finalResponse = '';
 
@@ -710,7 +710,7 @@
           // Remove typing indicator
           hideTypingIndicator();
 
-          // Display the full response as a single paragraph
+          // Display the full response
           if (finalResponse.trim()) {
             addMessage(finalResponse.trim(), 'assistant');
           }
@@ -722,11 +722,7 @@
         } catch (error) {
           console.error('Error sending message:', error);
           hideTypingIndicator();
-          addMessage(
-            'Sorry, I encountered an error while processing your request. Please try again later.',
-            'assistant',
-            true,
-          );
+          addMessage('Sorry, the server is currently unavailable. Please try again later.', 'assistant', true);
         } finally {
           isLoading = false;
           updateSendButton();
