@@ -658,7 +658,12 @@
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              message: message,
+              messages: [
+                {
+                  role: 'assistant',
+                  content: message,
+                },
+              ],
               sessionId: currentSessionId,
               userId: userId,
               context: 'environmental_monitoring',
