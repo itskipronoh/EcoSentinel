@@ -34,6 +34,7 @@ matplotlib>=3.7.0
 
 # Weather & Climate Data APIs
 requests>=2.31.0
+urllib3>=2.0.0
 netCDF4>=1.6.0
 h5py>=3.9.0
 

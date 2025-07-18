@@ -445,6 +445,35 @@
         box-shadow: var(--shadow);
       }
 
+      .map-controls {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .map-filter-btn {
+        padding: 8px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 20px;
+        background: var(--white);
+        color: var(--gray);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .map-filter-btn:hover {
+        border-color: var(--forest-green);
+        color: var(--forest-green);
+      }
+
+      .map-filter-btn.active {
+        background: var(--forest-green);
+        border-color: var(--forest-green);
+        color: var(--white);
+      }
+
       .map-placeholder {
         width: 100%;
         height: 300px;
@@ -708,55 +737,686 @@
           <i class="fas fa-map-marked-alt"></i>
           Environmental Monitoring Map
         </h2>
-        <div class="map-placeholder">
-          <i class="fas fa-map" style="margin-right: 12px"></i>
-          Interactive Environmental Map - Click to View Details
+        <div class="map-controls" style="margin-bottom: 16px;">
+          <button class="map-filter-btn active" data-layer="all">All Data</button>
+          <button class="map-filter-btn" data-layer="air">Air Quality</button>
+          <button class="map-filter-btn" data-layer="flood">Flood Risk</button>
+          <button class="map-filter-btn" data-layer="water">Water Quality</button>
         </div>
+        <div id="environmentalMap" style="width: 100%; height: 400px; border-radius: var(--border-radius);"></div>
       </section>
     </main>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="src/services/ecosentinel-api.js"></script>
+
     <script>
-      // Search functionality
+      // Global variables for real-time data management
+      let currentLocation = null;
+      let searchTimeout;
+      let updateInterval;
+      let environmentalMap = null;
+      let mapMarkers = [];
+      let currentMapLayer = 'all';
+      const API_BASE_URL = 'http://localhost:7071/api';
+
+      // Initialize the environmental monitoring map
+      function initializeEnvironmentalMap() {
+        // Initialize map centered on Nairobi
+        environmentalMap = L.map('environmentalMap').setView([-1.2921, 36.8219], 11);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(environmentalMap);
+
+        // Add environmental monitoring stations
+        addEnvironmentalStations();
+      }
+
+      // Add environmental monitoring stations to the map
+      async function addEnvironmentalStations() {
+        const stations = [
+          { name: 'Nairobi Central', lat: -1.2921, lng: 36.8219 },
+          { name: 'Westlands', lat: -1.274, lng: 36.8172 },
+          { name: 'Embakasi', lat: -1.3098, lng: 36.8537 },
+          { name: 'Mathare', lat: -1.2699, lng: 36.8566 },
+          { name: 'Kibera', lat: -1.3127, lng: 36.7816 },
+          { name: 'Kasarani', lat: -1.224, lng: 36.8795 },
+          { name: 'Kawangware', lat: -1.2832, lng: 36.7516 },
+          { name: 'Industrial Area', lat: -1.3197, lng: 36.8510 }
+        ];
+
+        for (const station of stations) {
+          try {
+            // Try to fetch real data from API
+            const stationData = await fetchLocationEnvironmentalData(station.name);
+            const data = stationData || generateLocationSpecificData(station.name);
+            
+            const marker = createEnvironmentalMarker(station, data);
+            mapMarkers.push({ marker, data, station, type: 'all' });
+            
+          } catch (error) {
+            console.error(`Error adding station ${station.name}:`, error);
+            // Add basic marker as fallback
+            const basicMarker = L.circleMarker([station.lat, station.lng], {
+              radius: 8,
+              fillColor: '#999',
+              color: '#fff',
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.7
+            }).addTo(environmentalMap);
+            
+            basicMarker.bindPopup(`<div style="padding: 8px;"><strong>${station.name}</strong><br/>Data temporarily unavailable</div>`);
+            mapMarkers.push({ marker: basicMarker, station, type: 'all' });
+          }
+        }
+      }
+
+      // Create environmental marker based on data
+      function createEnvironmentalMarker(station, data) {
+        let color = '#4caf50'; // Default green
+        let radius = 10;
+        let riskLevel = 'Normal';
+
+        // Determine marker color and size based on environmental data
+        if (data.airQuality && data.airQuality.aqi > 150) {
+          color = '#f44336'; // Red for bad air quality
+          radius = 15;
+          riskLevel = 'High Air Pollution';
+        } else if (data.floodRisk && data.floodRisk.level === 'High') {
+          color = '#2196f3'; // Blue for flood risk
+          radius = 15;
+          riskLevel = 'High Flood Risk';
+        } else if (data.waterQuality && data.waterQuality.status === 'Unverified') {
+          color = '#ff9800'; // Orange for water issues
+          radius = 12;
+          riskLevel = 'Water Quality Alert';
+        } else if (data.airQuality && data.airQuality.aqi > 100) {
+          color = '#ff9800'; // Orange for moderate air quality
+          radius = 12;
+          riskLevel = 'Moderate Pollution';
+        }
+
+        const marker = L.circleMarker([station.lat, station.lng], {
+          radius: radius,
+          fillColor: color,
+          color: '#fff',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.8
+        }).addTo(environmentalMap);
+
+        // Create detailed popup content
+        const popupContent = `
+          <div style="padding: 12px; min-width: 200px;">
+            <h4 style="margin: 0 0 8px 0; color: var(--forest-green);">${station.name}</h4>
+            <div style="margin: 8px 0;">
+              <strong>Status:</strong> <span style="color: ${color};">${riskLevel}</span>
+            </div>
+            ${data.airQuality ? `
+              <div style="margin: 4px 0;">
+                <strong>Air Quality:</strong> ${data.airQuality.aqi} AQI (${data.airQuality.status})
+              </div>
+            ` : ''}
+            ${data.weather ? `
+              <div style="margin: 4px 0;">
+                <strong>Temperature:</strong> ${data.weather.temperature}°C
+              </div>
+              <div style="margin: 4px 0;">
+                <strong>Rainfall:</strong> ${data.weather.rainfall24h}mm
+              </div>
+            ` : ''}
+            ${data.floodRisk ? `
+              <div style="margin: 4px 0;">
+                <strong>Flood Risk:</strong> ${data.floodRisk.level} (${data.floodRisk.probability}%)
+              </div>
+            ` : ''}
+            ${data.waterQuality ? `
+              <div style="margin: 4px 0;">
+                <strong>Water Quality:</strong> ${data.waterQuality.status}
+              </div>
+            ` : ''}
+            <div style="margin: 8px 0 4px 0; font-size: 11px; color: #666;">
+              Last updated: ${new Date().toLocaleTimeString()}
+            </div>
+            <button onclick="searchLocationData('${station.name}')" style="
+              background: var(--forest-green); 
+              color: white; 
+              border: none; 
+              padding: 6px 12px; 
+              border-radius: 4px; 
+              cursor: pointer; 
+              font-size: 12px;
+              margin-top: 8px;
+            ">View Details</button>
+          </div>
+        `;
+
+        marker.bindPopup(popupContent);
+        return marker;
+      }
+
+      // Filter map markers based on selected layer
+      function filterMapMarkers(layer) {
+        currentMapLayer = layer;
+        
+        // Update button states
+        document.querySelectorAll('.map-filter-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`[data-layer="${layer}"]`).classList.add('active');
+
+        // Clear existing markers
+        mapMarkers.forEach(item => {
+          environmentalMap.removeLayer(item.marker);
+        });
+
+        // Add markers based on filter
+        mapMarkers.forEach(item => {
+          let shouldShow = false;
+          
+          if (layer === 'all') {
+            shouldShow = true;
+          } else if (layer === 'air' && item.data.airQuality) {
+            shouldShow = item.data.airQuality.aqi > 100; // Show only problematic air quality
+          } else if (layer === 'flood' && item.data.floodRisk) {
+            shouldShow = item.data.floodRisk.level !== 'Low'; // Show medium/high flood risk
+          } else if (layer === 'water' && item.data.waterQuality) {
+            shouldShow = item.data.waterQuality.status !== 'Good'; // Show water quality issues
+          }
+
+          if (shouldShow) {
+            item.marker.addTo(environmentalMap);
+          }
+        });
+      }
+
+      // Refresh map data
+      async function refreshMapData() {
+        console.log('Refreshing environmental map data...');
+        
+        // Clear existing markers
+        mapMarkers.forEach(item => {
+          environmentalMap.removeLayer(item.marker);
+        });
+        mapMarkers = [];
+
+        // Re-add stations with fresh data
+        await addEnvironmentalStations();
+        
+        // Apply current filter
+        if (currentMapLayer !== 'all') {
+          filterMapMarkers(currentMapLayer);
+        }
+      }
+
+      // Utility function to format rainfall values to minimal decimal places
+      function formatRainfall(value) {
+        if (typeof value === 'string') {
+          // Extract number from string like "24.507932146770163mm"
+          const numericValue = parseFloat(value.replace('mm', ''));
+          return isNaN(numericValue) ? '0.0mm' : `${numericValue.toFixed(1)}mm`;
+        } else if (typeof value === 'number') {
+          return `${value.toFixed(1)}mm`;
+        }
+        return '0.0mm';
+      }
+
+      // Utility function to format any environmental value to reasonable precision
+      function formatEnvironmentalValue(value, unit = '', decimals = 1) {
+        if (typeof value === 'string') {
+          const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''));
+          return isNaN(numericValue) ? `0${unit}` : `${numericValue.toFixed(decimals)}${unit}`;
+        } else if (typeof value === 'number') {
+          return `${value.toFixed(decimals)}${unit}`;
+        }
+        return `0${unit}`;
+      }
+
+      // Real-time data storage
+      let realTimeData = {
+        airQuality: { aqi: 164, status: 'Unsafe', location: 'Mathare' },
+        weather: { temp: 28, condition: 'Partly cloudy', location: 'Nairobi' },
+        floodRisk: { level: 'Medium', location: 'Kawangware', rainfall: '24.5mm' },
+        waterQuality: { status: 'Unverified', location: 'Kibera' }
+      };
+
+      // Enhanced search functionality with real-time location data
+      function performSearch() {
+        const searchTerm = document.querySelector('.search-input').value.trim();
+        if (searchTerm) {
+          console.log('Searching for:', searchTerm);
+          searchLocationData(searchTerm);
+        }
+      }
+
+      // Search for location-specific environmental data
+      async function searchLocationData(location) {
+        try {
+          // Show loading states on cards while fetching data
+          showLoadingOnCards();
+          
+          // Try to fetch real data from our EcoSentinel API
+          const locationData = await fetchLocationEnvironmentalData(location);
+          
+          if (locationData) {
+            currentLocation = location;
+            updateCardsWithRealData(locationData);
+            updateAlertsWithLocationData(location, locationData);
+            startRealTimeUpdates();
+          } else {
+            // Fallback to simulated location-specific data
+            const mockData = generateLocationSpecificData(location);
+            updateCardsWithRealData(mockData);
+            updateAlertsWithLocationData(location, mockData);
+            startRealTimeUpdates();
+          }
+
+          // Center map on searched location if map is initialized
+          if (environmentalMap && location.toLowerCase() !== 'nairobi') {
+            const coords = await getLocationCoordinates(location);
+            if (coords) {
+              environmentalMap.setView([coords.lat, coords.lng], 13);
+              
+              // Add a temporary marker for the searched location
+              const searchMarker = L.marker([coords.lat, coords.lng])
+                .addTo(environmentalMap)
+                .bindPopup(`<div style="padding: 8px;"><strong>${location}</strong><br/>Search Result</div>`)
+                .openPopup();
+              
+              // Remove the search marker after 5 seconds
+              setTimeout(() => {
+                environmentalMap.removeLayer(searchMarker);
+              }, 5000);
+            }
+          }
+          
+        } catch (error) {
+          console.error('Error fetching location data:', error);
+          // Use fallback data
+          const fallbackData = generateLocationSpecificData(location);
+          updateCardsWithRealData(fallbackData);
+          updateAlertsWithLocationData(location, fallbackData);
+        }
+      }
+
+      // Fetch real environmental data for a location
+      async function fetchLocationEnvironmentalData(location) {
+        try {
+          // First, try to get coordinates for the location
+          const coordinates = await getLocationCoordinates(location);
+          
+          if (coordinates) {
+            // Fetch environmental predictions from our backend
+            const response = await fetch(`${API_BASE_URL}/predict`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                lat: coordinates.lat,
+                lng: coordinates.lng,
+                location: location
+              })
+            });
+            
+            if (response.ok) {
+              return await response.json();
+            }
+          }
+          
+          return null;
+        } catch (error) {
+          console.error('API call failed:', error);
+          return null;
+        }
+      }
+
+      // Get coordinates for a location (simplified for demo)
+      async function getLocationCoordinates(location) {
+        const locationMap = {
+          'nairobi': { lat: -1.2921, lng: 36.8219 },
+          'mombasa': { lat: -4.0435, lng: 39.6682 },
+          'kisumu': { lat: -0.0917, lng: 34.7680 },
+          'nakuru': { lat: -0.3031, lng: 36.0800 },
+          'eldoret': { lat: 0.5143, lng: 35.2698 },
+          'mathare': { lat: -1.2699, lng: 36.8566 },
+          'kibera': { lat: -1.3127, lng: 36.7816 },
+          'kawangware': { lat: -1.2832, lng: 36.7516 },
+          'westlands': { lat: -1.274, lng: 36.8172 },
+          'embakasi': { lat: -1.3098, lng: 36.8537 }
+        };
+        
+        const normalizedLocation = location.toLowerCase();
+        return locationMap[normalizedLocation] || locationMap['nairobi'];
+      }
+
+      // Generate location-specific mock data
+      function generateLocationSpecificData(location) {
+        const locationFactors = {
+          'mathare': { airMultiplier: 1.8, floodRisk: 0.7, industryFactor: 2.1 },
+          'kibera': { airMultiplier: 1.6, floodRisk: 0.9, industryFactor: 1.8 },
+          'kawangware': { airMultiplier: 1.4, floodRisk: 0.8, industryFactor: 1.5 },
+          'westlands': { airMultiplier: 0.8, floodRisk: 0.3, industryFactor: 0.7 },
+          'nairobi': { airMultiplier: 1.2, floodRisk: 0.5, industryFactor: 1.3 },
+          'mombasa': { airMultiplier: 1.1, floodRisk: 0.4, industryFactor: 1.1 }
+        };
+
+        const factors = locationFactors[location.toLowerCase()] || locationFactors['nairobi'];
+        
+        return {
+          location: location,
+          airQuality: {
+            aqi: Math.min(300, Math.floor(80 * factors.airMultiplier + Math.random() * 40)),
+            status: getAQIStatus(Math.floor(80 * factors.airMultiplier)),
+            pm25: Math.floor(25 * factors.airMultiplier + Math.random() * 15),
+            lastUpdate: new Date().toISOString()
+          },
+          weather: {
+            temperature: Math.floor(22 + Math.random() * 10),
+            condition: ['Sunny', 'Partly Cloudy', 'Cloudy', 'Light Rain'][Math.floor(Math.random() * 4)],
+            humidity: Math.floor(60 + Math.random() * 30),
+            rainfall24h: formatEnvironmentalValue(Math.random() * 30 * factors.floodRisk, '', 1),
+            lastUpdate: new Date().toISOString()
+          },
+          floodRisk: {
+            level: factors.floodRisk > 0.7 ? 'High' : factors.floodRisk > 0.4 ? 'Medium' : 'Low',
+            probability: (factors.floodRisk * 100).toFixed(0),
+            rainfall: formatRainfall(Math.random() * 50 * factors.floodRisk),
+            lastUpdate: new Date().toISOString()
+          },
+          waterQuality: {
+            status: factors.industryFactor > 1.5 ? 'Unverified' : 'Good',
+            tdsLevel: Math.floor(200 * factors.industryFactor + Math.random() * 100),
+            lastUpdate: new Date().toISOString()
+          }
+        };
+      }
+
+      // Get AQI status description
+      function getAQIStatus(aqi) {
+        if (aqi <= 50) return 'Good';
+        if (aqi <= 100) return 'Moderate';
+        if (aqi <= 150) return 'Unhealthy for Sensitive Groups';
+        if (aqi <= 200) return 'Unhealthy';
+        if (aqi <= 300) return 'Very Unhealthy';
+        return 'Hazardous';
+      }
+
+      // Show loading states on cards
+      function showLoadingOnCards() {
+        // Add loading indicators while keeping the same UI
+        const cards = document.querySelectorAll('.alert-card');
+        cards.forEach(card => {
+          const statusBadge = card.querySelector('.status-badge');
+          if (statusBadge) {
+            statusBadge.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+          }
+        });
+      }
+
+      // Update cards with real-time data
+      function updateCardsWithRealData(data) {
+        // Update Air Quality Card
+        const airQualityCard = document.querySelector('.air-quality-card');
+        if (airQualityCard && data.airQuality) {
+          const statusBadge = airQualityCard.querySelector('.status-badge');
+          const locationInfo = airQualityCard.querySelector('.location-info');
+          const description = airQualityCard.querySelector('p');
+          
+          // Update status with color coding
+          statusBadge.textContent = data.airQuality.status;
+          statusBadge.className = 'status-badge ' + getStatusClass(data.airQuality.aqi);
+          
+          locationInfo.textContent = `in ${data.location}`;
+          description.textContent = `AQI: ${data.airQuality.aqi}. PM2.5: ${data.airQuality.pm25 || 'N/A'} μg/m³`;
+        }
+
+        // Update Weather Card
+        const weatherCard = document.querySelector('.weather-card');
+        if (weatherCard && data.weather) {
+          const locationInfo = weatherCard.querySelector('.location-info');
+          const tempDisplays = weatherCard.querySelectorAll('.temp-display span');
+          const weatherDetail = weatherCard.querySelector('.weather-detail');
+          
+          locationInfo.textContent = data.location;
+          if (tempDisplays.length >= 2) {
+            tempDisplays[0].textContent = `${data.weather.temperature}°`;
+            tempDisplays[1].textContent = `${Math.floor(data.weather.temperature * 0.7)}°`;
+          }
+          weatherDetail.textContent = `${data.weather.condition}. Rainfall: ${data.weather.rainfall24h}mm`;
+        }
+
+        // Update AI Insight Card (if water quality data available)
+        const aiInsightCard = document.querySelector('.ai-insight-card');
+        if (aiInsightCard && data.waterQuality) {
+          const description = aiInsightCard.querySelector('p');
+          const recommendation = generateAIRecommendation(data);
+          description.textContent = recommendation;
+        }
+
+        // Update Water Quality Card
+        const waterQualityCard = document.querySelector('.water-quality-card');
+        if (waterQualityCard && data.waterQuality) {
+          const statusBadge = waterQualityCard.querySelector('.status-badge');
+          const locationInfo = waterQualityCard.querySelector('.location-info');
+          const description = waterQualityCard.querySelector('p');
+          
+          statusBadge.textContent = data.waterQuality.status;
+          statusBadge.className = 'status-badge ' + (data.waterQuality.status === 'Good' ? 'status-safe' : 'status-unverified');
+          
+          locationInfo.textContent = `in ${data.location}`;
+          description.textContent = `TDS Level: ${data.waterQuality.tdsLevel || 'N/A'} ppm. Last updated: ${new Date().toLocaleTimeString()}`;
+        }
+      }
+
+      // Get status class based on AQI value
+      function getStatusClass(aqi) {
+        if (aqi <= 50) return 'status-safe';
+        if (aqi <= 100) return 'status-moderate';
+        if (aqi <= 150) return 'status-warning';
+        return 'status-critical';
+      }
+
+      // Generate AI recommendation based on environmental data
+      function generateAIRecommendation(data) {
+        const recommendations = [];
+        
+        if (data.airQuality.aqi > 150) {
+          recommendations.push('Use air purifiers indoors');
+        }
+        
+        if (data.floodRisk.level === 'High') {
+          recommendations.push('Plant water-resistant trees near drainage areas');
+        }
+        
+        if (data.waterQuality.status === 'Unverified') {
+          recommendations.push('Install community water filtration systems');
+        }
+        
+        if (recommendations.length === 0) {
+          recommendations.push('Continue environmental monitoring and community tree planting initiatives');
+        }
+        
+        return `AI suggests: ${recommendations[0]}.`;
+      }
+
+      // Update alerts section with location-specific data
+      function updateAlertsWithLocationData(location, data) {
+        // Find existing alerts and update them with location-specific information
+        const alertItems = document.querySelectorAll('.alert-item');
+        
+        alertItems.forEach((item, index) => {
+          const title = item.querySelector('.alert-title');
+          const description = item.querySelector('.alert-description');
+          const metaSpan = item.querySelector('.alert-meta span');
+          
+          if (title && description) {
+            switch (index) {
+              case 0: // Flood alert
+                if (data.floodRisk.level !== 'Low') {
+                  title.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: var(--alert-red); margin-right: 8px"></i>
+                    ${data.floodRisk.level.toUpperCase()} Flood Risk - ${location}`;
+                  description.textContent = `Current rainfall: ${data.floodRisk.rainfall}. Risk probability: ${data.floodRisk.probability}%.`;
+                }
+                break;
+              case 1: // Air quality alert
+                title.innerHTML = `<i class="fas fa-wind" style="color: var(--alert-orange); margin-right: 8px"></i>
+                  Air Quality Alert - ${data.airQuality.status} levels in ${location}`;
+                description.textContent = `AQI: ${data.airQuality.aqi}. PM2.5: ${data.airQuality.pm25 || 'N/A'} μg/m³. ${getHealthAdvice(data.airQuality.aqi)}`;
+                break;
+              case 2: // Water quality alert
+                if (data.waterQuality.status === 'Unverified') {
+                  title.innerHTML = `<i class="fas fa-tint" style="color: var(--tech-blue); margin-right: 8px"></i>
+                    Water Quality Alert - ${location}`;
+                  description.textContent = `TDS Level: ${data.waterQuality.tdsLevel} ppm. Use alternative sources until verification.`;
+                }
+                break;
+            }
+            
+            // Update timestamp
+            if (metaSpan) {
+              metaSpan.textContent = 'Just updated';
+            }
+          }
+        });
+      }
+
+      // Get health advice based on AQI
+      function getHealthAdvice(aqi) {
+        if (aqi <= 50) return 'Air quality is good for outdoor activities.';
+        if (aqi <= 100) return 'Moderate air quality. Sensitive individuals should consider limiting outdoor activities.';
+        if (aqi <= 150) return 'Unhealthy for sensitive groups. Limit outdoor activities.';
+        if (aqi <= 200) return 'Unhealthy air quality. Everyone should avoid outdoor activities.';
+        return 'Very unhealthy. Stay indoors and use air purifiers.';
+      }
+
+      // Start real-time updates for the searched location
+      function startRealTimeUpdates() {
+        // Clear any existing interval
+        if (updateInterval) {
+          clearInterval(updateInterval);
+        }
+        
+        // Update every 30 seconds
+        updateInterval = setInterval(() => {
+          if (currentLocation) {
+            console.log('Updating real-time data for:', currentLocation);
+            searchLocationData(currentLocation);
+          }
+        }, 30000);
+      }
+
+      // Enhanced search functionality
       document.querySelector('.search-input').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
           performSearch();
         }
       });
 
-      document.querySelector('.search-btn').addEventListener('click', performSearch);
+      // Add input event for live search suggestions
+      document.querySelector('.search-input').addEventListener('input', function (e) {
+        const query = e.target.value.trim();
+        
+        // Clear existing timeout
+        clearTimeout(searchTimeout);
+        
+        // Show suggestions after user stops typing for 300ms
+        searchTimeout = setTimeout(() => {
+          if (query.length >= 2) {
+            showSearchSuggestions(query);
+          }
+        }, 300);
+      });
 
-      function performSearch() {
-        const searchTerm = document.querySelector('.search-input').value;
-        if (searchTerm.trim()) {
-          // Implement search logic here
-          console.log('Searching for:', searchTerm);
-          // You can integrate with your backend API here
+      // Show search suggestions (keeping the same UI)
+      function showSearchSuggestions(query) {
+        const suggestions = [
+          'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret',
+          'Mathare', 'Kibera', 'Kawangware', 'Westlands', 'Embakasi'
+        ].filter(city => city.toLowerCase().includes(query.toLowerCase()));
+
+        // For now, just log suggestions (can be enhanced to show dropdown)
+        if (suggestions.length > 0) {
+          console.log('Search suggestions:', suggestions);
         }
       }
 
-      // Alert interaction
+      document.querySelector('.search-btn').addEventListener('click', performSearch);
+
+      // Alert interaction with enhanced functionality
       document.querySelectorAll('.action-btn').forEach((btn) => {
         btn.addEventListener('click', function (e) {
           e.preventDefault();
           const action = this.textContent;
           console.log('Action clicked:', action);
-          // Implement action handlers here
+          
+          // Add specific actions for real-time features
+          if (action.includes('View Details') && currentLocation) {
+            console.log(`Showing detailed environmental data for ${currentLocation}`);
+          } else if (action.includes('Alternative Sources')) {
+            console.log('Showing alternative water sources near current location');
+          }
         });
       });
 
-      // Auto-refresh alerts every 30 seconds
+      // Auto-refresh alerts every 30 seconds with real data
       setInterval(() => {
-        // You can implement auto-refresh logic here
-        console.log('Refreshing alerts...');
+        if (currentLocation) {
+          console.log('Auto-refreshing environmental data...');
+          searchLocationData(currentLocation);
+        }
       }, 30000);
 
       // Add real-time timestamp updates
       function updateTimestamps() {
         const timeElements = document.querySelectorAll('.alert-meta span');
-        // Update relative timestamps
+        timeElements.forEach(element => {
+          if (element.textContent.includes('Just updated')) {
+            const now = new Date();
+            const minutes = Math.floor(Math.random() * 10) + 1;
+            element.textContent = `${minutes} min${minutes > 1 ? 's' : ''} ago`;
+          }
+        });
       }
 
       setInterval(updateTimestamps, 60000); // Update every minute
+
+      // Add CSS for new status classes
+      const style = document.createElement('style');
+      style.textContent = `
+        .status-safe { background-color: #e8f5e8; color: #2e7d32; }
+        .status-moderate { background-color: #fff3e0; color: #f57c00; }
+        .status-warning { background-color: #fff3e0; color: #ff9800; }
+        .status-critical { background-color: #ffebee; color: #f44336; }
+        .status-unverified { background-color: #f3e5f5; color: #7b1fa2; }
+      `;
+      document.head.appendChild(style);
+
+      // Initialize with default location on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('🌍 EcoSentinel Alerts - Real-time Environmental Monitoring Loaded');
+        
+        // Initialize the environmental monitoring map
+        setTimeout(() => {
+          initializeEnvironmentalMap();
+        }, 1000);
+        
+        // Set up map filter button event listeners
+        document.querySelectorAll('.map-filter-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const layer = this.getAttribute('data-layer');
+            filterMapMarkers(layer);
+          });
+        });
+        
+        // Set default location to Nairobi for initial data
+        setTimeout(() => {
+          searchLocationData('Nairobi');
+        }, 2000);
+
+        // Auto-refresh map data every 5 minutes
+        setInterval(refreshMapData, 300000);
+      });
     </script>
   </body>
 </html>

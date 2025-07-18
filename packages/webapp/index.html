@@ -9,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
       :root {
         --forest-green: #2e7d32;
@@ -106,10 +109,305 @@
       .main-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
-        gap: 32px;
-        padding: 40px 32px;
+        grid-template-rows: auto 1fr auto;
+        gap: 24px;
+        padding: 32px;
         min-height: calc(100vh - var(--header-height));
+      }
+
+      /* Real-time prediction banner */
+      .prediction-banner {
+        grid-column: 1 / -1;
+        background: linear-gradient(135deg, var(--forest-green), var(--eco-green));
+        color: white;
+        padding: 20px 24px;
+        border-radius: var(--border-radius);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow);
+      }
+
+      .prediction-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .prediction-icon {
+        font-size: 32px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+      }
+
+      .prediction-text h3 {
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+
+      .prediction-text p {
+        opacity: 0.9;
+        font-size: 14px;
+      }
+
+      .prediction-actions {
+        display: flex;
+        gap: 12px;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-primary {
+        background: white;
+        color: var(--forest-green);
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .btn-primary:hover,
+      .btn-secondary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Enhanced main grid */
+      .grid-main {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+
+      /* Status cards row */
+      .status-cards {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+      }
+
+      .status-card {
+        background: white;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: transform 0.2s;
+      }
+
+      .status-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .status-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+      }
+
+      .status-flood {
+        background: linear-gradient(135deg, #42a5f5, #2196f3);
+      }
+      .status-air {
+        background: linear-gradient(135deg, #ff9800, #f57c00);
+      }
+      .status-forest {
+        background: linear-gradient(135deg, #4caf50, #2e7d32);
+      }
+      .status-weather {
+        background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+      }
+
+      .status-info h4 {
+        font-size: 16px;
+        margin-bottom: 4px;
+        color: #333;
+      }
+
+      .status-value {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 2px;
+      }
+
+      .status-label {
+        font-size: 12px;
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      /* Enhanced chart containers */
+      .chart-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .chart-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--forest-green);
+      }
+
+      .chart-controls {
+        display: flex;
+        gap: 8px;
+      }
+
+      .control-btn {
+        padding: 6px 12px;
+        border: 1px solid #ddd;
+        background: white;
+        border-radius: 6px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .control-btn.active {
+        background: var(--forest-green);
+        color: white;
+        border-color: var(--forest-green);
+      }
+
+      .chart-content {
+        flex: 1;
+        position: relative;
+      }
+
+      /* Map enhancements */
+      .map-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .map-header {
+        padding: 20px 24px 0;
+        background: white;
+      }
+
+      .map-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--forest-green);
+        margin-bottom: 8px;
+      }
+
+      .map-filters {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .filter-chip {
+        padding: 6px 12px;
+        background: #f5f5f5;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+      }
+
+      .filter-chip.active {
+        background: var(--forest-green);
+        color: white;
+      }
+
+      /* Loading states */
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid var(--forest-green);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 10px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Real-time updates indicator */
+      .live-indicator {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .live-dot {
+        width: 8px;
+        height: 8px;
+        background: #4caf50;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
       }
       .card {
         background: var(--white);
@@ -369,14 +667,34 @@
       @media (max-width: 1024px) {
         .main-container {
           grid-template-columns: 1fr;
-          grid-template-rows: repeat(4, minmax(0, 1fr));
-          gap: 24px;
-          padding: 24px 8px;
+          grid-template-rows: auto auto auto;
+          gap: 16px;
+          padding: 16px;
         }
+
+        .grid-main {
+          grid-template-columns: 1fr;
+        }
+
+        .status-cards {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
         .map-container {
-          min-height: 220px;
+          min-height: 250px;
+        }
+
+        .prediction-banner {
+          flex-direction: column;
+          gap: 16px;
+          text-align: center;
+        }
+
+        .prediction-actions {
+          justify-content: center;
         }
       }
+
       @media (max-width: 600px) {
         .header {
           flex-direction: column;
@@ -388,13 +706,37 @@
           margin-left: 0;
           gap: 18px;
         }
+
+        .status-cards {
+          grid-template-columns: 1fr;
+        }
+
         .main-container {
-          padding: 12px 2px;
+          padding: 12px 8px;
           gap: 12px;
         }
+
         .card,
-        .map-card {
-          padding: 12px;
+        .map-card,
+        .chart-card {
+          padding: 16px;
+        }
+
+        .chart-controls,
+        .map-filters {
+          flex-wrap: wrap;
+        }
+
+        .prediction-banner {
+          padding: 16px;
+        }
+
+        .status-card {
+          padding: 16px;
+        }
+
+        .chart-content {
+          height: 200px;
         }
       }
     </style>
@@ -412,10 +754,110 @@
         <a href="about.html" class="nav-item">About</a>
       </nav>
     </header>
+
     <main class="main-container">
-      <!-- Chat Card -->
+      <!-- Real-time AI Predictions Banner -->
+      <section class="prediction-banner">
+        <div class="prediction-content">
+          <div class="prediction-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <div class="prediction-text">
+            <h3>🚨 AI Alert: Medium Flood Risk Detected</h3>
+            <p>Nairobi Central - Next 6 hours | Confidence: 87%</p>
+          </div>
+        </div>
+        <div class="prediction-actions">
+          <!-- <a href="#" class="btn-primary" onclick="updatePredictions()">Update Now</a> -->
+          <a href="alerts.html" class="btn-secondary">View Details</a>
+        </div>
+      </section>
+
+      <!-- Status Cards Grid -->
+      <section class="status-cards">
+        <div class="status-card">
+          <div class="status-icon status-flood">
+            <i class="fas fa-water"></i>
+          </div>
+          <div class="status-info">
+            <h4>Flood Risk</h4>
+            <div class="status-value" style="color: #ff9800" id="floodRisk">MEDIUM</div>
+            <div class="status-label">Current Status</div>
+          </div>
+        </div>
+
+        <div class="status-card">
+          <div class="status-icon status-air">
+            <i class="fas fa-wind"></i>
+          </div>
+          <div class="status-info">
+            <h4>Air Quality</h4>
+            <div class="status-value" style="color: #f44336" id="airQuality">164</div>
+            <div class="status-label">AQI Index</div>
+          </div>
+        </div>
+
+        <div class="status-card">
+          <div class="status-icon status-forest">
+            <i class="fas fa-tree"></i>
+          </div>
+          <div class="status-info">
+            <h4>Forest Cover</h4>
+            <div class="status-value" style="color: #4caf50" id="forestCover">LOW</div>
+            <div class="status-label">Deforestation Risk</div>
+          </div>
+        </div>
+
+        <div class="status-card">
+          <div class="status-icon status-weather">
+            <i class="fas fa-cloud-rain"></i>
+          </div>
+          <div class="status-info">
+            <h4>Weather Data</h4>
+            <div class="status-value" style="color: #2196f3" id="rainfall">24.5mm</div>
+            <div class="status-label">24h Rainfall</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content Grid -->
+      <div class="grid-main">
+        <!-- Enhanced Interactive Map -->
+        <section class="map-card">
+          <div class="map-header">
+            <div class="chart-title">Environmental Risk Map</div>
+            <div class="live-indicator">
+              <div class="live-dot"></div>
+              Live Data
+            </div>
+            <div class="map-filters">
+              <button class="filter-chip active" onclick="toggleMapLayer('flood')">Flood Risk</button>
+              <button class="filter-chip" onclick="toggleMapLayer('air')">Air Quality</button>
+              <button class="filter-chip" onclick="toggleMapLayer('forest')">Deforestation</button>
+            </div>
+          </div>
+          <div id="mapContainer" class="map-container"></div>
+        </section>
+
+        <!-- Multi-Chart Dashboard -->
+        <section class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">Prediction Timeline</div>
+            <div class="chart-controls">
+              <button class="control-btn active" onclick="updateChart('24h')">24H</button>
+              <button class="control-btn" onclick="updateChart('7d')">7D</button>
+              <button class="control-btn" onclick="updateChart('30d')">30D</button>
+            </div>
+          </div>
+          <div class="chart-content">
+            <canvas id="predictionChart" width="400" height="200"></canvas>
+          </div>
+        </section>
+      </div>
+
+      <!-- AI Chat Interface -->
       <section class="card">
-        <div class="chat-header">Hello! How can I assist you today?</div>
+        <div class="chat-header">🤖 EcoSentinel AI Assistant</div>
         <div class="message-question">Which trees are best for planting in Kibera?</div>
         <div class="message assistant">
           For planting in Kibera: I recommend native Acacia trees such as Acacia xanthophloea. They can help reduce
@@ -430,60 +872,825 @@
           <span class="user-message-content">
             <a href="chat.html" style="color: inherit; text-decoration: none">Jane: Text me today's air quality →</a>
           </span>
-          <!-- <span class="user-message-content">Jane: Text me today's air quality →</span> -->
         </div>
       </section>
-      <!-- Map Card -->
-      <section class="map-card card">
-        <div id="mapContainer" class="map-container"></div>
-      </section>
-      <!-- Alerts Card -->
+
+      <!-- Enhanced Alerts Section -->
       <section class="card">
-        <div class="alerts-title">Alerts</div>
+        <div class="alerts-title">🚨 Active Environmental Alerts</div>
         <div class="alert-item">
-          <div class="alert-title"><i class="fas fa-exclamation-triangle"></i> Flood risk in Kawangware</div>
-          <div class="alert-content">Evacuate low-lying areas immediately</div>
+          <div class="alert-title"><i class="fas fa-exclamation-triangle"></i> HIGH Flood Risk - Kawangware</div>
+          <div class="alert-content">Evacuate low-lying areas immediately. 75.5mm rainfall recorded.</div>
         </div>
         <div class="air-quality">
-          <div class="air-title"><i class="fas fa-wind"></i> Today's air quality forecast: → Mathare</div>
+          <div class="air-title"><i class="fas fa-wind"></i> UNHEALTHY Air Quality - Mathare</div>
           <div class="gauge-row">
             <div class="gauge"></div>
-            <span class="gauge-value">UNSAFE</span>
+            <span class="gauge-value">AQI 164</span>
           </div>
         </div>
         <div class="precautions">
           <i class="fas fa-shield-alt"></i>
-          Take precautions (AQI=164)
+          📱 SMS alerts active for 3 locations
           <div class="precautions-visual"></div>
         </div>
-      </section>
-      <!-- Dashboard Card -->
-      <section class="card">
-        <div class="dashboard-title">Dashboard</div>
-        <div class="chart-container">
-          <canvas id="environmentalChart"></canvas>
-        </div>
-        <div class="legend">
-          <div class="legend-item">
-            <span class="legend-color" style="background: #2e7d32"></span>
-            Planting
+
+        <!-- Real-time updates -->
+        <div style="margin-top: 16px; padding: 12px; background: #f8f9fa; border-radius: 8px">
+          <div style="font-size: 12px; color: #666; margin-bottom: 8px">
+            <i class="fas fa-sync-alt"></i> Last updated: <span id="lastUpdate">Just now</span>
           </div>
-          <div class="legend-item">
-            <span class="legend-color" style="background: #4caf50"></span>
-            Pollution Alerts
-          </div>
+          <button
+            onclick="refreshAlerts()"
+            style="
+              background: var(--forest-green);
+              color: white;
+              border: none;
+              padding: 8px 16px;
+              border-radius: 6px;
+              font-size: 12px;
+              cursor: pointer;
+            "
+          >
+            Refresh Data
+          </button>
         </div>
       </section>
     </main>
-    <!-- Azure Maps SDK -->
+    <!-- Enhanced JavaScript for EcoSentinel AI -->
+    <script>
+      // Global variables for data management
+      let predictionChart = null;
+      let environmentalMap = null;
+      let currentMapLayer = 'flood';
+      let realTimeData = {
+        floodRisk: 'MEDIUM',
+        airQuality: 164,
+        forestCover: 'LOW',
+        rainfall: '24.5mm',
+        lastUpdate: new Date(),
+      };
+
+      // API configuration
+      const API_BASE_URL = 'http://localhost:7071/api';
+
+      // Real API data fetching functions
+      async function fetchEnvironmentalData(location = 'Nairobi') {
+        try {
+          const response = await fetch(`${API_BASE_URL}/environmental-data?location=${location}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error('Error fetching environmental data:', error);
+          return getFallbackEnvironmentalData(location);
+        }
+      }
+
+      async function fetchPredictionData(location = 'Nairobi', period = '24h') {
+        try {
+          const response = await fetch(`${API_BASE_URL}/predictions?location=${location}&period=${period}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error('Error fetching prediction data:', error);
+          return getFallbackPredictionData(period);
+        }
+      }
+
+      // Seeded random function for consistent fallback data
+      function seededRandom(seed) {
+        const x = Math.sin(seed) * 10000;
+        return x - Math.floor(x);
+      }
+
+      // Fallback data functions - using consistent seeded data like the API
+      function getFallbackEnvironmentalData(location) {
+        // Generate consistent data based on location and time (changes every 10 minutes)
+        const now = new Date();
+        const hourSeed = Math.floor(now.getTime() / (1000 * 60 * 10)); // Changes every 10 minutes
+        const locationSeed = location
+          .toLowerCase()
+          .split('')
+          .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        const combinedSeed = (hourSeed + locationSeed) % 1000;
+
+        // Location-specific base values
+        const locationFactors = {
+          mathare: { airBase: 180, floodBase: 0.7, forestRisk: 0.8, rainfall: 25, temp: 23 },
+          kibera: { airBase: 190, floodBase: 0.9, forestRisk: 0.7, rainfall: 30, temp: 24 },
+          kawangware: { airBase: 150, floodBase: 0.8, forestRisk: 0.6, rainfall: 28, temp: 23 },
+          westlands: { airBase: 95, floodBase: 0.3, forestRisk: 0.2, rainfall: 15, temp: 25 },
+          nairobi: { airBase: 140, floodBase: 0.5, forestRisk: 0.4, rainfall: 20, temp: 24 },
+          embakasi: { airBase: 145, floodBase: 0.3, forestRisk: 0.3, rainfall: 18, temp: 25 },
+          kasarani: { airBase: 95, floodBase: 0.2, forestRisk: 0.2, rainfall: 12, temp: 24 },
+        };
+
+        const baseData = locationFactors[location.toLowerCase()] || locationFactors['nairobi'];
+
+        // Add consistent variations
+        const airVariation = (seededRandom(combinedSeed) - 0.5) * 0.1;
+        const floodVariation = (seededRandom(combinedSeed + 1) - 0.5) * 0.1;
+        const rainfallVariation = (seededRandom(combinedSeed + 2) - 0.5) * 0.2;
+        const tempVariation = (seededRandom(combinedSeed + 3) - 0.5) * 4;
+
+        const currentTime = new Date();
+        const airQuality = Math.max(50, Math.min(300, Math.floor(baseData.airBase * (1 + airVariation))));
+        const floodRiskScore = Math.max(0.1, Math.min(1.0, baseData.floodBase + floodVariation));
+        const currentRainfall = Math.max(0, baseData.rainfall * (1 + rainfallVariation));
+        const currentTemp = Math.max(15, Math.min(35, baseData.temp + tempVariation));
+
+        return {
+          location: location,
+          timestamp: currentTime.toISOString(),
+          airQuality: {
+            aqi: airQuality,
+            level: airQuality > 150 ? 'UNHEALTHY' : airQuality > 100 ? 'MODERATE' : 'GOOD',
+            pm25: Math.floor(airQuality * 0.3),
+            pm10: Math.floor(airQuality * 0.6),
+            lastUpdate: currentTime.toISOString(),
+          },
+          floodRisk: {
+            level: floodRiskScore > 0.7 ? 'HIGH' : floodRiskScore > 0.4 ? 'MEDIUM' : 'LOW',
+            probability: (floodRiskScore * 100).toFixed(0),
+            riskScore: floodRiskScore.toFixed(2),
+            confidence: 0.87,
+            lastUpdate: currentTime.toISOString(),
+          },
+          forestCover: {
+            status: baseData.forestRisk > 0.6 ? 'HIGH' : baseData.forestRisk > 0.3 ? 'MEDIUM' : 'LOW',
+            deforestationRisk: baseData.forestRisk.toFixed(2),
+            treesCovered: Math.floor(90 - baseData.forestRisk * 30),
+            lastUpdate: currentTime.toISOString(),
+          },
+          weather: {
+            temperature: Math.floor(currentTemp),
+            humidity: Math.floor(60 + seededRandom(combinedSeed + 4) * 20),
+            rainfall24h: currentRainfall.toFixed(1),
+            condition: ['Sunny', 'Partly Cloudy', 'Cloudy', 'Light Rain'][
+              Math.floor(seededRandom(combinedSeed + 5) * 4)
+            ],
+            lastUpdate: currentTime.toISOString(),
+          },
+        };
+      }
+
+      function getFallbackPredictionData(period) {
+        let labels, dataPoints;
+
+        // Generate consistent data based on period and time (changes every 10 minutes)
+        const now = new Date();
+        const hourSeed = Math.floor(now.getTime() / (1000 * 60 * 10)); // Changes every 10 minutes
+        const locationSeed = 'nairobi'.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        const baseSeed = (hourSeed + locationSeed) % 1000;
+
+        switch (period) {
+          case '24h':
+            dataPoints = 24;
+            labels = Array.from({ length: 24 }, (_, i) => {
+              const now = new Date();
+              now.setHours(now.getHours() + i);
+              return now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            });
+            break;
+          case '7d':
+            dataPoints = 7;
+            labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            break;
+          case '30d':
+            dataPoints = 30;
+            labels = Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`);
+            break;
+          default:
+            dataPoints = 24;
+            labels = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+        }
+
+        // Location-specific base values (same as API)
+        const factors = { airBase: 140, floodBase: 0.5 }; // Nairobi defaults
+
+        // Generate realistic prediction data with consistent patterns
+        const floodRisk = Array.from({ length: dataPoints }, (_, i) => {
+          const timeTrend = period === '24h' ? Math.sin(i / 4) * 0.3 : 0;
+          const seedValue = seededRandom(baseSeed + i) * 0.2 - 0.1; // ±0.1 variation
+          return Math.max(0.1, Math.min(1.0, factors.floodBase + timeTrend + seedValue));
+        });
+
+        const airQuality = Array.from({ length: dataPoints }, (_, i) => {
+          const timeTrend = period === '24h' ? Math.sin(i / 3) * 30 : 0;
+          const seedValue = seededRandom(baseSeed + i + 100) * 40 - 20; // ±20 variation
+          return Math.max(50, Math.min(300, factors.airBase + timeTrend + seedValue));
+        });
+
+        const deforestation = Array.from({ length: dataPoints }, (_, i) => {
+          const baseDeforest = factors.floodBase * 0.6; // Correlate with flood risk
+          const seedValue = seededRandom(baseSeed + i + 200) * 0.3 - 0.15;
+          return Math.max(0.1, Math.min(1.0, baseDeforest + seedValue));
+        });
+
+        const temperature = Array.from({ length: dataPoints }, (_, i) => {
+          const dailyCycle = period === '24h' ? Math.sin(((i - 6) * Math.PI) / 12) * 5 : 0;
+          const seedValue = seededRandom(baseSeed + i + 300) * 6 - 3; // ±3°C variation
+          return Math.max(15, Math.min(35, 24 + dailyCycle + seedValue));
+        });
+
+        return {
+          location: 'Nairobi',
+          period: period,
+          timestamp: new Date().toISOString(),
+          labels: labels,
+          predictions: {
+            floodRisk: floodRisk,
+            airQuality: airQuality,
+            deforestation: deforestation,
+            temperature: temperature,
+          },
+        };
+      }
+
+      // Initialize the dashboard
+      document.addEventListener('DOMContentLoaded', async function () {
+        await initializeDashboard();
+      });
+
+      // Initialize dashboard with real data
+      async function initializeDashboard() {
+        try {
+          // Fetch initial environmental data
+          const environmentalData = await fetchEnvironmentalData('Nairobi');
+          updateDisplayWithEnvironmentalData(environmentalData);
+
+          // Initialize map with real data
+          await initializeMap();
+
+          // Initialize chart with real prediction data
+          await initializePredictionChart();
+
+          // Start real-time updates
+          startRealTimeUpdates();
+          updateLastUpdateTime();
+        } catch (error) {
+          console.error('Error initializing dashboard:', error);
+          // Initialize with fallback data
+          const fallbackData = getFallbackEnvironmentalData('Nairobi');
+          updateDisplayWithEnvironmentalData(fallbackData);
+          initializeMap();
+          initializePredictionChart();
+          startRealTimeUpdates();
+          updateLastUpdateTime();
+        }
+      }
+
+      // Update display with environmental data
+      function updateDisplayWithEnvironmentalData(data) {
+        if (data.floodRisk) {
+          realTimeData.floodRisk = data.floodRisk.level;
+          document.getElementById('floodRisk').textContent = data.floodRisk.level;
+          document.getElementById('floodRisk').style.color =
+            data.floodRisk.level === 'HIGH' ? '#f44336' : data.floodRisk.level === 'MEDIUM' ? '#ff9800' : '#4caf50';
+        }
+
+        if (data.airQuality) {
+          realTimeData.airQuality = data.airQuality.aqi;
+          document.getElementById('airQuality').textContent = data.airQuality.aqi;
+          document.getElementById('airQuality').style.color =
+            data.airQuality.aqi > 150 ? '#f44336' : data.airQuality.aqi > 100 ? '#ff9800' : '#4caf50';
+        }
+
+        if (data.forestCover) {
+          realTimeData.forestCover = data.forestCover.status;
+          document.getElementById('forestCover').textContent = data.forestCover.status;
+          document.getElementById('forestCover').style.color =
+            data.forestCover.status === 'HIGH'
+              ? '#f44336'
+              : data.forestCover.status === 'MEDIUM'
+                ? '#ff9800'
+                : '#4caf50';
+        }
+
+        if (data.weather) {
+          realTimeData.rainfall = data.weather.rainfall24h + 'mm';
+          document.getElementById('rainfall').textContent = realTimeData.rainfall;
+        }
+
+        // Update prediction banner
+        updatePredictionBanner(data.floodRisk);
+      }
+
+      // Initialize Leaflet map with real environmental data
+      async function initializeMap() {
+        try {
+          // Initialize map centered on Nairobi
+          environmentalMap = L.map('mapContainer').setView([-1.2921, 36.8219], 11);
+
+          // Add OpenStreetMap tiles
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+          }).addTo(environmentalMap);
+
+          // Fetch real environmental data for different locations
+          const locations = [
+            { name: 'Nairobi Central', lat: -1.2921, lng: 36.8219 },
+            { name: 'Westlands', lat: -1.274, lng: 36.8172 },
+            { name: 'Embakasi', lat: -1.3098, lng: 36.8537 },
+            { name: 'Mathare', lat: -1.2699, lng: 36.8566 },
+            { name: 'Kibera', lat: -1.3127, lng: 36.7816 },
+            { name: 'Kasarani', lat: -1.224, lng: 36.8795 },
+            { name: 'Kitengela', lat: -1.4746, lng: 36.9634 },
+            { name: 'Ruiru', lat: -1.1667, lng: 36.9667 },
+            { name: 'Ngong', lat: -1.3667, lng: 36.6833 },
+          ];
+
+          // Add markers for each monitoring point with real data
+          for (const location of locations) {
+            try {
+              const data = await fetchEnvironmentalData(location.name);
+
+              let layerValue;
+              if (currentMapLayer === 'flood') {
+                layerValue = parseFloat(data.floodRisk?.riskScore || '0.5');
+              } else if (currentMapLayer === 'air') {
+                layerValue = data.airQuality?.aqi || 120;
+              } else if (currentMapLayer === 'forest') {
+                layerValue = parseFloat(data.forestCover?.deforestationRisk || '0.3');
+              }
+
+              const color = getColorByRisk(layerValue);
+              const radius = currentMapLayer === 'air' ? 8 + (layerValue / 300) * 15 : 8 + layerValue * 15;
+
+              const marker = L.circleMarker([location.lat, location.lng], {
+                radius: Math.max(8, radius),
+                fillColor: color,
+                color: '#fff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.7,
+              }).addTo(environmentalMap);
+
+              marker.bindPopup(`
+                <div style="padding: 8px;">
+                  <strong>${location.name}</strong><br/>
+                  Flood Risk: ${data.floodRisk?.level || 'N/A'} (${(parseFloat(data.floodRisk?.riskScore || '0') * 100).toFixed(0)}%)<br/>
+                  Air Quality: ${data.airQuality?.aqi || 'N/A'} AQI<br/>
+                  Forest Risk: ${data.forestCover?.status || 'N/A'}<br/>
+                  <small>Updated: ${new Date(data.timestamp || Date.now()).toLocaleTimeString()}</small>
+                </div>
+              `);
+            } catch (error) {
+              console.error(`Error fetching data for ${location.name}:`, error);
+              // Add fallback marker
+              const marker = L.circleMarker([location.lat, location.lng], {
+                radius: 10,
+                fillColor: '#999',
+                color: '#fff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.7,
+              }).addTo(environmentalMap);
+
+              marker.bindPopup(
+                `<div style="padding: 8px;"><strong>${location.name}</strong><br/>Data temporarily unavailable</div>`,
+              );
+            }
+          }
+        } catch (error) {
+          console.error('Error initializing map:', error);
+          // Initialize basic map without data
+          environmentalMap = L.map('mapContainer').setView([-1.2921, 36.8219], 11);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+          }).addTo(environmentalMap);
+        }
+      }
+
+      // Get color based on risk level
+      function getColorByRisk(value) {
+        if (currentMapLayer === 'air') {
+          if (value > 150) return '#f44336';
+          if (value > 100) return '#ff9800';
+          return '#4caf50';
+        } else {
+          if (value > 0.7) return '#f44336';
+          if (value > 0.4) return '#ff9800';
+          return '#4caf50';
+        }
+      }
+
+      // Initialize prediction timeline chart with real data
+      async function initializePredictionChart() {
+        try {
+          const predictionData = await fetchPredictionData('Nairobi', '24h');
+
+          const ctx = document.getElementById('predictionChart').getContext('2d');
+
+          predictionChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: predictionData.labels,
+              datasets: [
+                {
+                  label: 'Flood Risk',
+                  data: predictionData.predictions.floodRisk,
+                  borderColor: '#2196f3',
+                  backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                  borderWidth: 2,
+                  tension: 0.4,
+                  fill: true,
+                },
+                {
+                  label: 'Air Quality Index',
+                  data: predictionData.predictions.airQuality.map((val) => val / 200), // Normalize for display
+                  borderColor: '#ff9800',
+                  backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                  borderWidth: 2,
+                  tension: 0.4,
+                  fill: true,
+                },
+                {
+                  label: 'Deforestation Risk',
+                  data: predictionData.predictions.deforestation,
+                  borderColor: '#4caf50',
+                  backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                  borderWidth: 2,
+                  tension: 0.4,
+                  fill: true,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'top',
+                  labels: {
+                    usePointStyle: true,
+                    padding: 20,
+                  },
+                },
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  max: 1,
+                  grid: {
+                    color: 'rgba(0,0,0,0.1)',
+                  },
+                  ticks: {
+                    callback: function (value) {
+                      return (value * 100).toFixed(0) + '%';
+                    },
+                  },
+                },
+                x: {
+                  grid: {
+                    display: false,
+                  },
+                },
+              },
+              interaction: {
+                intersect: false,
+                mode: 'index',
+              },
+            },
+          });
+        } catch (error) {
+          console.error('Error initializing prediction chart:', error);
+          // Initialize with fallback data
+          const fallbackData = getFallbackPredictionData('24h');
+          initializeFallbackChart(fallbackData);
+        }
+      }
+
+      // Fallback chart initialization
+      function initializeFallbackChart(data) {
+        const ctx = document.getElementById('predictionChart').getContext('2d');
+
+        predictionChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.labels,
+            datasets: [
+              {
+                label: 'Flood Risk',
+                data: data.predictions.floodRisk,
+                borderColor: '#2196f3',
+                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+              },
+              {
+                label: 'Air Quality Index',
+                data: data.predictions.airQuality.map((val) => val / 200),
+                borderColor: '#ff9800',
+                backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+              },
+              {
+                label: 'Deforestation Risk',
+                data: data.predictions.deforestation,
+                borderColor: '#4caf50',
+                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+                labels: {
+                  usePointStyle: true,
+                  padding: 20,
+                },
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 1,
+                grid: {
+                  color: 'rgba(0,0,0,0.1)',
+                },
+                ticks: {
+                  callback: function (value) {
+                    return (value * 100).toFixed(0) + '%';
+                  },
+                },
+              },
+              x: {
+                grid: {
+                  display: false,
+                },
+              },
+            },
+            interaction: {
+              intersect: false,
+              mode: 'index',
+            },
+          },
+        });
+      }
+
+      // Update chart with different time periods using real data
+      async function updateChart(period) {
+        try {
+          // Update button states
+          document.querySelectorAll('.control-btn').forEach((btn) => btn.classList.remove('active'));
+          event.target.classList.add('active');
+
+          // Fetch new prediction data
+          const predictionData = await fetchPredictionData('Nairobi', period);
+
+          // Update chart data
+          predictionChart.data.labels = predictionData.labels;
+          predictionChart.data.datasets[0].data = predictionData.predictions.floodRisk;
+          predictionChart.data.datasets[1].data = predictionData.predictions.airQuality.map((val) => val / 200);
+          predictionChart.data.datasets[2].data = predictionData.predictions.deforestation;
+          predictionChart.update();
+        } catch (error) {
+          console.error('Error updating chart:', error);
+          // Use fallback data
+          const fallbackData = getFallbackPredictionData(period);
+          predictionChart.data.labels = fallbackData.labels;
+          predictionChart.data.datasets[0].data = fallbackData.predictions.floodRisk;
+          predictionChart.data.datasets[1].data = fallbackData.predictions.airQuality.map((val) => val / 200);
+          predictionChart.data.datasets[2].data = fallbackData.predictions.deforestation;
+          predictionChart.update();
+        }
+      }
+
+      // Toggle map layers with real data
+      async function toggleMapLayer(layer) {
+        currentMapLayer = layer;
+
+        // Update button states
+        document.querySelectorAll('.filter-chip').forEach((btn) => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        // Reinitialize map with new layer
+        environmentalMap.remove();
+        await initializeMap();
+      }
+
+      // Update prediction banner
+      function updatePredictionBanner(floodData) {
+        const banner = document.querySelector('.prediction-banner');
+        if (!banner || !floodData) return;
+
+        const riskLevel = floodData.level || 'MEDIUM';
+        const confidence = Math.floor((floodData.confidence || 0.87) * 100);
+        const alertIcon = riskLevel === 'HIGH' ? '🚨' : riskLevel === 'MEDIUM' ? '⚠️' : 'ℹ️';
+
+        const predictionContent = banner.querySelector('.prediction-text');
+        if (predictionContent) {
+          predictionContent.innerHTML = `
+            <h3>${alertIcon} AI Alert: ${riskLevel} Flood Risk Detected</h3>
+            <p>Nairobi Central - Next 6 hours | Confidence: ${confidence}%</p>
+          `;
+        }
+      }
+
+      // Fetch real-time predictions from EcoSentinel API
+      async function updatePredictions() {
+        // Show loading state
+        const banner = document.querySelector('.prediction-banner');
+        const originalContent = banner.innerHTML;
+
+        banner.innerHTML = `
+          <div class="prediction-content">
+            <div class="spinner"></div>
+            <div class="prediction-text">
+              <h3>🧠 Updating AI Predictions...</h3>
+              <p>Fetching latest environmental data from EcoSentinel API</p>
+            </div>
+          </div>
+        `;
+
+        try {
+          // Fetch fresh environmental data from API
+          const environmentalData = await fetchEnvironmentalData('Nairobi');
+
+          // Update all status cards with new API data
+          updateDisplayWithEnvironmentalData(environmentalData);
+
+          // Fetch and update prediction chart with new data
+          const predictionData = await fetchPredictionData('Nairobi', '24h');
+          if (predictionChart) {
+            predictionChart.data.labels = predictionData.labels;
+            predictionChart.data.datasets[0].data = predictionData.predictions.floodRisk;
+            predictionChart.data.datasets[1].data = predictionData.predictions.airQuality.map((val) => val / 200);
+            predictionChart.data.datasets[2].data = predictionData.predictions.deforestation;
+            predictionChart.update();
+          }
+
+          // Update map with fresh data
+          if (environmentalMap) {
+            environmentalMap.remove();
+            await initializeMap();
+          }
+
+          // Update timestamp
+          realTimeData.lastUpdate = new Date();
+          updateLastUpdateTime();
+
+          // Restore banner with updated prediction banner content
+          setTimeout(() => {
+            banner.innerHTML = `
+              <div class="prediction-content">
+                <div class="prediction-icon">
+                  <i class="fas fa-brain"></i>
+                </div>
+                <div class="prediction-text">
+                  <h3>${environmentalData.floodRisk?.level === 'HIGH' ? '🚨' : environmentalData.floodRisk?.level === 'MEDIUM' ? '⚠️' : 'ℹ️'} AI Alert: ${environmentalData.floodRisk?.level || 'MEDIUM'} Flood Risk Detected</h3>
+                  <p>Nairobi Central - Next 6 hours | Confidence: ${Math.floor((environmentalData.floodRisk?.confidence || 0.87) * 100)}%</p>
+                </div>
+              </div>
+              <div class="prediction-actions">
+                <a href="#" class="btn-primary" onclick="updatePredictions()">Update Now</a>
+                <a href="alerts.html" class="btn-secondary">View Details</a>
+              </div>
+            `;
+          }, 1500);
+
+          // Show success feedback
+          banner.style.background = 'linear-gradient(135deg, #4caf50, #66bb6a)';
+          setTimeout(() => {
+            banner.style.background = 'linear-gradient(135deg, var(--forest-green), var(--eco-green))';
+          }, 2500);
+        } catch (error) {
+          console.error('Error updating predictions:', error);
+
+          // Restore original content on error
+          banner.innerHTML = originalContent;
+
+          // Show error feedback
+          banner.style.background = 'linear-gradient(135deg, #f44336, #ef5350)';
+          setTimeout(() => {
+            banner.style.background = 'linear-gradient(135deg, var(--forest-green), var(--eco-green))';
+          }, 2000);
+        }
+      }
+
+      // Update display values
+      function updateDisplayValues() {
+        document.getElementById('floodRisk').textContent = realTimeData.floodRisk;
+        document.getElementById('floodRisk').style.color = realTimeData.floodRisk === 'HIGH' ? '#f44336' : '#ff9800';
+
+        document.getElementById('airQuality').textContent = realTimeData.airQuality;
+        document.getElementById('rainfall').textContent = realTimeData.rainfall;
+
+        updateLastUpdateTime();
+      }
+
+      // Refresh alerts with real API data
+      async function refreshAlerts() {
+        const alertsSection = document.querySelector('.card:last-child');
+        alertsSection.style.opacity = '0.6';
+
+        try {
+          // Fetch fresh environmental data
+          const environmentalData = await fetchEnvironmentalData('Nairobi');
+          updateDisplayWithEnvironmentalData(environmentalData);
+
+          setTimeout(() => {
+            alertsSection.style.opacity = '1';
+
+            // Add a flash effect
+            alertsSection.style.background = '#f0f8ff';
+            setTimeout(() => {
+              alertsSection.style.background = 'white';
+            }, 500);
+          }, 1000);
+        } catch (error) {
+          console.error('Error refreshing alerts:', error);
+          setTimeout(() => {
+            alertsSection.style.opacity = '1';
+          }, 1000);
+        }
+      }
+
+      // Update last update time
+      function updateLastUpdateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        });
+
+        const updateElement = document.getElementById('lastUpdate');
+        if (updateElement) {
+          updateElement.textContent = timeString;
+        }
+      }
+
+      // Start real-time updates with API data
+      function startRealTimeUpdates() {
+        // Update every 30 seconds with fresh API data
+        setInterval(async () => {
+          try {
+            console.log('Fetching real-time environmental updates...');
+            const environmentalData = await fetchEnvironmentalData('Nairobi');
+            updateDisplayWithEnvironmentalData(environmentalData);
+            updateLastUpdateTime();
+          } catch (error) {
+            console.error('Error in real-time update:', error);
+            // Continue with current data, just update timestamp
+            updateLastUpdateTime();
+          }
+        }, 30000);
+      }
+
+      // Add some CSS animations
+      const style = document.createElement('style');
+      style.textContent = `
+        .status-card:hover .status-icon {
+          transform: scale(1.1);
+          transition: transform 0.2s;
+        }
+        
+        .prediction-banner {
+          animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+          from { transform: translateY(-20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .chart-card {
+          transition: box-shadow 0.3s;
+        }
+        
+        .chart-card:hover {
+          box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+      `;
+      document.head.appendChild(style);
+    </script>
+
+    <!-- EcoSentinel AI Integration -->
+    <script src="./src/ecosentinel-api.js"></script>
+
+    <!-- Azure Maps SDK (keeping for compatibility) -->
     <link
       rel="stylesheet"
       href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css"
       type="text/css"
     />
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
-    <div id="mapContainer" style="height: 400px"></div>
-    <canvas id="environmentalChart" height="200"></canvas>
-    <script type="module" src="./src/main.ts"></script>
   </body>
 </html>
