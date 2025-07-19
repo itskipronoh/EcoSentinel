@@ -29,16 +29,23 @@ Never say "I don't know". Be helpful, resourceful, and clear. When referencing d
 
 Wrap 2–3 possible follow-up questions in double angle brackets, e.g.:
 <<Can I access historical pollution data?>>
-<<How does weather affect air quality?>>
-`;
+<<How does weather affect air quality?>>`;
 
 const titleSystemPrompt = `Create a title for this chat session, based on the user question. The title should be less than 32 characters and relevant to environmental monitoring or sustainability. Do NOT use double-quotes.`;
+
+interface ChatContext {
+  sessionId: string;
+}
 
 export async function postChats(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
   const azureOpenAiEndpoint = process.env.AZURE_OPENAI_API_ENDPOINT;
 
   try {
-    const requestBody = (await request.json()) as AIChatCompletionRequest;
+    const requestBody = (await request.json()) as {
+      messages: AIChatCompletionRequest['messages'];
+      context: ChatContext;
+    };
+
     const { messages, context: chatContext } = requestBody;
     const userId = getUserId(request, requestBody);
 
@@ -65,22 +72,19 @@ export async function postChats(request: HttpRequest, context: InvocationContext
       const credentials = getCredentials();
       const azureADTokenProvider = getAzureOpenAiTokenProvider();
 
-      // Initialize models and vector database
       embeddings = new AzureOpenAIEmbeddings({ azureADTokenProvider });
       model = new AzureChatOpenAI({
-        temperature: 0.7, // Controls randomness. 0 = deterministic, 1 = maximum randomness
+        temperature: 0.7,
         azureADTokenProvider,
       });
       store = new AzureCosmosDBNoSQLVectorStore(embeddings, { credentials });
 
-      // Initialize chat history
       chatHistory = new AzureCosmsosDBNoSQLChatMessageHistory({
         sessionId,
         userId,
         credentials,
       });
     } else {
-      // If no environment variables are set, it means we are running locally
       context.log('No Azure OpenAI endpoint set, using Ollama models and local DB');
       embeddings = new OllamaEmbeddings({ model: ollamaEmbeddingsModel });
       model = new ChatOllama({
@@ -94,7 +98,6 @@ export async function postChats(request: HttpRequest, context: InvocationContext
       });
     }
 
-    // Create the chain that combines the prompt with the documents
     const ragChain = await createStuffDocumentsChain({
       llm: model,
       prompt: ChatPromptTemplate.fromMessages([
@@ -104,7 +107,6 @@ export async function postChats(request: HttpRequest, context: InvocationContext
       documentPrompt: PromptTemplate.fromTemplate('[{source}]: {page_content}\n'),
     });
 
-    // Handle chat history
     const ragChainWithHistory = new RunnableWithMessageHistory({
       runnable: ragChain,
       inputMessagesKey: 'input',
@@ -112,7 +114,6 @@ export async function postChats(request: HttpRequest, context: InvocationContext
       getMessageHistory: async () => chatHistory,
     });
 
-    // Retriever to search for the documents in the database
     const retriever = store.asRetriever(3);
     const question = messages.at(-1)!.content;
     const responseStream = await ragChainWithHistory.stream(
@@ -124,7 +125,6 @@ export async function postChats(request: HttpRequest, context: InvocationContext
     );
     const jsonStream = Readable.from(createJsonStream(responseStream, sessionId));
 
-    // Create a short title for this chat session
     const { title } = await chatHistory.getContext();
     if (!title) {
       const response = await ChatPromptTemplate.fromMessages([
@@ -144,12 +144,10 @@ export async function postChats(request: HttpRequest, context: InvocationContext
   } catch (_error: unknown) {
     const error = _error as Error;
     context.error(`Error when processing chat-post request: ${error.message}`);
-
     return serviceUnavailable('Service temporarily unavailable. Please try again later.');
   }
 }
 
-// Transform the response chunks into a JSON stream
 async function* createJsonStream(chunks: AsyncIterable<string>, sessionId: string) {
   for await (const chunk of chunks) {
     if (!chunk) continue;
@@ -164,13 +162,12 @@ async function* createJsonStream(chunks: AsyncIterable<string>, sessionId: strin
       },
     };
 
-    // Format response chunks in Newline delimited JSON
-    // see https://github.com/ndjson/ndjson-spec
     yield JSON.stringify(responseChunk) + '\n';
   }
 }
 
 app.setup({ enableHttpStream: true });
+
 app.http('chats-post', {
   route: 'chats/stream',
   methods: ['POST'],
