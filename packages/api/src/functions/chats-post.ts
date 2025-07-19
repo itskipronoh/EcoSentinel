@@ -42,15 +42,23 @@ export async function postChats(request: HttpRequest, context: InvocationContext
     const { messages, context: chatContext } = requestBody;
     const userId = getUserId(request, requestBody);
 
+    // Validate messages
     if (!messages || messages.length === 0 || !messages.at(-1)?.content) {
       return badRequest('Invalid or missing messages in the request body');
+    }
+
+    // Validate context
+    if (!chatContext || typeof chatContext !== 'object' || !chatContext.sessionId) {
+      return badRequest(
+        'Invalid or missing context in the request body. Ensure "context" includes a valid "sessionId".',
+      );
     }
 
     let embeddings: Embeddings;
     let model: BaseChatModel;
     let store: VectorStore;
     let chatHistory;
-    const sessionId = ((chatContext as any)?.sessionId as string) || uuidv4();
+    const sessionId = chatContext.sessionId || uuidv4();
     context.log(`userId: ${userId}, sessionId: ${sessionId}`);
 
     if (azureOpenAiEndpoint) {
@@ -60,8 +68,7 @@ export async function postChats(request: HttpRequest, context: InvocationContext
       // Initialize models and vector database
       embeddings = new AzureOpenAIEmbeddings({ azureADTokenProvider });
       model = new AzureChatOpenAI({
-        // Controls randomness. 0 = deterministic, 1 = maximum randomness
-        temperature: 0.7,
+        temperature: 0.7, // Controls randomness. 0 = deterministic, 1 = maximum randomness
         azureADTokenProvider,
       });
       store = new AzureCosmosDBNoSQLVectorStore(embeddings, { credentials });
@@ -96,6 +103,7 @@ export async function postChats(request: HttpRequest, context: InvocationContext
       ]),
       documentPrompt: PromptTemplate.fromTemplate('[{source}]: {page_content}\n'),
     });
+
     // Handle chat history
     const ragChainWithHistory = new RunnableWithMessageHistory({
       runnable: ragChain,
@@ -103,6 +111,7 @@ export async function postChats(request: HttpRequest, context: InvocationContext
       historyMessagesKey: 'chat_history',
       getMessageHistory: async () => chatHistory,
     });
+
     // Retriever to search for the documents in the database
     const retriever = store.asRetriever(3);
     const question = messages.at(-1)!.content;
