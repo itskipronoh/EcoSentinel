@@ -27,6 +27,7 @@
 [Overview](#overview) • [Features](#features) • [ML Models](#ml-models) • [Architecture](#architecture) • [FAQ](#faq) • [Contributing](#contributing) • [Licensing](#licensing)
 
 ![EcoSentinel AI Dashboard](./assets/EcoSentinel_AI_Mockup.png)
+
 <!--
 ![EcoSentinel AI Demo](./docs/images/demo.gif) -->
 
@@ -36,13 +37,27 @@
 
 **EcoSentinel AI** is a revolutionary Community-Driven Environmental Risk Intelligence Platform developed for the [UNEP Hack for the Environment](https://www.unep.org/) hackathon. Our mission is to democratize environmental intelligence by transforming complex climate and environmental data into actionable insights that communities across Kenya and beyond can understand and act upon.
 
-### 🎯 The Challenge
+## 🎯 The Challenge
 
-Environmental risks disproportionately affect vulnerable populations. Despite abundant global environmental data, at-risk communities often lack access to:
+Kenya, a biodiversity-rich nation hosting UNEP’s headquarters, faces the **triple planetary crisis** of climate change, biodiversity loss, and pollution. These crises disproportionately affect vulnerable populations, demanding urgent digital solutions.
 
-- **Real-time, localized information** in their native languages
-- **Actionable guidance** that translates scientific data into practical steps
-- **Accessible technology** that works without high-speed internet or smartphones
+### Key Challenges:
+
+1. **Climate Change**:
+
+   - Intensified droughts in Turkana and floods in Mombasa.
+   - Lack of real-time monitoring leaves communities vulnerable.
+
+2. **Biodiversity Loss**:
+
+   - Slow progress on conservation targets (e.g., 8% of land protected vs. 30% target by 2030).
+   - Deforestation in Mau Forest and mangroves disrupts ecosystems.
+
+3. **Pollution and Waste**:
+   - Plastics clogging rivers like Athi-Galana-Sabaki.
+   - Low recycling rates (10%) and weak infrastructure.
+
+---
 
 ### ✨ Our Solution
 
@@ -129,6 +144,7 @@ We use the [HTTP protocol for AI chat apps](https://aka.ms/chatprotocol) to comm
 - **Chat Sessions History**: Maintains a personal chat history for each user, allowing them to revisit previous conversations.
 - **Scalable and Cost-Effective**: Leverages Azure's serverless offerings to provide a scalable and cost-effective solution.
 - **Local Development**: Supports local development using Ollama for testing without any cloud costs.
+- **Voice Accessibility**: Supports IVR systems for low-tech users.
 
 ## 🤖 ML Models
 
@@ -153,7 +169,7 @@ You can find answers to frequently asked questions in the [FAQ](./docs/faq.md).
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional
- questions or comments.
+questions or comments.
 
 ## Trademarks''
 
@@ -223,8 +239,8 @@ For questions regarding licensing, commercial use, or contributions, please cont
 
 - **Email:** [kipronoyegon68@gmail.com](mailto:kipronoyegon68@gmail.com)
 - **GitHub:** [@itskipronoh](https://github.com/itskipronoh),
-- **GitHub:** [@Kimutai004](https://github.com/Kimutai004), 
-- 
+- **GitHub:** [@Kimutai004](https://github.com/Kimutai004),
+-
 - **Project Repository:** [EcoSentinel AI](https://github.com/itskipronoh/EcoSentinel)
 
 ---
