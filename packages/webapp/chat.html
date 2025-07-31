@@ -651,35 +651,31 @@
         updateSendButton();
 
         try {
-          // Call your API here
-          try {
-            const response = await fetch(`${apiBaseUrl}/api/chats/stream`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
+          // Construct the request body
+          const requestBody = {
+            messages: [
+              {
+                content: message,
+                role: 'user',
               },
-              body: JSON.stringify({
-                messages: [
-                  {
-                    role: 'user',
-                    content: message,
-                  },
-                ],
-                context: {
-                  sessionId: currentSessionId || '123', // fallback for testing
-                },
-              }),
-            });
+            ],
+            context: {
+              sessionId: currentSessionId || '123', // Use a fallback sessionId for testing
+            },
+          };
 
-            if (!response.ok) {
-              const errorText = await response.text();
-              throw new Error(`Failed to get response from server: ${response.status} - ${errorText}`);
-            }
+          // Call your API
+          const response = await fetch(`${apiBaseUrl}/api/chats/stream`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+          });
 
-            const data = await response.json();
-            console.log('API response:', data);
-          } catch (error) {
-            console.error('Error sending message:', error);
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to get response from server: ${response.status} - ${errorText}`);
           }
 
           const reader = response.body.getReader();
