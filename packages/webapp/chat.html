@@ -509,7 +509,7 @@
             <div class="quick-actions">
               <div
                 class="quick-action"
-                onclick="sendQuickPrompt('What\\'s the current air quality in major Kenyan cities?')"
+                onclick="sendQuickPrompt('What is the current air quality in major Kenyan cities?')"
               >
                 <div class="quick-action-icon"><i class="fas fa-wind"></i></div>
                 <div class="quick-action-title">Air Quality</div>
@@ -652,26 +652,34 @@
 
         try {
           // Call your API here
-          const response = await fetch(`${apiBaseUrl}/api/chats/stream`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              messages: [
-                {
-                  role: 'user',
-                  content: message,
-                },
-              ],
-              context: {
-                sessionId: currentSessionId,
+          try {
+            const response = await fetch(`${apiBaseUrl}/api/chats/stream`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
               },
-            }),
-          });
+              body: JSON.stringify({
+                messages: [
+                  {
+                    role: 'user',
+                    content: message,
+                  },
+                ],
+                context: {
+                  sessionId: currentSessionId || '123', // fallback for testing
+                },
+              }),
+            });
 
-          if (!response.ok) {
-            throw new Error(`Failed to get response from server: ${response.statusText}`);
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`Failed to get response from server: ${response.status} - ${errorText}`);
+            }
+
+            const data = await response.json();
+            console.log('API response:', data);
+          } catch (error) {
+            console.error('Error sending message:', error);
           }
 
           const reader = response.body.getReader();
