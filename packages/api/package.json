@@ -9,7 +9,7 @@
     "clean": "rimraf dist",
     "prestart": "npm run clean && npm run build",
     "start:host": "func start",
-    "start": "npm start"
+    "start": "concurrently npm:start:host npm:watch --raw --kill-others"
   },
   "author": "Microsoft",
   "license": "MIT",
@@ -34,6 +34,8 @@
   "devDependencies": {
     "@types/node": "^20.x",
     "azure-functions-core-tools": "^4.0.5611",
+    "concurrently": "^9.2.0",
+    "rimraf": "^6.0.1",
     "typescript": "^5.4.4"
   }
 }

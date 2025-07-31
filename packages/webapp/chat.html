@@ -660,18 +660,13 @@
             body: JSON.stringify({
               messages: [
                 {
-                  role: 'system',
-                  content:
-                    'You are EcoSentinel AI, an environmental monitoring assistant. Always provide helpful, context-based responses using available data. If exact data is unavailable, approximate or provide insights based on related information.',
-                },
-                {
                   role: 'user',
                   content: message,
                 },
               ],
-              sessionId: currentSessionId,
-              userId: userId || 'anonymous', // Ensure userId is defined
-              context: 'environmental_monitoring', // Ensure context is included
+              context: {
+                sessionId: currentSessionId,
+              },
             }),
           });
 
