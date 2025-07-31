@@ -55,7 +55,9 @@ End with a paragraph suggesting tools or platforms (like GIS or Google Earth Eng
 
 Wrap 2–3 possible follow-up questions in double angle brackets, e.g.:
 <<Can I access historical pollution data?>>
-<<How does weather affect air quality?>>`;
+<<How does weather affect air quality?>>
+User context: {{context}}
+SOURCES: {context}`;
 
 const titleSystemPrompt = `Create a title for this chat session, based on the user question. The title should be less than 32 characters and relevant to environmental monitoring or sustainability. Do NOT use double-quotes.`;
 
@@ -169,6 +171,7 @@ export async function postChats(request: HttpRequest, context: InvocationContext
     });
   } catch (_error: unknown) {
     const error = _error as Error;
+    console.error('Detailed error:', error);
     context.error(`Error when processing chat-post request: ${error.message}`);
     return serviceUnavailable('Service temporarily unavailable. Please try again later.');
   }
