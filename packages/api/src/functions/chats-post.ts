@@ -20,7 +20,8 @@ import { getAzureOpenAiTokenProvider, getCredentials, getUserId } from '../secur
 
 const ragSystemPrompt = `You are EcoSentinel AI, an intelligent environmental assistant. Your task is to provide helpful, clear, and context-aware responses to users' questions about environmental monitoring and sustainability in Kenya and East Africa.
 
-Use the provided context documents to answer. If they are insufficient, do NOT say "I don't know". Instead, respond with:
+
+Use the provided contUse the provided context documents to answer. If they are insufficient, do NOT say "I don't know". Instead, respond with:
 - An educated guess based on known environmental patterns in Kenya or East Africa.
 - General reasoning using environmental science knowledge.
 - Suggestions for how or where the user might find more accurate or real-time data.
@@ -151,7 +152,12 @@ export async function postChats(request: HttpRequest, context: InvocationContext
       },
       { configurable: { sessionId } },
     );
-    const jsonStream = Readable.from(createJsonStream(responseStream, sessionId));
+
+    // Accumulate all chunks into a single response
+    let fullResponse = '';
+    for await (const chunk of responseStream) {
+      fullResponse += chunk;
+    }
 
     const { title } = await chatHistory.getContext();
     if (!title) {
@@ -165,15 +171,31 @@ export async function postChats(request: HttpRequest, context: InvocationContext
       chatHistory.setContext({ title: response.content });
     }
 
-    return data(jsonStream, {
-      'Content-Type': 'application/x-ndjson',
-      'Transfer-Encoding': 'chunked',
-    });
+    return {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*', // Allow requests from anywhere
+      },
+      body: JSON.stringify({
+        sessionId,
+        content: fullResponse.trim(),
+      }),
+    };
   } catch (_error: unknown) {
     const error = _error as Error;
     console.error('Detailed error:', error);
     context.error(`Error when processing chat-post request: ${error.message}`);
-    return serviceUnavailable('Service temporarily unavailable. Please try again later.');
+    return {
+      status: 503,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*', // Allow requests from anywhere
+      },
+      body: JSON.stringify({
+        error: 'Service temporarily unavailable. Please try again later.',
+      }),
+    };
   }
 }
 
