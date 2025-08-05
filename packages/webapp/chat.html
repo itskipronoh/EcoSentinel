@@ -112,11 +112,6 @@
           const requestBody = {
             messages: [
               {
-                role: 'system',
-                content:
-                  'You are EcoSentinel AI, an environmental monitoring assistant. Always provide helpful, context-based responses using available data. If exact data is unavailable, approximate or provide insights based on related information.',
-              },
-              {
                 role: 'user',
                 content: message,
               },
@@ -125,7 +120,6 @@
               sessionId: sessionId,
             },
           };
-
           const response = await fetch(`${apiBaseUrl}/api/chats/stream`, {
             method: 'POST',
             headers: {
