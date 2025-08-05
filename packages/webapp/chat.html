@@ -26,6 +26,7 @@
         padding: 12px;
         border-radius: 8px;
         max-width: 70%;
+        word-wrap: break-word;
       }
       .user {
         align-self: flex-end;
@@ -36,6 +37,9 @@
         align-self: flex-start;
         background-color: #e0e0e0;
         color: black;
+      }
+      .streaming {
+        border-left: 3px solid #4caf50;
       }
       #inputContainer {
         display: flex;
@@ -49,6 +53,7 @@
         border: 1px solid #ddd;
         border-radius: 8px;
         font-size: 16px;
+        resize: none;
       }
       #sendButton {
         margin-left: 8px;
@@ -64,6 +69,11 @@
         background-color: #ccc;
         cursor: not-allowed;
       }
+      .error {
+        background-color: #ffebee;
+        color: #c62828;
+        border-left: 3px solid #c62828;
+      }
     </style>
   </head>
   <body>
@@ -74,6 +84,7 @@
         rows="1"
         placeholder="Type your message..."
         oninput="adjustTextareaHeight(this)"
+        onkeydown="handleKeyDown(event)"
       ></textarea>
       <button id="sendButton" onclick="sendMessage()">Send</button>
     </div>
@@ -81,14 +92,43 @@
     <script>
       const apiBaseUrl = 'https://func-api-t2z2frqgsbaym.azurewebsites.net';
       let sessionId = '123'; // Replace with a dynamic session ID if needed
+      let currentStreamingMessage = null;
 
-      function addMessage(content, sender) {
+      function addMessage(content, sender, isStreaming = false) {
+        const chatContainer = document.getElementById('chatContainer');
+
+        if (isStreaming && currentStreamingMessage) {
+          // Update existing streaming message
+          currentStreamingMessage.textContent += content;
+        } else {
+          // Create new message
+          const messageDiv = document.createElement('div');
+          messageDiv.className = `message ${sender}`;
+          if (isStreaming) {
+            messageDiv.className += ' streaming';
+            currentStreamingMessage = messageDiv;
+          }
+          messageDiv.textContent = content;
+          chatContainer.appendChild(messageDiv);
+        }
+
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      function addErrorMessage(content) {
         const chatContainer = document.getElementById('chatContainer');
         const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}`;
+        messageDiv.className = 'message assistant error';
         messageDiv.textContent = content;
         chatContainer.appendChild(messageDiv);
         chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      function finishStreaming() {
+        if (currentStreamingMessage) {
+          currentStreamingMessage.classList.remove('streaming');
+          currentStreamingMessage = null;
+        }
       }
 
       async function sendMessage() {
@@ -107,7 +147,7 @@
         sendButton.disabled = true;
 
         try {
-          // Construct the request body
+          // Construct the request body (matches your working Postman request exactly)
           const requestBody = {
             messages: [
               {
@@ -120,53 +160,109 @@
             },
           };
 
+          console.log('Sending request:', JSON.stringify(requestBody, null, 2));
+
           // Call the API
           const response = await fetch(`${apiBaseUrl}/api/chats/stream`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              Accept: 'application/json, text/plain, */*',
             },
             body: JSON.stringify(requestBody),
           });
 
+          console.log('Response status:', response.status);
+          console.log('Response headers:', [...response.headers.entries()]);
+
           if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Failed to get response from server: ${response.status} - ${errorText}`);
+            let errorText;
+            try {
+              errorText = await response.text();
+            } catch (e) {
+              errorText = `HTTP ${response.status} ${response.statusText}`;
+            }
+            throw new Error(`Server returned ${response.status}: ${errorText}`);
+          }
+
+          // Check if response body is readable
+          if (!response.body) {
+            throw new Error('Response body is not readable');
           }
 
           const reader = response.body.getReader();
           const decoder = new TextDecoder();
-          let partialResult = '';
+          let buffer = '';
+
+          // Start with empty assistant message for streaming
+          addMessage('', 'assistant', true);
 
           while (true) {
             const { done, value } = await reader.read();
-            if (done) break;
+
+            if (done) {
+              console.log('Stream completed');
+              break;
+            }
 
             const chunk = decoder.decode(value, { stream: true });
-            partialResult += chunk;
+            console.log('Received chunk:', chunk);
+            buffer += chunk;
 
-            // Process each JSON object in the stream
-            const lines = partialResult.split('\n');
-            partialResult = lines.pop(); // Keep the last incomplete line for the next iteration
+            // Process complete lines from buffer
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || ''; // Keep incomplete line in buffer
 
             for (const line of lines) {
-              if (line.trim()) {
+              const trimmedLine = line.trim();
+              if (trimmedLine) {
                 try {
-                  const data = JSON.parse(line.trim());
+                  const data = JSON.parse(trimmedLine);
+                  console.log('Parsed data:', data);
+
+                  // Handle different possible response formats
                   if (data.delta && data.delta.content) {
-                    addMessage(data.delta.content, 'assistant');
+                    addMessage(data.delta.content, 'assistant', true);
+                  } else if (data.content) {
+                    addMessage(data.content, 'assistant', true);
+                  } else if (data.message) {
+                    addMessage(data.message, 'assistant', true);
+                  } else if (typeof data === 'string') {
+                    addMessage(data, 'assistant', true);
                   }
                 } catch (parseError) {
                   console.error('Error parsing JSON chunk:', parseError);
-                  console.error('Chunk:', line);
+                  console.error('Raw line:', trimmedLine);
+                  // Try to add as plain text if JSON parsing fails
+                  if (trimmedLine.length > 0) {
+                    addMessage(trimmedLine, 'assistant', true);
+                  }
                 }
+              }
+            }
+          }
+
+          // Process any remaining data in buffer
+          if (buffer.trim()) {
+            try {
+              const data = JSON.parse(buffer.trim());
+              if (data.delta && data.delta.content) {
+                addMessage(data.delta.content, 'assistant', true);
+              } else if (data.content) {
+                addMessage(data.content, 'assistant', true);
+              }
+            } catch (parseError) {
+              console.error('Error parsing final buffer:', parseError);
+              if (buffer.trim().length > 0) {
+                addMessage(buffer.trim(), 'assistant', true);
               }
             }
           }
         } catch (error) {
           console.error('Error sending message:', error);
-          addMessage('Sorry, I encountered an error while processing your request.', 'assistant');
+          addErrorMessage(`Error: ${error.message}`);
         } finally {
+          finishStreaming();
           sendButton.disabled = false;
         }
       }
@@ -175,6 +271,21 @@
         textarea.style.height = 'auto';
         textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
       }
+
+      function handleKeyDown(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          sendMessage();
+        }
+      }
+
+      // Initialize with a welcome message
+      window.addEventListener('load', function () {
+        addMessage(
+          "Hello! I'm EcoSentinel AI. Ask me about environmental topics, tree recommendations, or sustainability practices.",
+          'assistant',
+        );
+      });
     </script>
   </body>
 </html>
