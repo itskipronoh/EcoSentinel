@@ -112,14 +112,19 @@
           const requestBody = {
             messages: [
               {
+                role: 'system',
+                content: 'You are an expert environmental assistant.', // optional system prompt
+              },
+              {
                 role: 'user',
                 content: message,
               },
             ],
-            context: {
-              sessionId: sessionId,
-            },
+            context: 'environmental_monitoring',
+            sessionId: sessionId,
+            userId: userId,
           };
+
           const response = await fetch(`${apiBaseUrl}/api/chats/stream`, {
             method: 'POST',
             headers: {
