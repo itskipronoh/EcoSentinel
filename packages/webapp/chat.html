@@ -1,183 +1,87 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EcoSentinel AI Chat</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="AI Chat with Enterprise Data" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>AI Chat with Enterprise Data</title>
     <style>
+      :root {
+        --azc-primary: #07c;
+        --azc-bg: #eee;
+        --azc-border-radius: 16px;
+      }
+      html,
       body {
-        font-family: Arial, sans-serif;
+        font-size: 16px;
         margin: 0;
-        padding: 0;
+        background: var(--azc-bg);
         display: flex;
         flex-direction: column;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
       }
-      #chatContainer {
-        flex: 1;
+      nav {
         display: flex;
-        flex-direction: column;
+        flex: 0 1 auto;
+        background: #333;
+        color: #fff;
         padding: 16px;
-        overflow-y: auto;
-        background-color: #f5f5f5;
+        font-family:
+          'Segoe UI',
+          -apple-system,
+          BlinkMacSystemFont,
+          Roboto,
+          'Helvetica Neue',
+          sans-serif;
+        font-size: 1.25rem;
+        align-items: center;
+
+        & img {
+          height: 32px;
+          margin-right: 0.5em;
+        }
       }
-      .message {
-        margin: 8px 0;
-        padding: 12px;
-        border-radius: 8px;
-        max-width: 70%;
-      }
-      .user {
-        align-self: flex-end;
-        background-color: #4caf50;
-        color: white;
-      }
-      .assistant {
-        align-self: flex-start;
-        background-color: #e0e0e0;
-        color: black;
-      }
-      #inputContainer {
-        display: flex;
-        padding: 16px;
-        background-color: white;
-        border-top: 1px solid #ddd;
-      }
-      #chatInput {
+      main {
+        container-type: size;
         flex: 1;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        font-size: 16px;
+        position: relative;
+        display: flex;
       }
-      #sendButton {
-        margin-left: 8px;
-        padding: 12px 16px;
-        background-color: #4caf50;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 16px;
-      }
-      #sendButton:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
+      azc-chat {
+        flex: 1;
+        max-width: 1024px;
+        margin: 0 auto;
       }
     </style>
   </head>
   <body>
-    <div id="chatContainer"></div>
-    <div id="inputContainer">
-      <textarea
-        id="chatInput"
-        rows="1"
-        placeholder="Type your message..."
-        oninput="adjustTextareaHeight(this)"
-      ></textarea>
-      <button id="sendButton" onclick="sendMessage()">Send</button>
-    </div>
-
+    <nav>
+      <img src="/favicon.png" alt="" />
+      AI Chat with Enterprise Data
+    </nav>
+    <main>
+      <azc-history id="chatHistory"></azc-history>
+      <azc-chat id="chat"></azc-chat>
+    </main>
+    <script type="module" src="./src/index.ts"></script>
     <script>
-      const apiBaseUrl = 'https://func-api-t2z2frqgsbaym.azurewebsites.net';
-      const sessionId = generateSessionId(); // Generate once per session
+      // Generate a unique ID and store it in local storage
+      const userId = localStorage.getItem('userId') || crypto.randomUUID();
+      localStorage.setItem('userId', userId);
 
-      function generateSessionId() {
-        return crypto.randomUUID();
-      }
+      window.chatHistory.userId = userId;
+      window.chatHistory.addEventListener('loadSession', (e) => {
+        const { id, messages } = e.detail;
+        window.chat.sessionId = id;
+        window.chat.messages = messages;
+      });
 
-      function addMessage(content, sender) {
-        const chatContainer = document.getElementById('chatContainer');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}`;
-        messageDiv.textContent = content;
-        chatContainer.appendChild(messageDiv);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-      }
-
-      async function sendMessage() {
-        const input = document.getElementById('chatInput');
-        const message = input.value.trim();
-
-        if (!message) return;
-
-        addMessage(message, 'user');
-        input.value = '';
-        adjustTextareaHeight(input);
-
-        const sendButton = document.getElementById('sendButton');
-        sendButton.disabled = true;
-
-        try {
-          const requestBody = {
-            messages: [
-              {
-                role: 'system',
-                content: 'You are an expert environmental assistant.', // optional system prompt
-              },
-              {
-                role: 'user',
-                content: message,
-              },
-            ],
-            context: 'environmental_monitoring',
-            sessionId: sessionId,
-            userId: userId,
-          };
-
-          const response = await fetch(`${apiBaseUrl}/api/chats/stream`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestBody),
-          });
-
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Failed to get response from server: ${response.status} - ${errorText}`);
-          }
-
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder();
-          let partialResult = '';
-
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            const chunk = decoder.decode(value, { stream: true });
-            partialResult += chunk;
-
-            const lines = partialResult.split('\n');
-            partialResult = lines.pop();
-
-            for (const line of lines) {
-              if (line.trim()) {
-                try {
-                  const data = JSON.parse(line.trim());
-                  if (data.delta && data.delta.content) {
-                    addMessage(data.delta.content, 'assistant');
-                  }
-                } catch (parseError) {
-                  console.error('Error parsing JSON chunk:', parseError);
-                  console.error('Chunk:', line);
-                }
-              }
-            }
-          }
-        } catch (error) {
-          console.error('Error sending message:', error);
-          addMessage('Sorry, I encountered an error while processing your request.', 'assistant');
-        } finally {
-          sendButton.disabled = false;
-        }
-      }
-
-      function adjustTextareaHeight(textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
-      }
+      window.chat.userId = userId;
+      window.chat.addEventListener('messagesUpdated', () => {
+        window.chatHistory.refresh();
+      });
     </script>
   </body>
 </html>
