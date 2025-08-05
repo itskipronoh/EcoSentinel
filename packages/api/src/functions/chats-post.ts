@@ -65,16 +65,6 @@ interface ChatContext {
   sessionId: string;
 }
 
-function addCorsHeaders(response: HttpResponseInit): HttpResponseInit {
-  response.headers = {
-    ...response.headers,
-    'Access-Control-Allow-Origin': '*', // Replace '*' with your frontend's origin for stricter security
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
-  return response;
-}
-
 export async function postChats(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
   const azureOpenAiEndpoint = process.env.AZURE_OPENAI_API_ENDPOINT;
 
@@ -94,8 +84,8 @@ export async function postChats(request: HttpRequest, context: InvocationContext
 
     // Validate context
     if (!chatContext || typeof chatContext !== 'object' || !chatContext.sessionId) {
-      return addCorsHeaders(
-        badRequest('Invalid or missing context in the request body. Ensure "context" includes a valid "sessionId".'),
+      return badRequest(
+        'Invalid or missing context in the request body. Ensure "context" includes a valid "sessionId".',
       );
     }
 
@@ -175,17 +165,15 @@ export async function postChats(request: HttpRequest, context: InvocationContext
       chatHistory.setContext({ title: response.content });
     }
 
-    return addCorsHeaders(
-      data(jsonStream, {
-        'Content-Type': 'application/x-ndjson',
-        'Transfer-Encoding': 'chunked',
-      }),
-    );
+    return data(jsonStream, {
+      'Content-Type': 'application/x-ndjson',
+      'Transfer-Encoding': 'chunked',
+    });
   } catch (_error: unknown) {
     const error = _error as Error;
     console.error('Detailed error:', error);
     context.error(`Error when processing chat-post request: ${error.message}`);
-    return addCorsHeaders(serviceUnavailable('Service temporarily unavailable. Please try again later.'));
+    return serviceUnavailable('Service temporarily unavailable. Please try again later.');
   }
 }
 
@@ -211,7 +199,7 @@ app.setup({ enableHttpStream: true });
 
 app.http('chats-post', {
   route: 'chats/stream',
-  methods: ['POST', 'OPTIONS'], // Add OPTIONS for CORS preflight
+  methods: ['POST'],
   authLevel: 'anonymous',
   handler: postChats,
 });
