@@ -30,6 +30,6 @@
       }
     ]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/api.js"],
   "types": ["vite/client"]
 }
