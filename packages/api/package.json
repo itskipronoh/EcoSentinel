@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Azure Functions API for the serverless AI Chat RAG sample",
   "main": "dist/src/functions/*.js",
-  "scripts": {
+    "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "clean": "rimraf dist",
