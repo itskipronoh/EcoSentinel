@@ -626,52 +626,33 @@
         input.value = prompt;
         sendMessage();
       }
-
       async function sendMessage() {
         const input = document.getElementById('chatInput');
         const message = input.value.trim();
 
         if (!message || isLoading) return;
 
-        // Generate sessionId if not exists
         if (!currentSessionId) {
           currentSessionId = crypto.randomUUID();
         }
 
-        // Clear welcome message if it exists
         const welcomeMessage = document.getElementById('welcomeMessage');
-        if (welcomeMessage) {
-          welcomeMessage.remove();
-        }
+        if (welcomeMessage) welcomeMessage.remove();
 
-        // Add user message to chat
         addMessage(message, 'user');
         input.value = '';
         adjustTextareaHeight(input);
 
-        // Show typing indicator
         showTypingIndicator();
-
         isLoading = true;
         updateSendButton();
 
         try {
-          // Construct the request body exactly as your backend expects
           const requestBody = {
-            messages: [
-              {
-                content: message,
-                role: 'user',
-              },
-            ],
-            context: {
-              sessionId: currentSessionId, // Use dynamic sessionId
-            },
+            messages: [{ content: message, role: 'user' }],
+            context: { sessionId: currentSessionId },
           };
 
-          console.log('Sending request:', JSON.stringify(requestBody, null, 2));
-
-          // Call your API
           const response = await fetch(`${apiBaseUrl}/api/chats/stream`, {
             method: 'POST',
             headers: {
@@ -682,23 +663,46 @@
 
           if (!response.ok) {
             const errorText = await response.text();
-            console.error('Server error response:', errorText);
-            throw new Error(`Failed to get response from server: ${response.status} - ${errorText}`);
+            throw new Error(`Failed: ${response.status} - ${errorText}`);
           }
 
-          // Since your backend now returns a single JSON response, parse it directly
-          const responseData = await response.json();
-          console.log('Response received:', responseData);
+          // Create a paragraph to stream assistant reply
+          const messageContainer = document.getElementById('chatMessages');
+          const paragraph = document.createElement('p');
+          paragraph.classList.add('assistant-message');
+          messageContainer.appendChild(paragraph);
 
-          // Remove typing indicator
+          // Stream and parse NDJSON
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = '';
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+
+            // Process complete JSON objects delimited by newline
+            const parts = buffer.split('\n');
+            buffer = parts.pop(); // keep incomplete for next read
+
+            for (const part of parts) {
+              if (!part.trim()) continue;
+
+              try {
+                const json = JSON.parse(part);
+                const chunk = json.delta?.content;
+                if (chunk) {
+                  paragraph.textContent += chunk;
+                }
+              } catch (err) {
+                console.error('Failed to parse JSON chunk:', part, err);
+              }
+            }
+          }
+
           hideTypingIndicator();
-
-          // Add the assistant's complete response
-          if (responseData.content) {
-            addMessage(responseData.content, 'assistant');
-          } else {
-            addMessage('I apologize, but I received an empty response. Please try again.', 'assistant', true);
-          }
 
           // Update session in history
           if (currentSessionId) {
@@ -707,11 +711,7 @@
         } catch (error) {
           console.error('Error sending message:', error);
           hideTypingIndicator();
-          addMessage(
-            'Sorry, I encountered an error while processing your request. Please check the console for details and try again.',
-            'assistant',
-            true,
-          );
+          addMessage('Sorry, an error occurred. Please check the console for details.', 'assistant', true);
         } finally {
           isLoading = false;
           updateSendButton();
