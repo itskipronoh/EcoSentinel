@@ -23,6 +23,8 @@ services:
     project: ./packages/api
     language: ts
     host: function
+    prepackage:
+      shell: npm install && npm run build
 
 hooks:
   postprovision:
