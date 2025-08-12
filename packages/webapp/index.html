@@ -16,7 +16,7 @@
     <div class="sidebar">
       <div class="logo">
         <span class="logo-icon">🌱</span>
-        <h2>EcoSentinel AI</h2>
+        <h2>EcoSentinel</h2>
       </div>
       <ul class="nav-menu">
         <li class="active">
@@ -45,14 +45,16 @@
     <!-- Main Content -->
     <div class="main-content">
       <div class="header">
-        <h1>Environmental Dashboard</h1>
+        <h1>Dashboard</h1>
         <div class="header-controls">
-          <div class="location-selector">
-            <span>🔍</span>
+          <div class="nav-button" onclick="navigateTo('chat.html')">
+            <span>�</span>
+            <span>Chat</span>
           </div>
-          <div class="alerts">
-            <span>🚨 Alerts</span>
-            <span class="alert-count" onclick="showAlerts()">3</span>
+          <div class="nav-button" onclick="navigateTo('alerts.html')">
+            <span>🚨</span>
+            <span>Alerts</span>
+            <span class="alert-count">3</span>
           </div>
         </div>
       </div>
