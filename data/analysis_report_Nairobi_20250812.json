@@ -1,0 +1,272 @@
+{
+  "report_metadata": {
+    "title": "EcoSentinel AI Environmental Analysis Report - Nairobi",
+    "generated_date": "2025-08-12T08:13:23.762114",
+    "region": "Nairobi",
+    "version": "1.0.0"
+  },
+  "regional_summary": {
+    "region": "Nairobi",
+    "analysis_date": "2025-08-12",
+    "data_availability": {
+      "weather": true,
+      "air_quality": true,
+      "flood_events": true,
+      "flood_risk": true,
+      "environmental_indicators": true
+    },
+    "weather": {
+      "avg_temperature_c": 16.5,
+      "total_rainfall_mm": 180.4,
+      "avg_humidity_percent": 45.9,
+      "avg_wind_speed_kmh": 4.6,
+      "data_records": 1827
+    },
+    "air_quality": {
+      "avg_aqi": 119.0,
+      "avg_pm25_ugm3": 31.8,
+      "avg_pm10_ugm3": 52.3,
+      "dominant_category": "Moderate",
+      "data_records": 1827
+    },
+    "flood_history": {
+      "total_events": 1,
+      "last_event": "2020-04-15",
+      "severe_events": 0
+    },
+    "flood_risk": {
+      "overall_risk_score": 0.5,
+      "risk_category": "Medium",
+      "elevation": "1795",
+      "drainage_score": 0.7
+    },
+    "environmental_health": {
+      "forest_cover_percent": 5.0,
+      "water_quality_index": 61.7,
+      "soil_health_index": 59.7,
+      "biodiversity_index": 41.1,
+      "waste_management_score": 62.7
+    }
+  },
+  "climate_analysis": {
+    "region": "Nairobi",
+    "analysis_period": {
+      "start": "2020-01-01",
+      "end": "2024-12-31",
+      "total_days": 1827
+    },
+    "overall_statistics": {
+      "avg_temperature_c": 19.05,
+      "min_temperature_c": 11.1,
+      "max_temperature_c": 28.0,
+      "total_rainfall_mm": 5930.66,
+      "avg_humidity_percent": 50.02
+    },
+    "trends": {
+      "temperature_trend": "Stable",
+      "rainfall_trend": "Decreasing",
+      "humidity_trend": "Stable"
+    },
+    "seasonal_patterns": {
+      "temperature_c": {
+        "1": 17.5,
+        "2": 19.01,
+        "3": 20.49,
+        "4": 21.55,
+        "5": 22.16,
+        "6": 21.92,
+        "7": 20.57,
+        "8": 18.97,
+        "9": 17.4,
+        "10": 16.45,
+        "11": 16.14,
+        "12": 16.5
+      },
+      "rainfall_mm": {
+        "1": 0.55,
+        "2": 0.66,
+        "3": 5.87,
+        "4": 5.88,
+        "5": 5.8,
+        "6": 0.54,
+        "7": 0.55,
+        "8": 0.66,
+        "9": 0.54,
+        "10": 5.93,
+        "11": 5.79,
+        "12": 5.97
+      },
+      "humidity_percent": {
+        "1": 55.78,
+        "2": 64.23,
+        "3": 68.97,
+        "4": 69.06,
+        "5": 63.51,
+        "6": 55.63,
+        "7": 44.77,
+        "8": 36.2,
+        "9": 31.37,
+        "10": 30.46,
+        "11": 35.85,
+        "12": 45.35
+      }
+    },
+    "yearly_summary": {
+      "temperature_c": {
+        "2020": 19.08,
+        "2021": 19.06,
+        "2022": 19.02,
+        "2023": 18.99,
+        "2024": 19.11
+      },
+      "rainfall_mm": {
+        "2020": 1217.42,
+        "2021": 1149.99,
+        "2022": 1207.82,
+        "2023": 1174.61,
+        "2024": 1180.82
+      },
+      "humidity_percent": {
+        "2020": 50.05,
+        "2021": 50.14,
+        "2022": 49.72,
+        "2023": 49.86,
+        "2024": 50.33
+      }
+    }
+  },
+  "air_quality_analysis": {
+    "region": "Nairobi",
+    "analysis_period": {
+      "start": "2020-01-01",
+      "end": "2024-12-31",
+      "total_days": 1827
+    },
+    "aqi_summary": {
+      "average_aqi": 92.3,
+      "min_aqi": 25.0,
+      "max_aqi": 500.0,
+      "category_distribution": {
+        "Moderate": 1484,
+        "Unhealthy for Sensitive Groups": 238,
+        "Good": 55,
+        "Hazardous": 50
+      }
+    },
+    "health_assessment": {
+      "unhealthy_days": 288,
+      "health_risk_percentage": 15.8,
+      "recommendation": "Moderate risk - Sensitive individuals should limit prolonged outdoor exertion"
+    },
+    "pollutant_analysis": {
+      "pm25": {
+        "average": 26.4,
+        "max": 47.8,
+        "days_above_who_limit": 1673
+      },
+      "pm10": {
+        "average": 42.3,
+        "max": 81.7,
+        "days_above_who_limit": 774
+      }
+    },
+    "monthly_trends": {
+      "2020-01": 107.9,
+      "2020-02": 140.4,
+      "2020-03": 70.9,
+      "2020-04": 70.0,
+      "2020-05": 64.0,
+      "2020-06": 92.7,
+      "2020-07": 105.5,
+      "2020-08": 125.4,
+      "2020-09": 66.5,
+      "2020-10": 67.8,
+      "2020-11": 66.2,
+      "2020-12": 148.3,
+      "2021-01": 122.9,
+      "2021-02": 122.8,
+      "2021-03": 69.3,
+      "2021-04": 66.8,
+      "2021-05": 77.2,
+      "2021-06": 108.4,
+      "2021-07": 111.9,
+      "2021-08": 149.4,
+      "2021-09": 63.0,
+      "2021-10": 67.7,
+      "2021-11": 66.5,
+      "2021-12": 121.2,
+      "2022-01": 107.3,
+      "2022-02": 125.0,
+      "2022-03": 70.2,
+      "2022-04": 68.1,
+      "2022-05": 70.3,
+      "2022-06": 96.0,
+      "2022-07": 122.0,
+      "2022-08": 110.3,
+      "2022-09": 69.0,
+      "2022-10": 65.7,
+      "2022-11": 65.2,
+      "2022-12": 122.2,
+      "2023-01": 106.5,
+      "2023-02": 152.8,
+      "2023-03": 70.2,
+      "2023-04": 67.7,
+      "2023-05": 65.8,
+      "2023-06": 89.6,
+      "2023-07": 93.6,
+      "2023-08": 118.3,
+      "2023-09": 70.5,
+      "2023-10": 65.3,
+      "2023-11": 69.2,
+      "2023-12": 108.0,
+      "2024-01": 131.7,
+      "2024-02": 123.3,
+      "2024-03": 66.9,
+      "2024-04": 62.9,
+      "2024-05": 65.5,
+      "2024-06": 96.3,
+      "2024-07": 119.0,
+      "2024-08": 108.6,
+      "2024-09": 70.5,
+      "2024-10": 71.4,
+      "2024-11": 67.4,
+      "2024-12": 118.4
+    }
+  },
+  "flood_risk_assessment": {
+    "region": "Nairobi",
+    "assessment_date": "2025-08-12",
+    "historical_analysis": {
+      "total_events": 1,
+      "severity_breakdown": {
+        "Moderate": 1
+      },
+      "average_affected_area_km2": 25.0,
+      "last_major_event": {
+        "date": "None",
+        "severity": "None"
+      }
+    },
+    "risk_factors": {
+      "overall_risk_score": 0.5,
+      "risk_category": "Medium",
+      "contributing_factors": {
+        "elevation_risk": 0.1,
+        "population_density_risk": 1.0,
+        "water_proximity_risk": 0.6,
+        "drainage_infrastructure": 0.7
+      },
+      "recommendations": [
+        "Monitor rainfall patterns closely",
+        "Maintain existing drainage systems",
+        "Prepare emergency response plans"
+      ]
+    },
+    "weather_patterns": {
+      "recent_heavy_rainfall_days": 0,
+      "average_daily_rainfall_mm": 5.95,
+      "max_daily_rainfall_mm": 12.04,
+      "rainfall_trend": "Increasing"
+    }
+  }
+}

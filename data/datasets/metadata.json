@@ -1,0 +1,118 @@
+{
+  "dataset_info": {
+    "title": "EcoSentinel AI Environmental Datasets",
+    "description": "Sample environmental data for Kenya regions covering weather, air quality, flood risks, and environmental indicators",
+    "version": "1.0.0",
+    "created": "2025-08-12T08:11:19.503855",
+    "regions_covered": [
+      "Nairobi",
+      "Kisumu",
+      "Eldoret",
+      "Mandera",
+      "Mombasa",
+      "Nakuru",
+      "Turkana",
+      "Kitui",
+      "Nyeri",
+      "Machakos"
+    ],
+    "temporal_coverage": "2020-01-01 to 2024-12-31",
+    "spatial_coverage": "Kenya",
+    "license": "MIT"
+  },
+  "datasets": {
+    "weather_data.csv": {
+      "description": "Daily weather measurements for Kenyan regions",
+      "rows": 18270,
+      "columns": [
+        "date",
+        "region",
+        "latitude",
+        "longitude",
+        "elevation",
+        "temperature_c",
+        "rainfall_mm",
+        "humidity_percent",
+        "wind_speed_kmh",
+        "pressure_hpa"
+      ],
+      "temporal_resolution": "Daily",
+      "spatial_resolution": "Regional"
+    },
+    "air_quality_data.csv": {
+      "description": "Daily air quality measurements and AQI calculations",
+      "rows": 18270,
+      "columns": [
+        "date",
+        "region",
+        "latitude",
+        "longitude",
+        "pm25_ugm3",
+        "pm10_ugm3",
+        "no2_ugm3",
+        "so2_ugm3",
+        "o3_ugm3",
+        "aqi",
+        "aqi_category"
+      ],
+      "temporal_resolution": "Daily",
+      "spatial_resolution": "Regional"
+    },
+    "flood_events.csv": {
+      "description": "Historical flood events with impact assessment",
+      "rows": 9,
+      "columns": [
+        "date",
+        "region",
+        "latitude",
+        "longitude",
+        "severity",
+        "affected_area_km2",
+        "estimated_affected_population",
+        "duration_hours",
+        "max_water_level_m",
+        "economic_impact_usd"
+      ],
+      "temporal_resolution": "Event-based",
+      "spatial_resolution": "Regional"
+    },
+    "flood_risk_factors.csv": {
+      "description": "Regional flood risk assessment factors",
+      "rows": 10,
+      "columns": [
+        "region",
+        "latitude",
+        "longitude",
+        "elevation",
+        "population",
+        "elevation_risk_factor",
+        "population_risk_factor",
+        "water_proximity_risk_factor",
+        "drainage_infrastructure_score",
+        "overall_flood_risk_score",
+        "risk_category"
+      ],
+      "temporal_resolution": "Static",
+      "spatial_resolution": "Regional"
+    },
+    "environmental_indicators.csv": {
+      "description": "Environmental health indicators by region",
+      "rows": 10,
+      "columns": [
+        "region",
+        "latitude",
+        "longitude",
+        "forest_cover_percent",
+        "water_quality_index",
+        "soil_health_index",
+        "biodiversity_index",
+        "air_quality_annual_avg",
+        "waste_management_score",
+        "renewable_energy_percent",
+        "last_updated"
+      ],
+      "temporal_resolution": "Annual",
+      "spatial_resolution": "Regional"
+    }
+  }
+}
