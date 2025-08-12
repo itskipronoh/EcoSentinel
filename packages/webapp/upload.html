@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSentinel - Data Upload</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <span class="logo-icon">🌱</span>
+            <h2>EcoSentinel AI</h2>
+        </div>
+        <ul class="nav-menu">
+            <li onclick="navigateTo('index.html')">
+                <span>📊</span>
+                <span>Dashboard</span>
+            </li>
+            <li onclick="navigateTo('livemap.html')">
+                <span>🗺️</span>
+                <span>Live Map</span>
+            </li>
+            <li onclick="navigateTo('reports.html')">
+                <span>📋</span>
+                <span>Reports</span>
+            </li>
+            <li class="active">
+                <span>📤</span>
+                <span>Data Upload</span>
+            </li>
+            <li onclick="navigateTo('settings.html')">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Environmental Data Upload</h1>
+            <div class="header-controls">
+                <span class="upload-status">📊 Ready to upload data</span>
+            </div>
+        </div>
+
+        <div class="upload-container">
+            <div class="upload-methods">
+                <div class="upload-method active" onclick="selectUploadMethod('file')">
+                    <div class="method-icon">📁</div>
+                    <h3>File Upload</h3>
+                    <p>Upload CSV, Excel, or JSON files</p>
+                </div>
+                <div class="upload-method" onclick="selectUploadMethod('api')">
+                    <div class="method-icon">🔗</div>
+                    <h3>API Integration</h3>
+                    <p>Connect external data sources</p>
+                </div>
+                <div class="upload-method" onclick="selectUploadMethod('manual')">
+                    <div class="method-icon">✏️</div>
+                    <h3>Manual Entry</h3>
+                    <p>Enter data manually through forms</p>
+                </div>
+                <div class="upload-method" onclick="selectUploadMethod('sensor')">
+                    <div class="method-icon">📡</div>
+                    <h3>IoT Sensors</h3>
+                    <p>Real-time sensor data streams</p>
+                </div>
+            </div>
+
+            <div class="upload-content">
+                <!-- File Upload Section -->
+                <div id="fileUpload" class="upload-section active">
+                    <div class="upload-area" id="dropZone">
+                        <div class="upload-icon">📁</div>
+                        <h3>Drag and drop files here</h3>
+                        <p>or <button class="btn-browse" onclick="document.getElementById('fileInput').click()">browse files</button></p>
+                        <input type="file" id="fileInput" multiple accept=".csv,.xlsx,.json" style="display: none;">
+                        <div class="file-types">
+                            <span>Supported formats: CSV, Excel (.xlsx), JSON</span>
+                        </div>
+                    </div>
+
+                    <div class="data-type-selector">
+                        <h4>Data Type</h4>
+                        <div class="data-types">
+                            <label class="data-type-option">
+                                <input type="radio" name="dataType" value="air-quality" checked>
+                                <span>🌪️ Air Quality</span>
+                            </label>
+                            <label class="data-type-option">
+                                <input type="radio" name="dataType" value="water-quality">
+                                <span>💧 Water Quality</span>
+                            </label>
+                            <label class="data-type-option">
+                                <input type="radio" name="dataType" value="waste-data">
+                                <span>♻️ Waste Data</span>
+                            </label>
+                            <label class="data-type-option">
+                                <input type="radio" name="dataType" value="biodiversity">
+                                <span>🌿 Biodiversity</span>
+                            </label>
+                            <label class="data-type-option">
+                                <input type="radio" name="dataType" value="climate">
+                                <span>🌡️ Climate Data</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="upload-queue" id="uploadQueue">
+                        <!-- Uploaded files will appear here -->
+                    </div>
+                </div>
+
+                <!-- API Integration Section -->
+                <div id="apiUpload" class="upload-section">
+                    <div class="api-form">
+                        <h3>API Configuration</h3>
+                        <div class="form-group">
+                            <label>API Endpoint URL</label>
+                            <input type="url" placeholder="https://api.example.com/environmental-data">
+                        </div>
+                        <div class="form-group">
+                            <label>Authentication Type</label>
+                            <select>
+                                <option>API Key</option>
+                                <option>Bearer Token</option>
+                                <option>Basic Auth</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>API Key / Token</label>
+                            <input type="password" placeholder="Enter your API key">
+                        </div>
+                        <div class="form-group">
+                            <label>Data Format</label>
+                            <select>
+                                <option>JSON</option>
+                                <option>XML</option>
+                                <option>CSV</option>
+                            </select>
+                        </div>
+                        <button class="btn-test" onclick="testApiConnection()">Test Connection</button>
+                    </div>
+                </div>
+
+                <!-- Manual Entry Section -->
+                <div id="manualUpload" class="upload-section">
+                    <div class="manual-form">
+                        <h3>Manual Data Entry</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Location</label>
+                                <input type="text" placeholder="e.g., Nairobi, Kenya">
+                            </div>
+                            <div class="form-group">
+                                <label>Date & Time</label>
+                                <input type="datetime-local">
+                            </div>
+                            <div class="form-group">
+                                <label>Measurement Type</label>
+                                <select>
+                                    <option>Air Quality (PM2.5)</option>
+                                    <option>Water pH Level</option>
+                                    <option>Temperature</option>
+                                    <option>Humidity</option>
+                                    <option>Waste Volume</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Value</label>
+                                <input type="number" placeholder="Enter measurement value">
+                            </div>
+                            <div class="form-group">
+                                <label>Unit</label>
+                                <select>
+                                    <option>μg/m³</option>
+                                    <option>pH</option>
+                                    <option>°C</option>
+                                    <option>%</option>
+                                    <option>kg</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Coordinates</label>
+                                <input type="text" placeholder="Latitude, Longitude">
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Notes (Optional)</label>
+                            <textarea placeholder="Additional information about this measurement..."></textarea>
+                        </div>
+                        <button class="btn-add" onclick="addManualEntry()">Add Entry</button>
+                    </div>
+                </div>
+
+                <!-- IoT Sensors Section -->
+                <div id="sensorUpload" class="upload-section">
+                    <div class="sensor-config">
+                        <h3>IoT Sensor Configuration</h3>
+                        <div class="sensor-list">
+                            <div class="sensor-item">
+                                <div class="sensor-info">
+                                    <h4>Air Quality Sensor - Nairobi CBD</h4>
+                                    <p>Device ID: AQ-NAI-001</p>
+                                    <span class="sensor-status online">● Online</span>
+                                </div>
+                                <button class="btn-configure" onclick="configureSensor('AQ-NAI-001')">Configure</button>
+                            </div>
+                            <div class="sensor-item">
+                                <div class="sensor-info">
+                                    <h4>Water Quality Sensor - Lake Victoria</h4>
+                                    <p>Device ID: WQ-VIC-002</p>
+                                    <span class="sensor-status online">● Online</span>
+                                </div>
+                                <button class="btn-configure" onclick="configureSensor('WQ-VIC-002')">Configure</button>
+                            </div>
+                            <div class="sensor-item">
+                                <div class="sensor-info">
+                                    <h4>Weather Station - Mount Kenya</h4>
+                                    <p>Device ID: WS-MKE-003</p>
+                                    <span class="sensor-status offline">● Offline</span>
+                                </div>
+                                <button class="btn-configure" onclick="configureSensor('WS-MKE-003')">Configure</button>
+                            </div>
+                        </div>
+                        <button class="btn-add-sensor" onclick="addNewSensor()">+ Add New Sensor</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="upload-actions">
+                <button class="btn-clear" onclick="clearUpload()">Clear All</button>
+                <button class="btn-upload" onclick="startUpload()">Start Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        function selectUploadMethod(method) {
+            // Update active method
+            document.querySelectorAll('.upload-method').forEach(m => m.classList.remove('active'));
+            event.target.closest('.upload-method').classList.add('active');
+
+            // Show corresponding section
+            document.querySelectorAll('.upload-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(method + 'Upload').classList.add('active');
+        }
+
+        // File upload functionality
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            const queue = document.getElementById('uploadQueue');
+            
+            Array.from(files).forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <span class="file-name">${file.name}</span>
+                        <span class="file-size">${formatFileSize(file.size)}</span>
+                    </div>
+                    <div class="file-status">Ready</div>
+                    <button class="btn-remove" onclick="removeFile(this)">×</button>
+                `;
+                queue.appendChild(fileItem);
+            });
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function removeFile(button) {
+            button.parentElement.remove();
+        }
+
+        function testApiConnection() {
+            alert('Testing API connection... Connection successful!');
+        }
+
+        function addManualEntry() {
+            alert('Manual entry added to queue');
+        }
+
+        function configureSensor(sensorId) {
+            alert(`Opening configuration for sensor: ${sensorId}`);
+        }
+
+        function addNewSensor() {
+            alert('Opening new sensor registration form...');
+        }
+
+        function clearUpload() {
+            document.getElementById('uploadQueue').innerHTML = '';
+            document.getElementById('fileInput').value = '';
+        }
+
+        function startUpload() {
+            alert('Starting data upload process...');
+        }
+    </script>
+</body>
+</html>
