@@ -1,282 +1,275 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EcoSentinel Dashboard</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="logo">
-      <span class="logo-icon">🌱</span>
-      <h2>EcoSentinel AI</h2>
-    </div>
-    <ul class="nav-menu">
-      <li class="active">
-        <span>📊</span>
-        <span>Dashboard</span>
-      </li>
-      <li onclick="navigateTo('livemap.html')">
-        <span>🗺️</span>
-        <span>Live Map</span>
-      </li>
-      <li onclick="navigateTo('reports.html')">
-        <span>📋</span>
-        <span>Reports</span>
-      </li>
-      <li onclick="navigateTo('upload.html')">
-        <span>📤</span>
-        <span>Data Upload</span>
-      </li>
-      <li onclick="navigateTo('settings.html')">
-        <span>⚙️</span>
-        <span>Settings</span>
-      </li>
-    </ul>
-  </div>
-  
-  <!-- Main Content -->
-  <div class="main-content">
-    <div class="header">
-      <h1>Environmental Dashboard</h1>
-      <div class="header-controls">
-        <div class="location-selector">
-          <span>🔍</span>
-          <select id="locationSelect" onchange="updateLocation()">
-            <option value="kenya">Kenya</option>
-            <option value="nairobi">Nairobi County</option>
-            <option value="mombasa">Mombasa County</option>
-            <option value="kisumu">Kisumu County</option>
-            <option value="nakuru">Nakuru County</option>
-          </select>
-        </div>
-        <div class="alerts">
-          <span>🚨 Alerts</span>
-          <span class="alert-count" onclick="showAlerts()">3</span>
-        </div>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <span class="logo-icon">🌱</span>
+        <h2>EcoSentinel AI</h2>
       </div>
+      <ul class="nav-menu">
+        <li class="active">
+          <span>📊</span>
+          <span>Dashboard</span>
+        </li>
+        <li onclick="navigateTo('livemap.html')">
+          <span>🗺️</span>
+          <span>Live Map</span>
+        </li>
+        <li onclick="navigateTo('reports.html')">
+          <span>📋</span>
+          <span>Reports</span>
+        </li>
+        <li onclick="navigateTo('upload.html')">
+          <span>📤</span>
+          <span>Data Upload</span>
+        </li>
+        <li onclick="navigateTo('settings.html')">
+          <span>⚙️</span>
+          <span>Settings</span>
+        </li>
+      </ul>
     </div>
 
-    <div class="nav-tabs">
-      <button class="tab-btn active" onclick="switchDataView('region')">📍 Region</button>
-      <button class="tab-btn" onclick="switchDataView('climate')">🌡️ Climate</button>
-      <button class="tab-btn" onclick="switchDataView('biodiversity')">🌿 Biodiversity</button>
-      <button class="tab-btn" onclick="switchDataView('waste')">🗑️ Waste</button>
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header">
+        <h1>Environmental Dashboard</h1>
+        <div class="header-controls">
+          <div class="location-selector">
+            <span>🔍</span>
+          </div>
+          <div class="alerts">
+            <span>🚨 Alerts</span>
+            <span class="alert-count" onclick="showAlerts()">3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchDataView('region')">📍 Region</button>
+        <button class="tab-btn" onclick="switchDataView('climate')">🌡️ Climate</button>
+        <button class="tab-btn" onclick="switchDataView('biodiversity')">🌿 Biodiversity</button>
+        <button class="tab-btn" onclick="switchDataView('waste')">🗑️ Waste</button>
+      </div>
+
+      <div class="dashboard-container">
+        <!-- Interactive Map Section -->
+        <div class="map-section">
+          <div id="map"></div>
+          <div class="risk-legend">
+            <h4>Environmental Risk Levels</h4>
+            <div class="legend-item">
+              <span class="legend-color low"></span>
+              <span>Low Risk</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color moderate"></span>
+              <span>Moderate Risk</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color high"></span>
+              <span>High Risk</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Environmental Insights -->
+        <div class="insights-section">
+          <h3>Environmental Insights Summary</h3>
+          <div class="insights-grid">
+            <div class="insight-card">
+              <h4>Nairobi County</h4>
+              <div class="insight-row">
+                <span>Air Quality Index</span>
+                <span class="value moderate">Moderate (95 AQI)</span>
+              </div>
+              <div class="insight-row">
+                <span>Water Quality</span>
+                <span class="value">Good</span>
+              </div>
+              <div class="insight-row">
+                <span>Waste Management</span>
+                <span class="value high">Critical</span>
+              </div>
+              <div class="action-needed">
+                <span class="action-text">Action Needed:</span>
+                <span class="action-text italic">Waste reduction initiatives</span>
+              </div>
+            </div>
+
+            <div class="insight-card">
+              <h4>Mombasa County</h4>
+              <div class="insight-row">
+                <span>Ocean Pollution</span>
+                <span class="value high">High</span>
+              </div>
+              <div class="insight-row">
+                <span>Plastic Waste</span>
+                <span class="value moderate">Moderate</span>
+              </div>
+              <div class="insight-row">
+                <span>Biodiversity Index</span>
+                <span class="value">Stable</span>
+              </div>
+              <div class="action-needed">
+                <span class="action-text">Action Needed:</span>
+                <span class="action-text italic">Coastal cleanup programs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytics Charts and Recommendations -->
+        <div class="bottom-section">
+          <div class="trend-charts">
+            <h3>Environmental Trends</h3>
+            <div class="charts-container">
+              <div class="chart-item">
+                <canvas id="rainfallChart" width="300" height="120"></canvas>
+                <p>Rainfall Patterns (Last 30 Days)</p>
+              </div>
+              <div class="chart-item">
+                <canvas id="wasteChart" width="300" height="120"></canvas>
+                <p>Waste Composition Analysis</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="recommendations">
+            <h3>AI-Powered Recommendations</h3>
+            <div class="recommendation-item">
+              <span class="rec-icon">🌱</span>
+              <span>Organize tree planting campaign in Nyeri County - Optimal conditions detected</span>
+            </div>
+            <div class="recommendation-item">
+              <span class="rec-icon">🧹</span>
+              <span>Schedule beach cleanup in Kilifi - High plastic waste accumulation predicted</span>
+            </div>
+            <div class="recommendation-item">
+              <span class="rec-icon">💧</span>
+              <span>Implement rainwater harvesting in Turkana - Drought mitigation opportunity</span>
+            </div>
+            <div class="recommendation-item">
+              <span class="rec-icon">♻️</span>
+              <span>Deploy mobile recycling units in Nairobi - Market day waste spike detected</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-actions">
+          <button class="action-btn" onclick="exportData()">📊 Export Data</button>
+          <button class="action-btn" onclick="shareReport()">📤 Share Report</button>
+          <button class="action-btn" onclick="customizeWidgets()">🔧 Customize Dashboard</button>
+          <button class="action-btn" onclick="downloadReport()">📄 Generate PDF Report</button>
+        </div>
+      </div>
     </div>
 
-    <div class="dashboard-container">
-      <!-- Interactive Map Section -->
-      <div class="map-section">
-        <div id="map"></div>
-        <div class="risk-legend">
-          <h4>Environmental Risk Levels</h4>
-          <div class="legend-item">
-            <span class="legend-color low"></span>
-            <span>Low Risk</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-color moderate"></span>
-            <span>Moderate Risk</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-color high"></span>
-            <span>High Risk</span>
-          </div>
-        </div>
-      </div>
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
 
-      <!-- Environmental Insights -->
-      <div class="insights-section">
-        <h3>Environmental Insights Summary</h3>
-        <div class="insights-grid">
-          <div class="insight-card">
-            <h4>Nairobi County</h4>
-            <div class="insight-row">
-              <span>Air Quality Index</span>
-              <span class="value moderate">Moderate (95 AQI)</span>
-            </div>
-            <div class="insight-row">
-              <span>Water Quality</span>
-              <span class="value">Good</span>
-            </div>
-            <div class="insight-row">
-              <span>Waste Management</span>
-              <span class="value high">Critical</span>
-            </div>
-            <div class="action-needed">
-              <span class="action-text">Action Needed:</span>
-              <span class="action-text italic">Waste reduction initiatives</span>
-            </div>
-          </div>
+    <script>
+      // Global variables
+      let map;
+      let currentDataView = 'region';
+      let currentLocation = 'kenya';
 
-          <div class="insight-card">
-            <h4>Mombasa County</h4>
-            <div class="insight-row">
-              <span>Ocean Pollution</span>
-              <span class="value high">High</span>
-            </div>
-            <div class="insight-row">
-              <span>Plastic Waste</span>
-              <span class="value moderate">Moderate</span>
-            </div>
-            <div class="insight-row">
-              <span>Biodiversity Index</span>
-              <span class="value">Stable</span>
-            </div>
-            <div class="action-needed">
-              <span class="action-text">Action Needed:</span>
-              <span class="action-text italic">Coastal cleanup programs</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      // Initialize map with enhanced features
+      function initializeMap() {
+        map = L.map('map', {
+          zoomControl: true,
+          attributionControl: true,
+        }).setView([-0.0236, 37.9062], 6.5);
 
-      <!-- Analytics Charts and Recommendations -->
-      <div class="bottom-section">
-        <div class="trend-charts">
-          <h3>Environmental Trends</h3>
-          <div class="charts-container">
-            <div class="chart-item">
-              <canvas id="rainfallChart" width="300" height="120"></canvas>
-              <p>Rainfall Patterns (Last 30 Days)</p>
-            </div>
-            <div class="chart-item">
-              <canvas id="wasteChart" width="300" height="120"></canvas>
-              <p>Waste Composition Analysis</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="recommendations">
-          <h3>AI-Powered Recommendations</h3>
-          <div class="recommendation-item">
-            <span class="rec-icon">🌱</span>
-            <span>Organize tree planting campaign in Nyeri County - Optimal conditions detected</span>
-          </div>
-          <div class="recommendation-item">
-            <span class="rec-icon">🧹</span>
-            <span>Schedule beach cleanup in Kilifi - High plastic waste accumulation predicted</span>
-          </div>
-          <div class="recommendation-item">
-            <span class="rec-icon">💧</span>
-            <span>Implement rainwater harvesting in Turkana - Drought mitigation opportunity</span>
-          </div>
-          <div class="recommendation-item">
-            <span class="rec-icon">♻️</span>
-            <span>Deploy mobile recycling units in Nairobi - Market day waste spike detected</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-actions">
-        <button class="action-btn" onclick="exportData()">📊 Export Data</button>
-        <button class="action-btn" onclick="shareReport()">📤 Share Report</button>
-        <button class="action-btn" onclick="customizeWidgets()">🔧 Customize Dashboard</button>
-        <button class="action-btn" onclick="downloadReport()">📄 Generate PDF Report</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Leaflet JavaScript -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/topojson-client@3"></script>
-  
-  <script>
-    // Global variables
-    let map;
-    let currentDataView = 'region';
-    let currentLocation = 'kenya';
-
-    // Initialize map with enhanced features
-    function initializeMap() {
-      map = L.map('map', {
-        zoomControl: true,
-        attributionControl: true
-      }).setView([-0.0236, 37.9062], 6.5);
-
-      // Add OpenStreetMap tile layer with better styling
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 18
-      }).addTo(map);
-
-      // Add zoom control to top right
-      map.zoomControl.setPosition('topright');
-      
-      loadKenyaMapData();
-      addEnvironmentalMarkers();
-    }
-
-    // Define enhanced colors for different risk levels
-    const riskColors = {
-      'low': '#90EE90',      // Light green
-      'moderate': '#FFB366', // Orange  
-      'high': '#FF6B6B'      // Red/coral
-    };
-
-    // Environmental data markers
-    const environmentalData = [
-      {
-        name: 'Nairobi Industrial Area',
-        coords: [-1.3197, 36.8510],
-        type: 'pollution',
-        risk: 'high',
-        details: 'High air pollution levels detected'
-      },
-      {
-        name: 'Mombasa Marine Park',
-        coords: [-4.0435, 39.6682],
-        type: 'marine',
-        risk: 'moderate',
-        details: 'Coral bleaching concerns'
-      },
-      {
-        name: 'Maasai Mara Wildlife Reserve',
-        coords: [-1.5061, 35.1432],
-        type: 'wildlife',
-        risk: 'low',
-        details: 'Stable ecosystem'
-      },
-      {
-        name: 'Lake Victoria',
-        coords: [-0.3397, 34.5644],
-        type: 'water',
-        risk: 'moderate',
-        details: 'Water quality monitoring needed'
-      },
-      {
-        name: 'Mount Kenya Forest',
-        coords: [-0.1521, 37.3084],
-        type: 'forest',
-        risk: 'low',
-        details: 'Conservation efforts successful'
-      }
-    ];
-
-    // Add environmental markers to map
-    function addEnvironmentalMarkers() {
-      environmentalData.forEach(location => {
-        const color = riskColors[location.risk];
-        const icon = getIconForType(location.type);
-        
-        const marker = L.circleMarker(location.coords, {
-          radius: 8,
-          fillColor: color,
-          color: '#fff',
-          weight: 2,
-          opacity: 1,
-          fillOpacity: 0.8
+        // Add OpenStreetMap tile layer with better styling
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors',
+          maxZoom: 18,
         }).addTo(map);
 
-        // Enhanced popup with more information
-        marker.bindPopup(`
+        // Add zoom control to top right
+        map.zoomControl.setPosition('topright');
+
+        loadKenyaMapData();
+        addEnvironmentalMarkers();
+      }
+
+      // Define enhanced colors for different risk levels
+      const riskColors = {
+        low: '#90EE90', // Light green
+        moderate: '#FFB366', // Orange
+        high: '#FF6B6B', // Red/coral
+      };
+
+      // Environmental data markers
+      const environmentalData = [
+        {
+          name: 'Nairobi Industrial Area',
+          coords: [-1.3197, 36.851],
+          type: 'pollution',
+          risk: 'high',
+          details: 'High air pollution levels detected',
+        },
+        {
+          name: 'Mombasa Marine Park',
+          coords: [-4.0435, 39.6682],
+          type: 'marine',
+          risk: 'moderate',
+          details: 'Coral bleaching concerns',
+        },
+        {
+          name: 'Maasai Mara Wildlife Reserve',
+          coords: [-1.5061, 35.1432],
+          type: 'wildlife',
+          risk: 'low',
+          details: 'Stable ecosystem',
+        },
+        {
+          name: 'Lake Victoria',
+          coords: [-0.3397, 34.5644],
+          type: 'water',
+          risk: 'moderate',
+          details: 'Water quality monitoring needed',
+        },
+        {
+          name: 'Mount Kenya Forest',
+          coords: [-0.1521, 37.3084],
+          type: 'forest',
+          risk: 'low',
+          details: 'Conservation efforts successful',
+        },
+      ];
+
+      // Add environmental markers to map
+      function addEnvironmentalMarkers() {
+        environmentalData.forEach((location) => {
+          const color = riskColors[location.risk];
+          const icon = getIconForType(location.type);
+
+          const marker = L.circleMarker(location.coords, {
+            radius: 8,
+            fillColor: color,
+            color: '#fff',
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.8,
+          }).addTo(map);
+
+          // Enhanced popup with more information
+          marker.bindPopup(`
           <div style="font-family: inherit;">
             <h4 style="margin: 0 0 8px 0; color: #2c3e50;">${icon} ${location.name}</h4>
             <p style="margin: 0 0 4px 0; font-size: 13px;"><strong>Risk Level:</strong> 
@@ -286,293 +279,300 @@
           </div>
         `);
 
-        // Add hover effects
-        marker.on('mouseover', function() {
-          this.setStyle({
-            radius: 12,
-            weight: 3
-          });
-        });
-
-        marker.on('mouseout', function() {
-          this.setStyle({
-            radius: 8,
-            weight: 2
-          });
-        });
-      });
-    }
-
-    // Get appropriate icon for location type
-    function getIconForType(type) {
-      const icons = {
-        'pollution': '🏭',
-        'marine': '🌊',
-        'wildlife': '🦁',
-        'water': '💧',
-        'forest': '🌲'
-      };
-      return icons[type] || '📍';
-    }
-
-    // Load Kenya GeoJSON boundary with improved error handling
-    async function loadKenyaMapData() {
-      try {
-        // Primary data source
-        const response = await fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson');
-        const data = await response.json();
-        
-        // Find Kenya feature with multiple possible name variations
-        const kenyaFeature = data.features.find(feature => {
-          const props = feature.properties;
-          return props.NAME === 'Kenya' || 
-                 props.name === 'Kenya' ||
-                 props.NAME_EN === 'Kenya' ||
-                 props.ADMIN === 'Kenya' ||
-                 props.NAME_LONG === 'Republic of Kenya';
-        });
-        
-        if (kenyaFeature) {
-          // Add Kenya boundary with enhanced styling
-          const kenyaLayer = L.geoJSON(kenyaFeature, {
-            style: {
-              fillColor: 'rgba(45, 74, 77, 0.1)',
+          // Add hover effects
+          marker.on('mouseover', function () {
+            this.setStyle({
+              radius: 12,
               weight: 3,
-              opacity: 1,
-              color: '#2d4a4d',
-              fillOpacity: 0.1,
-              dashArray: '8, 4'
-            }
-          }).addTo(map);
-          
-          // Fit map to Kenya bounds with padding
-          map.fitBounds(kenyaLayer.getBounds(), {
-            padding: [30, 30]
+            });
           });
-          
-          console.log('Kenya boundary loaded successfully');
-        } else {
-          throw new Error('Kenya feature not found in data');
-        }
-      } catch (error) {
-        console.warn('Failed to load Kenya boundary from primary source:', error);
-        loadFallbackBoundary();
+
+          marker.on('mouseout', function () {
+            this.setStyle({
+              radius: 8,
+              weight: 2,
+            });
+          });
+        });
       }
-    }
 
-    // Fallback boundary loading
-    function loadFallbackBoundary() {
-      // Kenya approximate boundary coordinates
-      const kenyaBounds = [
-        [5.0, 33.9],   // Northwest
-        [-4.7, 41.9]   // Southeast  
-      ];
-      
-      map.fitBounds(kenyaBounds, { padding: [30, 30] });
-      
-      // Add manual Kenya boundary rectangle
-      L.rectangle(kenyaBounds, {
-        color: '#2d4a4d',
-        weight: 3,
-        fillColor: 'rgba(45, 74, 77, 0.1)',
-        fillOpacity: 0.1,
-        dashArray: '8, 4'
-      }).addTo(map);
-      
-      console.log('Fallback Kenya boundary loaded');
-    }
-
-    // Interactive Functions
-    function navigateTo(page) {
-      window.location.href = page;
-    }
-
-    function switchTab(tabName) {
-      // Handle navigation to different pages
-      switch(tabName) {
-        case 'livemap':
-          navigateTo('livemap.html');
-          break;
-        case 'reports':
-          navigateTo('reports.html');
-          break;
-        case 'upload':
-          navigateTo('upload.html');
-          break;
-        case 'settings':
-          navigateTo('settings.html');
-          break;
-        default:
-          // Stay on dashboard
-          break;
+      // Get appropriate icon for location type
+      function getIconForType(type) {
+        const icons = {
+          pollution: '🏭',
+          marine: '🌊',
+          wildlife: '🦁',
+          water: '💧',
+          forest: '🌲',
+        };
+        return icons[type] || '📍';
       }
-    }
 
-    function switchDataView(viewType) {
-      currentDataView = viewType;
-      
-      // Update active tab button
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-      
-      // Update data view (you can customize this based on data type)
-      updateDashboardData(viewType);
-      console.log(`Switched to ${viewType} data view`);
-    }
+      // Load Kenya GeoJSON boundary with improved error handling
+      async function loadKenyaMapData() {
+        try {
+          // Primary data source
+          const response = await fetch(
+            'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson',
+          );
+          const data = await response.json();
 
-    function updateLocation() {
-      const select = document.getElementById('locationSelect');
-      currentLocation = select.value;
-      
-      // Update map focus based on location
-      const locations = {
-        'kenya': [-0.0236, 37.9062, 6.5],
-        'nairobi': [-1.2921, 36.8219, 11],
-        'mombasa': [-4.0435, 39.6682, 11], 
-        'kisumu': [-0.0917, 34.7680, 11],
-        'nakuru': [-0.3031, 36.0800, 11]
-      };
-      
-      if (locations[currentLocation]) {
-        const [lat, lng, zoom] = locations[currentLocation];
-        map.setView([lat, lng], zoom);
-      }
-      
-      updateDashboardData(currentDataView);
-      console.log(`Location updated to: ${currentLocation}`);
-    }
+          // Find Kenya feature with multiple possible name variations
+          const kenyaFeature = data.features.find((feature) => {
+            const props = feature.properties;
+            return (
+              props.NAME === 'Kenya' ||
+              props.name === 'Kenya' ||
+              props.NAME_EN === 'Kenya' ||
+              props.ADMIN === 'Kenya' ||
+              props.NAME_LONG === 'Republic of Kenya'
+            );
+          });
 
-    function updateDashboardData(dataType) {
-      // Simulate data updates based on current view and location
-      console.log(`Updating dashboard for ${dataType} in ${currentLocation}`);
-      // You can add logic here to update charts and insights based on selected filters
-    }
-
-    function showAlerts() {
-      alert('Environmental Alerts:\n\n🚨 High pollution levels in Nairobi Industrial Area\n⚠️ Moderate coral bleaching in Mombasa Marine Park\n📊 Water quality monitoring needed for Lake Victoria');
-    }
-
-    function exportData() {
-      console.log('Exporting environmental data...');
-      // Add export functionality
-    }
-
-    function shareReport() {
-      console.log('Sharing environmental report...');
-      // Add share functionality
-    }
-
-    function customizeWidgets() {
-      console.log('Opening widget customization...');
-      // Add customization functionality
-    }
-
-    function downloadReport() {
-      console.log('Generating PDF report...');
-      // Add PDF generation functionality
-    }
-
-    // Initialize Charts with improved data
-    function initializeCharts() {
-      // Rainfall Chart with realistic Kenya data
-      const rainfallCtx = document.getElementById('rainfallChart').getContext('2d');
-      new Chart(rainfallCtx, {
-        type: 'line',
-        data: {
-          labels: Array.from({length: 30}, (_, i) => `Day ${i + 1}`),
-          datasets: [{
-            label: 'Rainfall (mm)',
-            data: [0, 2, 15, 22, 18, 5, 0, 0, 12, 25, 30, 18, 8, 0, 0, 3, 20, 28, 15, 10, 0, 0, 5, 18, 25, 22, 12, 8, 2, 0],
-            borderColor: '#4CAF50',
-            backgroundColor: 'rgba(76, 175, 80, 0.2)',
-            tension: 0.4,
-            fill: true,
-            pointRadius: 2,
-            pointBackgroundColor: '#4CAF50'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              mode: 'index',
-              intersect: false,
-            }
-          },
-          scales: {
-            x: {
-              display: true,
-              grid: {
-                display: false
+          if (kenyaFeature) {
+            // Add Kenya boundary with enhanced styling
+            const kenyaLayer = L.geoJSON(kenyaFeature, {
+              style: {
+                fillColor: 'rgba(45, 74, 77, 0.1)',
+                weight: 3,
+                opacity: 1,
+                color: '#2d4a4d',
+                fillOpacity: 0.1,
+                dashArray: '8, 4',
               },
-              ticks: {
-                maxTicksLimit: 6
-              }
-            },
-            y: {
-              display: true,
-              grid: {
-                color: 'rgba(0,0,0,0.1)'
-              },
-              ticks: {
-                callback: function(value) {
-                  return value + 'mm';
-                }
-              }
-            }
+            }).addTo(map);
+
+            // Fit map to Kenya bounds with padding
+            map.fitBounds(kenyaLayer.getBounds(), {
+              padding: [30, 30],
+            });
+
+            console.log('Kenya boundary loaded successfully');
+          } else {
+            throw new Error('Kenya feature not found in data');
           }
+        } catch (error) {
+          console.warn('Failed to load Kenya boundary from primary source:', error);
+          loadFallbackBoundary();
         }
-      });
+      }
 
-      // Waste Chart with Kenya-specific categories
-      const wasteCtx = document.getElementById('wasteChart').getContext('2d');
-      new Chart(wasteCtx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Organic', 'Plastic', 'Paper', 'Metal', 'Glass'],
-          datasets: [{
-            data: [45, 25, 15, 10, 5],
-            backgroundColor: [
-              '#4ECDC4',
-              '#FF6B6B', 
-              '#45B7D1',
-              '#96CEB4',
-              '#FFEAA7'
+      // Fallback boundary loading
+      function loadFallbackBoundary() {
+        // Kenya approximate boundary coordinates
+        const kenyaBounds = [
+          [5.0, 33.9], // Northwest
+          [-4.7, 41.9], // Southeast
+        ];
+
+        map.fitBounds(kenyaBounds, { padding: [30, 30] });
+
+        // Add manual Kenya boundary rectangle
+        L.rectangle(kenyaBounds, {
+          color: '#2d4a4d',
+          weight: 3,
+          fillColor: 'rgba(45, 74, 77, 0.1)',
+          fillOpacity: 0.1,
+          dashArray: '8, 4',
+        }).addTo(map);
+
+        console.log('Fallback Kenya boundary loaded');
+      }
+
+      // Interactive Functions
+      function navigateTo(page) {
+        window.location.href = page;
+      }
+
+      function switchTab(tabName) {
+        // Handle navigation to different pages
+        switch (tabName) {
+          case 'livemap':
+            navigateTo('livemap.html');
+            break;
+          case 'reports':
+            navigateTo('reports.html');
+            break;
+          case 'upload':
+            navigateTo('upload.html');
+            break;
+          case 'settings':
+            navigateTo('settings.html');
+            break;
+          default:
+            // Stay on dashboard
+            break;
+        }
+      }
+
+      function switchDataView(viewType) {
+        currentDataView = viewType;
+
+        // Update active tab button
+        document.querySelectorAll('.tab-btn').forEach((btn) => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        // Update data view (you can customize this based on data type)
+        updateDashboardData(viewType);
+        console.log(`Switched to ${viewType} data view`);
+      }
+
+      function updateLocation() {
+        const select = document.getElementById('locationSelect');
+        currentLocation = select.value;
+
+        // Update map focus based on location
+        const locations = {
+          kenya: [-0.0236, 37.9062, 6.5],
+          nairobi: [-1.2921, 36.8219, 11],
+          mombasa: [-4.0435, 39.6682, 11],
+          kisumu: [-0.0917, 34.768, 11],
+          nakuru: [-0.3031, 36.08, 11],
+        };
+
+        if (locations[currentLocation]) {
+          const [lat, lng, zoom] = locations[currentLocation];
+          map.setView([lat, lng], zoom);
+        }
+
+        updateDashboardData(currentDataView);
+        console.log(`Location updated to: ${currentLocation}`);
+      }
+
+      function updateDashboardData(dataType) {
+        // Simulate data updates based on current view and location
+        console.log(`Updating dashboard for ${dataType} in ${currentLocation}`);
+        // You can add logic here to update charts and insights based on selected filters
+      }
+
+      function showAlerts() {
+        alert(
+          'Environmental Alerts:\n\n🚨 High pollution levels in Nairobi Industrial Area\n⚠️ Moderate coral bleaching in Mombasa Marine Park\n📊 Water quality monitoring needed for Lake Victoria',
+        );
+      }
+
+      function exportData() {
+        console.log('Exporting environmental data...');
+        // Add export functionality
+      }
+
+      function shareReport() {
+        console.log('Sharing environmental report...');
+        // Add share functionality
+      }
+
+      function customizeWidgets() {
+        console.log('Opening widget customization...');
+        // Add customization functionality
+      }
+
+      function downloadReport() {
+        console.log('Generating PDF report...');
+        // Add PDF generation functionality
+      }
+
+      // Initialize Charts with improved data
+      function initializeCharts() {
+        // Rainfall Chart with realistic Kenya data
+        const rainfallCtx = document.getElementById('rainfallChart').getContext('2d');
+        new Chart(rainfallCtx, {
+          type: 'line',
+          data: {
+            labels: Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`),
+            datasets: [
+              {
+                label: 'Rainfall (mm)',
+                data: [
+                  0, 2, 15, 22, 18, 5, 0, 0, 12, 25, 30, 18, 8, 0, 0, 3, 20, 28, 15, 10, 0, 0, 5, 18, 25, 22, 12, 8, 2,
+                  0,
+                ],
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 2,
+                pointBackgroundColor: '#4CAF50',
+              },
             ],
-            borderWidth: 2,
-            borderColor: '#fff'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                mode: 'index',
+                intersect: false,
+              },
             },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  return context.label + ': ' + context.parsed + '%';
-                }
-              }
-            }
-          }
-        }
-      });
-    }
+            scales: {
+              x: {
+                display: true,
+                grid: {
+                  display: false,
+                },
+                ticks: {
+                  maxTicksLimit: 6,
+                },
+              },
+              y: {
+                display: true,
+                grid: {
+                  color: 'rgba(0,0,0,0.1)',
+                },
+                ticks: {
+                  callback: function (value) {
+                    return value + 'mm';
+                  },
+                },
+              },
+            },
+          },
+        });
 
-    // Initialize everything when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('EcoSentinel Dashboard initializing...');
-      initializeMap();
-      initializeCharts();
-      console.log('Dashboard initialization complete!');
-    });
-  </script>
-</body>
+        // Waste Chart with Kenya-specific categories
+        const wasteCtx = document.getElementById('wasteChart').getContext('2d');
+        new Chart(wasteCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Organic', 'Plastic', 'Paper', 'Metal', 'Glass'],
+            datasets: [
+              {
+                data: [45, 25, 15, 10, 5],
+                backgroundColor: ['#4ECDC4', '#FF6B6B', '#45B7D1', '#96CEB4', '#FFEAA7'],
+                borderWidth: 2,
+                borderColor: '#fff',
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    return context.label + ': ' + context.parsed + '%';
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+
+      // Initialize everything when page loads
+      document.addEventListener('DOMContentLoaded', function () {
+        console.log('EcoSentinel Dashboard initializing...');
+        initializeMap();
+        initializeCharts();
+        console.log('Dashboard initialization complete!');
+      });
+    </script>
+  </body>
 </html>
