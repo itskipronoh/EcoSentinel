@@ -26,3 +26,5 @@ env/
 .DS_Store
 Thumbs.db
 TODO
+__pycache__/
+*.pyc
