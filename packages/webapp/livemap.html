@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSentinel - Live Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <span class="logo-icon">🌱</span>
+            <h2>EcoSentinel AI</h2>
+        </div>
+        <ul class="nav-menu">
+            <li onclick="navigateTo('index.html')">
+                <span>📊</span>
+                <span>Dashboard</span>
+            </li>
+            <li class="active">
+                <span>🗺️</span>
+                <span>Live Map</span>
+            </li>
+            <li onclick="navigateTo('reports.html')">
+                <span>📋</span>
+                <span>Reports</span>
+            </li>
+            <li onclick="navigateTo('upload.html')">
+                <span>📤</span>
+                <span>Data Upload</span>
+            </li>
+            <li onclick="navigateTo('settings.html')">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Live Environmental Map</h1>
+            <div class="header-controls">
+                <div class="location-selector">
+                    <span>🔍</span>
+                    <select id="locationSelect">
+                        <option value="kenya">Kenya</option>
+                        <option value="nairobi">Nairobi County</option>
+                        <option value="mombasa">Mombasa County</option>
+                        <option value="kisumu">Kisumu County</option>
+                    </select>
+                </div>
+                <div class="alerts">
+                    <span>🚨 Live Alerts</span>
+                    <span class="alert-count">5</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="analysis-container">
+            <!-- Left Panel - Analysis Controls -->
+            <div class="analysis-panel">
+                <div class="panel-section">
+                    <h3>Analysis Types</h3>
+                    <div class="analysis-grid">
+                        <div class="analysis-item active" onclick="selectAnalysis('air-quality')">
+                            <span class="analysis-icon">🌪️</span>
+                            <span>Air Quality</span>
+                        </div>
+                        <div class="analysis-item" onclick="selectAnalysis('biodiversity')">
+                            <span class="analysis-icon">🌿</span>
+                            <span>Biodiversity</span>
+                        </div>
+                        <div class="analysis-item" onclick="selectAnalysis('water-quality')">
+                            <span class="analysis-icon">💧</span>
+                            <span>Water Quality</span>
+                        </div>
+                        <div class="analysis-item" onclick="selectAnalysis('forest-cover')">
+                            <span class="analysis-icon">🌲</span>
+                            <span>Forest Cover</span>
+                        </div>
+                        <div class="analysis-item" onclick="selectAnalysis('waste-management')">
+                            <span class="analysis-icon">♻️</span>
+                            <span>Waste Management</span>
+                        </div>
+                        <div class="analysis-item" onclick="selectAnalysis('climate-risk')">
+                            <span class="analysis-icon">🌡️</span>
+                            <span>Climate Risk</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>Area of Interest</h3>
+                    <div class="area-controls">
+                        <button class="area-btn active" onclick="selectAreaType('admin')">
+                            <span>🏛️</span>
+                            <span>Admin Division</span>
+                        </button>
+                        <button class="area-btn" onclick="selectAreaType('watershed')">
+                            <span>🌊</span>
+                            <span>Water Basin</span>
+                        </button>
+                        <button class="area-btn" onclick="selectAreaType('custom')">
+                            <span>✏️</span>
+                            <span>Custom Shape</span>
+                        </button>
+                        <button class="area-btn" onclick="selectAreaType('upload')">
+                            <span>📁</span>
+                            <span>Upload</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>Time Period</h3>
+                    <div class="time-controls">
+                        <input type="date" id="startDate" class="date-input">
+                        <span>to</span>
+                        <input type="date" id="endDate" class="date-input">
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="action-buttons">
+                        <button class="btn-clear" onclick="clearAnalysis()">CLEAR</button>
+                        <button class="btn-run" onclick="runAnalysis()">RUN ANALYSIS</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Map -->
+            <div class="map-container">
+                <div id="liveMap"></div>
+                
+                <!-- Map Controls -->
+                <div class="map-controls">
+                    <div class="layer-selector">
+                        <button class="layer-btn active" onclick="switchLayer('satellite')">
+                            <span>🛰️</span>
+                            <span>Satellite</span>
+                        </button>
+                        <button class="layer-btn" onclick="switchLayer('terrain')">
+                            <span>🗻</span>
+                            <span>Terrain</span>
+                        </button>
+                        <button class="layer-btn" onclick="switchLayer('street')">
+                            <span>🗺️</span>
+                            <span>Street</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Panel -->
+                <div class="results-panel" id="resultsPanel">
+                    <h4>Analysis Results</h4>
+                    <div class="results-content">
+                        <p>Select an analysis type and run to see results</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // Initialize live map
+        let liveMap = L.map('liveMap').setView([-0.0236, 37.9062], 6.5);
+        
+        let currentLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri'
+        }).addTo(liveMap);
+
+        function selectAnalysis(type) {
+            document.querySelectorAll('.analysis-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.analysis-item').classList.add('active');
+            console.log(`Selected analysis: ${type}`);
+        }
+
+        function selectAreaType(type) {
+            document.querySelectorAll('.area-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.area-btn').classList.add('active');
+            console.log(`Selected area type: ${type}`);
+        }
+
+        function switchLayer(layerType) {
+            document.querySelectorAll('.layer-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.layer-btn').classList.add('active');
+            
+            liveMap.removeLayer(currentLayer);
+            
+            switch(layerType) {
+                case 'satellite':
+                    currentLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                        attribution: 'Tiles &copy; Esri'
+                    });
+                    break;
+                case 'terrain':
+                    currentLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                        attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap'
+                    });
+                    break;
+                case 'street':
+                    currentLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    });
+                    break;
+            }
+            
+            currentLayer.addTo(liveMap);
+        }
+
+        function clearAnalysis() {
+            document.getElementById('resultsPanel').style.display = 'none';
+            console.log('Analysis cleared');
+        }
+
+        function runAnalysis() {
+            document.getElementById('resultsPanel').style.display = 'block';
+            const resultsContent = document.querySelector('.results-content');
+            resultsContent.innerHTML = `
+                <div class="result-item">
+                    <strong>Analysis Complete</strong>
+                    <p>Environmental data processed for selected area</p>
+                    <div class="result-stats">
+                        <span>Data Points: 1,247</span>
+                        <span>Risk Level: Moderate</span>
+                        <span>Confidence: 94%</span>
+                    </div>
+                </div>
+            `;
+            console.log('Running analysis...');
+        }
+
+        // Set default dates
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+            
+            document.getElementById('endDate').value = today.toISOString().split('T')[0];
+            document.getElementById('startDate').value = lastMonth.toISOString().split('T')[0];
+        });
+    </script>
+</body>
+</html>

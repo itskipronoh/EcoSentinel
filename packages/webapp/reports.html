@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSentinel - Reports</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <span class="logo-icon">🌱</span>
+            <h2>EcoSentinel AI</h2>
+        </div>
+        <ul class="nav-menu">
+            <li onclick="navigateTo('index.html')">
+                <span>📊</span>
+                <span>Dashboard</span>
+            </li>
+            <li onclick="navigateTo('livemap.html')">
+                <span>🗺️</span>
+                <span>Live Map</span>
+            </li>
+            <li class="active">
+                <span>📋</span>
+                <span>Reports</span>
+            </li>
+            <li onclick="navigateTo('upload.html')">
+                <span>📤</span>
+                <span>Data Upload</span>
+            </li>
+            <li onclick="navigateTo('settings.html')">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Environmental Reports</h1>
+            <div class="header-controls">
+                <button class="btn-primary" onclick="generateReport()">📊 Generate New Report</button>
+                <button class="btn-secondary" onclick="exportReports()">📤 Export All</button>
+            </div>
+        </div>
+
+        <div class="reports-container">
+            <div class="filters-section">
+                <div class="filter-group">
+                    <label>Report Type:</label>
+                    <select id="reportType">
+                        <option value="all">All Reports</option>
+                        <option value="environmental">Environmental Impact</option>
+                        <option value="pollution">Pollution Analysis</option>
+                        <option value="biodiversity">Biodiversity Assessment</option>
+                        <option value="climate">Climate Analysis</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Time Period:</label>
+                    <select id="timePeriod">
+                        <option value="week">Last Week</option>
+                        <option value="month">Last Month</option>
+                        <option value="quarter">Last Quarter</option>
+                        <option value="year">Last Year</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Location:</label>
+                    <select id="location">
+                        <option value="all">All Locations</option>
+                        <option value="nairobi">Nairobi County</option>
+                        <option value="mombasa">Mombasa County</option>
+                        <option value="kisumu">Kisumu County</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="reports-grid">
+                <div class="report-card">
+                    <div class="report-header">
+                        <h3>🌪️ Air Quality Assessment - Nairobi</h3>
+                        <span class="report-date">August 10, 2025</span>
+                    </div>
+                    <div class="report-summary">
+                        <p>Comprehensive analysis of air pollution levels across Nairobi County, including PM2.5, NO2, and SO2 measurements.</p>
+                        <div class="report-stats">
+                            <span class="stat critical">AQI: 156 (Unhealthy)</span>
+                            <span class="stat">Data Points: 1,247</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-view" onclick="viewReport('air-quality-nairobi')">View</button>
+                        <button class="btn-download" onclick="downloadReport('air-quality-nairobi')">Download</button>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <div class="report-header">
+                        <h3>🌊 Water Quality Report - Lake Victoria</h3>
+                        <span class="report-date">August 9, 2025</span>
+                    </div>
+                    <div class="report-summary">
+                        <p>Monthly water quality monitoring covering chemical composition, pH levels, and pollution indicators.</p>
+                        <div class="report-stats">
+                            <span class="stat moderate">Quality Index: 72 (Moderate)</span>
+                            <span class="stat">Samples: 156</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-view" onclick="viewReport('water-quality-victoria')">View</button>
+                        <button class="btn-download" onclick="downloadReport('water-quality-victoria')">Download</button>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <div class="report-header">
+                        <h3>🌿 Biodiversity Impact Study - Maasai Mara</h3>
+                        <span class="report-date">August 8, 2025</span>
+                    </div>
+                    <div class="report-summary">
+                        <p>Wildlife population analysis and ecosystem health assessment for the Maasai Mara conservation area.</p>
+                        <div class="report-stats">
+                            <span class="stat good">Biodiversity Index: 8.4/10</span>
+                            <span class="stat">Species Tracked: 247</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-view" onclick="viewReport('biodiversity-mara')">View</button>
+                        <button class="btn-download" onclick="downloadReport('biodiversity-mara')">Download</button>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <div class="report-header">
+                        <h3>♻️ Waste Management Analysis - Mombasa</h3>
+                        <span class="report-date">August 7, 2025</span>
+                    </div>
+                    <div class="report-summary">
+                        <p>Waste generation patterns, recycling rates, and disposal efficiency analysis for coastal regions.</p>
+                        <div class="report-stats">
+                            <span class="stat moderate">Recycling Rate: 34%</span>
+                            <span class="stat">Waste Volume: 2,847 tons</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-view" onclick="viewReport('waste-mombasa')">View</button>
+                        <button class="btn-download" onclick="downloadReport('waste-mombasa')">Download</button>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <div class="report-header">
+                        <h3>🌡️ Climate Risk Assessment - Kenya</h3>
+                        <span class="report-date">August 5, 2025</span>
+                    </div>
+                    <div class="report-summary">
+                        <p>National climate vulnerability assessment covering drought, flood, and temperature change projections.</p>
+                        <div class="report-stats">
+                            <span class="stat critical">Risk Level: High</span>
+                            <span class="stat">Coverage: 47 Counties</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-view" onclick="viewReport('climate-kenya')">View</button>
+                        <button class="btn-download" onclick="downloadReport('climate-kenya')">Download</button>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <div class="report-header">
+                        <h3>🌲 Forest Cover Change - Mount Kenya</h3>
+                        <span class="report-date">August 3, 2025</span>
+                    </div>
+                    <div class="report-summary">
+                        <p>Satellite-based forest monitoring showing deforestation trends and conservation progress.</p>
+                        <div class="report-stats">
+                            <span class="stat good">Forest Cover: 78% (+2%)</span>
+                            <span class="stat">Area: 2,417 km²</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-view" onclick="viewReport('forest-mt-kenya')">View</button>
+                        <button class="btn-download" onclick="downloadReport('forest-mt-kenya')">Download</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        function generateReport() {
+            alert('Opening report generation wizard...');
+        }
+
+        function exportReports() {
+            alert('Exporting all reports as ZIP file...');
+        }
+
+        function viewReport(reportId) {
+            alert(`Opening detailed view for report: ${reportId}`);
+            // In a real app, this would navigate to a detailed report page
+        }
+
+        function downloadReport(reportId) {
+            alert(`Downloading report: ${reportId}.pdf`);
+            // In a real app, this would trigger a file download
+        }
+
+        // Filter functionality
+        document.getElementById('reportType').addEventListener('change', filterReports);
+        document.getElementById('timePeriod').addEventListener('change', filterReports);
+        document.getElementById('location').addEventListener('change', filterReports);
+
+        function filterReports() {
+            const reportType = document.getElementById('reportType').value;
+            const timePeriod = document.getElementById('timePeriod').value;
+            const location = document.getElementById('location').value;
+            
+            console.log(`Filtering reports: Type=${reportType}, Period=${timePeriod}, Location=${location}`);
+            // In a real app, this would filter the displayed reports
+        }
+    </script>
+</body>
+</html>

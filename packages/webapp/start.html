@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSentinel - Start Local Server</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f6fa;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #2d4a4d;
+            margin-bottom: 20px;
+        }
+        .logo {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .instructions {
+            text-align: left;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .command {
+            background: #2c3e50;
+            color: white;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 10px;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🌱</div>
+        <h1>EcoSentinel Dashboard</h1>
+        <p>To run the EcoSentinel dashboard locally, follow these steps:</p>
+        
+        <div class="instructions">
+            <h3>Option 1: Using Python (Recommended)</h3>
+            <p>Open your terminal in the webapp folder and run:</p>
+            <div class="command">python -m http.server 8000</div>
+            <p>Then visit: <a href="http://localhost:8000">http://localhost:8000</a></p>
+            
+            <h3>Option 2: Using Node.js</h3>
+            <p>Install and run a simple HTTP server:</p>
+            <div class="command">npm install -g http-server</div>
+            <div class="command">http-server . -p 8000</div>
+            
+            <h3>Option 3: Using VS Code Live Server</h3>
+            <p>Install the "Live Server" extension in VS Code and right-click on index.html → "Open with Live Server"</p>
+        </div>
+        
+        <a href="index.html" class="btn">📊 Go to Dashboard</a>
+        <a href="livemap.html" class="btn">🗺️ Live Map</a>
+        <a href="reports.html" class="btn">📋 Reports</a>
+    </div>
+
+    <script>
+        // Check if we're running locally and redirect to index.html
+        if (window.location.protocol === 'file:') {
+            document.querySelector('.instructions').innerHTML += 
+                '<div style="background: #fee; padding: 15px; border-radius: 4px; margin-top: 15px; color: #c0392b;">' +
+                '<strong>⚠️ Warning:</strong> You are viewing this as a file. For full functionality, please run a local server as described above.' +
+                '</div>';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSentinel - Settings</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <span class="logo-icon">🌱</span>
+            <h2>EcoSentinel AI</h2>
+        </div>
+        <ul class="nav-menu">
+            <li onclick="navigateTo('index.html')">
+                <span>📊</span>
+                <span>Dashboard</span>
+            </li>
+            <li onclick="navigateTo('livemap.html')">
+                <span>🗺️</span>
+                <span>Live Map</span>
+            </li>
+            <li onclick="navigateTo('reports.html')">
+                <span>📋</span>
+                <span>Reports</span>
+            </li>
+            <li onclick="navigateTo('upload.html')">
+                <span>📤</span>
+                <span>Data Upload</span>
+            </li>
+            <li class="active">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>System Settings</h1>
+            <div class="header-controls">
+                <button class="btn-save" onclick="saveSettings()">💾 Save Changes</button>
+            </div>
+        </div>
+
+        <div class="settings-container">
+            <div class="settings-sidebar">
+                <div class="settings-nav">
+                    <button class="settings-nav-item active" onclick="showSettingsSection('general')">
+                        <span>🏠</span>
+                        <span>General</span>
+                    </button>
+                    <button class="settings-nav-item" onclick="showSettingsSection('notifications')">
+                        <span>🔔</span>
+                        <span>Notifications</span>
+                    </button>
+                    <button class="settings-nav-item" onclick="showSettingsSection('data')">
+                        <span>📊</span>
+                        <span>Data Sources</span>
+                    </button>
+                    <button class="settings-nav-item" onclick="showSettingsSection('alerts')">
+                        <span>🚨</span>
+                        <span>Alert Thresholds</span>
+                    </button>
+                    <button class="settings-nav-item" onclick="showSettingsSection('api')">
+                        <span>🔗</span>
+                        <span>API Configuration</span>
+                    </button>
+                    <button class="settings-nav-item" onclick="showSettingsSection('backup')">
+                        <span>💾</span>
+                        <span>Backup & Export</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="settings-content">
+                <!-- General Settings -->
+                <div id="generalSettings" class="settings-section active">
+                    <h2>General Settings</h2>
+                    
+                    <div class="setting-group">
+                        <h3>Application Preferences</h3>
+                        <div class="setting-item">
+                            <label>Default Dashboard View</label>
+                            <select>
+                                <option>Regional Overview</option>
+                                <option>Climate Focus</option>
+                                <option>Pollution Tracking</option>
+                                <option>Biodiversity Monitor</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>Default Location</label>
+                            <select>
+                                <option>Kenya (National)</option>
+                                <option>Nairobi County</option>
+                                <option>Mombasa County</option>
+                                <option>Kisumu County</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>Language</label>
+                            <select>
+                                <option>English</option>
+                                <option>Kiswahili</option>
+                                <option>French</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>Time Zone</label>
+                            <select>
+                                <option>East Africa Time (UTC+3)</option>
+                                <option>UTC</option>
+                                <option>Other...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>Display Settings</h3>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                                Dark Mode
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                                High Contrast Mode
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox">
+                                <span class="toggle-slider"></span>
+                                Animations
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Settings -->
+                <div id="notificationsSettings" class="settings-section">
+                    <h2>Notification Settings</h2>
+                    
+                    <div class="setting-group">
+                        <h3>Alert Notifications</h3>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                                Email Notifications
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                                SMS Alerts
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox">
+                                <span class="toggle-slider"></span>
+                                Push Notifications
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>Notification Frequency</h3>
+                        <div class="setting-item">
+                            <label>Critical Alerts</label>
+                            <select>
+                                <option>Immediate</option>
+                                <option>Every 15 minutes</option>
+                                <option>Hourly</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>Weekly Reports</label>
+                            <select>
+                                <option>Monday</option>
+                                <option>Friday</option>
+                                <option>Sunday</option>
+                                <option>Disabled</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Sources Settings -->
+                <div id="dataSettings" class="settings-section">
+                    <h2>Data Sources Configuration</h2>
+                    
+                    <div class="setting-group">
+                        <h3>Active Data Sources</h3>
+                        <div class="data-source-item">
+                            <div class="source-info">
+                                <h4>Kenya Meteorological Department</h4>
+                                <p>Official weather and climate data</p>
+                                <span class="source-status active">● Active</span>
+                            </div>
+                            <button class="btn-configure">Configure</button>
+                        </div>
+                        <div class="data-source-item">
+                            <div class="source-info">
+                                <h4>UNEP Air Quality Network</h4>
+                                <p>Regional air pollution monitoring</p>
+                                <span class="source-status active">● Active</span>
+                            </div>
+                            <button class="btn-configure">Configure</button>
+                        </div>
+                        <div class="data-source-item">
+                            <div class="source-info">
+                                <h4>NASA Earth Observation</h4>
+                                <p>Satellite imagery and environmental data</p>
+                                <span class="source-status inactive">● Inactive</span>
+                            </div>
+                            <button class="btn-configure">Configure</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>Data Update Settings</h3>
+                        <div class="setting-item">
+                            <label>Update Frequency</label>
+                            <select>
+                                <option>Real-time</option>
+                                <option>Every 15 minutes</option>
+                                <option>Hourly</option>
+                                <option>Daily</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>Data Retention Period</label>
+                            <select>
+                                <option>1 Year</option>
+                                <option>2 Years</option>
+                                <option>5 Years</option>
+                                <option>Unlimited</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alert Thresholds Settings -->
+                <div id="alertsSettings" class="settings-section">
+                    <h2>Alert Threshold Configuration</h2>
+                    
+                    <div class="setting-group">
+                        <h3>Air Quality Thresholds</h3>
+                        <div class="threshold-item">
+                            <label>PM2.5 Critical Level (μg/m³)</label>
+                            <input type="number" value="150" min="0" max="500">
+                        </div>
+                        <div class="threshold-item">
+                            <label>PM2.5 Warning Level (μg/m³)</label>
+                            <input type="number" value="100" min="0" max="500">
+                        </div>
+                        <div class="threshold-item">
+                            <label>NO2 Critical Level (μg/m³)</label>
+                            <input type="number" value="200" min="0" max="1000">
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>Water Quality Thresholds</h3>
+                        <div class="threshold-item">
+                            <label>pH Critical Low</label>
+                            <input type="number" value="5.5" min="0" max="14" step="0.1">
+                        </div>
+                        <div class="threshold-item">
+                            <label>pH Critical High</label>
+                            <input type="number" value="9.5" min="0" max="14" step="0.1">
+                        </div>
+                        <div class="threshold-item">
+                            <label>Dissolved Oxygen Critical (mg/L)</label>
+                            <input type="number" value="4.0" min="0" max="20" step="0.1">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Configuration Settings -->
+                <div id="apiSettings" class="settings-section">
+                    <h2>API Configuration</h2>
+                    
+                    <div class="setting-group">
+                        <h3>API Keys</h3>
+                        <div class="api-key-item">
+                            <label>OpenWeatherMap API Key</label>
+                            <div class="input-group">
+                                <input type="password" placeholder="Enter API key">
+                                <button class="btn-test">Test</button>
+                            </div>
+                        </div>
+                        <div class="api-key-item">
+                            <label>Google Earth Engine API</label>
+                            <div class="input-group">
+                                <input type="password" placeholder="Enter API key">
+                                <button class="btn-test">Test</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>Rate Limiting</h3>
+                        <div class="setting-item">
+                            <label>Requests per minute</label>
+                            <input type="number" value="60" min="1" max="1000">
+                        </div>
+                        <div class="setting-item">
+                            <label>Concurrent connections</label>
+                            <input type="number" value="10" min="1" max="100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Backup Settings -->
+                <div id="backupSettings" class="settings-section">
+                    <h2>Backup & Export Settings</h2>
+                    
+                    <div class="setting-group">
+                        <h3>Automatic Backup</h3>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                                Enable Automatic Backup
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label>Backup Frequency</label>
+                            <select>
+                                <option>Daily</option>
+                                <option>Weekly</option>
+                                <option>Monthly</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>Backup Location</label>
+                            <select>
+                                <option>Local Storage</option>
+                                <option>Cloud Storage</option>
+                                <option>External Drive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>Manual Actions</h3>
+                        <div class="backup-actions">
+                            <button class="btn-backup" onclick="createBackup()">Create Backup Now</button>
+                            <button class="btn-restore" onclick="restoreBackup()">Restore from Backup</button>
+                            <button class="btn-export" onclick="exportData()">Export All Data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        function showSettingsSection(sectionName) {
+            // Update navigation
+            document.querySelectorAll('.settings-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Show section
+            document.querySelectorAll('.settings-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionName + 'Settings').classList.add('active');
+        }
+
+        function saveSettings() {
+            alert('Settings saved successfully!');
+        }
+
+        function createBackup() {
+            alert('Creating backup... This may take a few minutes.');
+        }
+
+        function restoreBackup() {
+            alert('Select backup file to restore...');
+        }
+
+        function exportData() {
+            alert('Exporting all environmental data...');
+        }
+    </script>
+</body>
+</html>
