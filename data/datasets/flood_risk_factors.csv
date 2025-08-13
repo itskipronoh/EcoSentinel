@@ -1,0 +1,11 @@
+region,latitude,longitude,elevation,population,elevation_risk_factor,population_risk_factor,water_proximity_risk_factor,drainage_infrastructure_score,overall_flood_risk_score,risk_category
+Nairobi,-1.2921,36.8219,1795,4397073,0.1,1.0,0.6,0.7,0.5,Medium
+Kisumu,-0.0917,34.768,1131,610082,0.43,0.61,0.8,0.7,0.54,Medium
+Eldoret,0.5143,35.2698,2085,475716,0.0,0.48,0.3,0.4,0.34,Low
+Mandera,3.9366,41.867,231,867457,0.88,0.87,0.3,0.4,0.66,Medium
+Mombasa,-4.0435,39.6682,17,1208333,0.99,1.0,0.8,0.7,0.77,High
+Nakuru,-0.3031,36.08,1850,570674,0.07,0.57,0.6,0.4,0.46,Medium
+Turkana,3.1167,35.5833,365,926976,0.82,0.93,0.3,0.4,0.66,Medium
+Kitui,-1.3669,38.0109,1136,1136187,0.43,1.0,0.3,0.4,0.58,Medium
+Nyeri,-0.4167,36.95,1759,759164,0.12,0.76,0.3,0.4,0.44,Medium
+Machakos,-1.5219,37.2634,1549,1421932,0.23,1.0,0.3,0.4,0.53,Medium
